@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         if (token != null && !token.isEmpty()) {
             binding.loadingMain.setVisibility(View.VISIBLE);
             new Thread(() -> {
-                Optional<UserView> loggedUser = authClient.getLoggedUser();
+                Optional<UserView> loggedUser = Optional.ofNullable(PurchaseHistoryApplication.getInstance().getLoggedUser().getValue());
+                if (!loggedUser.isPresent()) loggedUser = authClient.getLoggedUser();
                 this.runOnUiThread(() -> binding.loadingMain.setVisibility(View.GONE));
                 if (loggedUser.isPresent()) {
                     root.getLoggedUser().postValue(loggedUser.get());
