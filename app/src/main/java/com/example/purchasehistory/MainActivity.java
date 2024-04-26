@@ -1,42 +1,81 @@
 package com.example.purchasehistory;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.example.purchasehistory.databinding.ActivityMainBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.purchasehistory.ui.HomeActivity;
+import com.example.purchasehistory.ui.login.LoginActivity;
+import com.example.purchasehistory.ui.register.RegisterActivity;
+import com.example.purchasehistory.web.clients.AuthClient;
 import dagger.hilt.android.AndroidEntryPoint;
+
+import javax.inject.Inject;
+import java.util.Optional;
+
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
+    @Inject
+    AuthClient authClient;
 
     private ActivityMainBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_dashboard, R.id.navigation_qrscanner)
-                .build();
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host_fragment_activity_main);
-        if (navHostFragment != null) {
-            NavController navController = navHostFragment.getNavController();
-            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-            NavigationUI.setupWithNavController(binding.navView, navController);
-        }
-
+        binding.loginButton.setOnClickListener(this::startLoginActivity);
+        binding.registerButton.setOnClickListener(this::startRegisterActivity);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        redirectIfJwtValid();
+    }
+
+    private void redirectIfJwtValid() {
+        PurchaseHistoryApplication root = PurchaseHistoryApplication.getInstance();
+
+        String token = root.getUserToken().getValue();
+        Log.i("jwtoken", token != null && !token.isEmpty() ? token : "no JWT in phone");
+        if (token != null && !token.isEmpty()) {
+            binding.loadingMain.setVisibility(View.VISIBLE);
+            new Thread(() -> {
+                Optional<UserView> loggedUser = authClient.getLoggedUser();
+                this.runOnUiThread(() -> binding.loadingMain.setVisibility(View.GONE));
+                if (loggedUser.isPresent()) {
+                    root.getLoggedUser().postValue(loggedUser.get());
+                    startHomeActivity();
+                } else {
+                    runOnUiThread(() -> Toast.makeText(PurchaseHistoryApplication.getContext(), R.string.alert_session_ended, Toast.LENGTH_SHORT).show());
+                }
+            }).start();
+        }
+    }
+
+    private void startHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void startRegisterActivity(View view) {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+    }
+
+    private void startLoginActivity(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
 
 }

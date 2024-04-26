@@ -6,6 +6,7 @@ import android.util.Log;
 import com.angelp.purchasehistorybackend.models.views.incoming.UserVO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.example.purchasehistory.PurchaseHistoryApplication;
+import com.example.purchasehistory.data.model.UsernamePassword;
 import okhttp3.Response;
 
 import javax.inject.Inject;
@@ -28,11 +29,13 @@ public class AuthClient extends HttpClient {
 
     public Optional<UserView> login(String username, String password) {
         UserView result = null;
-        try (Response res = post(BACKEND_URL + "/login", new UserVO(username, password, ""))) {
+
+        try (Response res = postFormData(BACKEND_URL + "/login", new UsernamePassword(username, password).getRequestBody())) {
             String authorization = res.header("Authorization");
+            Log.i("loginResult", "Response code: "+ res.code());
             if (res.isSuccessful() && res.body() != null && authorization != null && !authorization.isEmpty()) {
                 String body = res.body().string();
-                Log.i("loginResult", "login: " + body);
+                Log.i("loginResult", "login successful: " + body);
                 result = gson.fromJson(body, UserView.class);
                 saveLoggedUser(authorization);
                 PurchaseHistoryApplication.getInstance().getLoggedUser().postValue(result);

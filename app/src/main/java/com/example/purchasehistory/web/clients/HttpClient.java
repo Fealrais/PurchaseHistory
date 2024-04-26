@@ -10,11 +10,12 @@ import okhttp3.*;
 import java.io.IOException;
 
 public class HttpClient {
-    public static String HOST_NAME = "192.168.0.104";
+    public static String HOST_NAME = "185.240.147.108";
     public static String BACKEND_URL = "https://" + HOST_NAME + ":9000/api";
     protected final OkHttpClient client;
     protected final AuthInterceptor authInterceptor = new AuthInterceptor();
     protected final Gson gson = new Gson();
+    private final String TAG = this.getClass().getSimpleName();
 
     public HttpClient() {
         client = new OkHttpClient().newBuilder()
@@ -28,8 +29,10 @@ public class HttpClient {
                 .url(url)
                 .get()
                 .build();
+        Log.i(TAG, String.format("Sending GET: '%s'", url));
         Response response = client.newCall(request).
                 execute();
+        Log.i(TAG, String.format("Received response GET: '%s' ", url));
         handleError(response);
         return response;
     }
@@ -37,11 +40,25 @@ public class HttpClient {
     public Response post(String url, Object body) throws IOException {
         String json = gson.toJson(body);
         RequestBody requestBody = RequestBody.create(MediaType.get("application/json"), json);
+        Log.i(TAG, String.format("Sending POST: '%s' Body:%s", url, json));
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)
                 .build();
         Response response = client.newCall(request).execute();
+        Log.i(TAG, String.format("Received response POST: '%s' ", url));
+        handleError(response);
+        return response;
+    }
+
+    public Response postFormData(String url, RequestBody body) throws IOException {
+        Log.i(TAG, String.format("Sending POST : %s", url));
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        Response response = client.newCall(request).execute();
+        Log.i(TAG, String.format("Received response POST: '%s' ", url));
         handleError(response);
         return response;
     }

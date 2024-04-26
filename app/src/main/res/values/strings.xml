@@ -24,5 +24,6 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_qr">QRScannerActivity</string>
     <string name="title_activity_qrscanner">QRScanner</string>
+    <string name="title_activity_home">HomeActivity</string>
 
 </resources>
