@@ -39,10 +39,16 @@ jobs:
       # - name: Make Gradlew Executable
       #   run: chmod +x ./gradlew
 
+      
+      - name: Write jks to file
+        run: |
+           echo ${{ secrets.ANDROID_SIGNING_KEY }} | base64 --decode > ./keystore.jks
+
+
       - name: Generate Signed APK
         uses: TeamNecta/build-signed-apk@v2.1
         with:
-          keystore_b64: ${{ secrets.ANDROID_SIGNING_KEY }}
+          keystore_file: ./keystore.jks
           keystore_password: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
           key_alias: ${{ secrets.ANDROID_ALIAS }}
           key_password: ${{ secrets.ANDROID_KEY_PASSWORD }}
