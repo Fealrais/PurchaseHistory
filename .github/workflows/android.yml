@@ -16,28 +16,28 @@ jobs:
       - name: Check out Git repository # clone the repo to local ci workspace
         uses: actions/checkout@v2
 
-      - name: Set up our JDK environment # setup JDK environment: mandatory as we need to build  android project
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 17
+      # - name: Set up our JDK environment # setup JDK environment: mandatory as we need to build  android project
+      #   uses: actions/setup-java@v1.4.3
+      #   with:
+      #     java-version: 17
 
       ## configure cash for gradle : will help to reduce build time
-      - name: Cache Gradle Wrapper
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+      # - name: Cache Gradle Wrapper
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ~/.gradle/wrapper
+      #     key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
 
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-
+      # - name: Cache Gradle Dependencies
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ~/.gradle/caches
+      #     key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-gradle-caches-
 
-      - name: Make Gradlew Executable
-        run: chmod +x ./gradlew
+      # - name: Make Gradlew Executable
+      #   run: chmod +x ./gradlew
 
       - name: Generate Signed APK
         uses: TeamNecta/build-signed-apk@v2.1
@@ -46,6 +46,7 @@ jobs:
           keystore_password: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
           key_alias: ${{ secrets.ANDROID_ALIAS }}
           key_password: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
 
       - name: Create Release in GitHub
         uses: actions/create-release@v1
