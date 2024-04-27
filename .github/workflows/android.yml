@@ -7,7 +7,7 @@ on:
 jobs:
   android-build:
     name: Android Build And Deploy
-    runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
+    runs-on: ubuntu-22.03 # using ubuntu latest version / or you can use a specific version
     steps:
       - name: Get current date
         id: date
