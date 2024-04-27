@@ -39,21 +39,13 @@ jobs:
       - name: Make Gradlew Executable
         run: chmod +x ./gradlew
 
-      - name: Generate App APK
-        id: generate_apk
-        run: |
-          ./gradlew assembleRelease --no-daemon
-
-         ## sign generated apk
-      - name: Sign APK
-        id: sign_app
-        uses: r0adkll/sign-android-release@v1
+      - name: Generate Signed APK
+        uses: TeamNecta/build-signed-apk@v2.1
         with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
-          alias: ${{ secrets.ANDROID_ALIAS }}
-          keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          keystore_b64: ${{ secrets.ANDROID_SIGNING_KEY }}
+          keystore_password: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          key_alias: ${{ secrets.ANDROID_ALIAS }}
+          key_password: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
       - name: Create Release in GitHub
         uses: actions/create-release@v1
