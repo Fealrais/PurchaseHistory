@@ -21,6 +21,10 @@ jobs:
         with:
           java-version: 17
 
+
+      - name: Setup Android SDK 
+        uses: android-actions/setup-android@v3 
+
       # configure cash for gradle : will help to reduce build time
       - name: Cache Gradle Wrapper
         uses: actions/cache@v2
