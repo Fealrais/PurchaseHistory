@@ -16,43 +16,44 @@ jobs:
       - name: Check out Git repository # clone the repo to local ci workspace
         uses: actions/checkout@v2
 
-      # - name: Set up our JDK environment # setup JDK environment: mandatory as we need to build  android project
-      #   uses: actions/setup-java@v1.4.3
-      #   with:
-      #     java-version: 17
+      - name: Set up our JDK environment # setup JDK environment: mandatory as we need to build  android project
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 17
 
-      ## configure cash for gradle : will help to reduce build time
-      # - name: Cache Gradle Wrapper
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ~/.gradle/wrapper
-      #     key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+      # configure cash for gradle : will help to reduce build time
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
 
-      # - name: Cache Gradle Dependencies
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ~/.gradle/caches
-      #     key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-gradle-caches-
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
 
-      # - name: Make Gradlew Executable
-      #   run: chmod +x ./gradlew
+      - name: Make Gradlew Executable
+        run: chmod +x ./gradlew
 
       
-      - name: Write jks to file
+      - name: Generate App APK
+        id: generate_apk
         run: |
-           echo ${{ secrets.ANDROID_SIGNING_KEY }} | base64 --decode > ./keystore.jks
+          ./gradlew assembleRelease --no-daemon
 
 
-      - name: Generate Signed APK
-        uses: TeamNecta/build-signed-apk@v2.1
+      - name: Sign Android release
+        uses: r0adkll/sign-android-release@v1
         with:
-          keystore_file: ./keystore.jks
-          keystore_password: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-          key_alias: ${{ secrets.ANDROID_ALIAS }}
-          key_password: ${{ secrets.ANDROID_KEY_PASSWORD }}
-
+          releaseDirectory: ./app/build/outputs/apk/release
+          signingKeyBase64: ${{secrets.ANDROID_SIGNING_KEY}}
+          alias: ${{secrets.ANDROID_ALIAS}}
+          keyStorePassword: ${{secrets.ANDROID_KEY_STORE_PASSWORD}}
+          keyPassword: ${{secrets.ANDROID_KEY_PASSWORD}}
 
       - name: Create Release in GitHub
         uses: actions/create-release@v1
@@ -69,13 +70,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Fetch apk
-        id: fetch-apk
-        run: |
-          ls-la
-          apk_file_path=$(find . -name "app-release.apk")
-          echo "apk_path=$apk_file_path" >> $GITHUB_ENV
-
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
@@ -83,6 +77,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ${{ env.apk_path }}
+          asset_path: ${{steps.sign_app.outputs.signedReleaseFile}}
           asset_name: apk-release-v${{ env.version }}.apk
           asset_content_type: application/vnd.android.package-archive
