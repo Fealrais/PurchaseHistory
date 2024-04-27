@@ -59,14 +59,6 @@ jobs:
             # Latest android release of the application
             ## ${{ github.event.head_commit.message }}
             ### Date: ${{ env.date }}
-            ---
-            This is an automated release that triggers when there is a new commit in the master branch with an updated Application version.
-            Workflow file written by Angel Prodanov
-            
-            Required permissions: 
-            - Location tracking
-            - Activity tracking
-            - Notifications
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
