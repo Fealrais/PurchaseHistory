@@ -5,6 +5,7 @@ import android.widget.Toast;
 import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.web.interceptors.AuthInterceptor;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class HttpClient {
     public static String BACKEND_URL = "https://" + HOST_NAME + ":9000/api";
     protected final OkHttpClient client;
     protected final AuthInterceptor authInterceptor = new AuthInterceptor();
-    protected final Gson gson = new Gson();
+    protected final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSS").create();;
     private final String TAG = this.getClass().getSimpleName();
 
     public HttpClient() {

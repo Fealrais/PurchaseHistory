@@ -3,6 +3,7 @@ package com.example.purchasehistory;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 import androidx.lifecycle.MutableLiveData;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import dagger.hilt.android.HiltAndroidApp;
@@ -31,6 +32,12 @@ public class PurchaseHistoryApplication extends Application {
     private void initializeJWT() {
         SharedPreferences player = getContext().getSharedPreferences("player", MODE_PRIVATE);
         userToken.setValue(player.getString("jwt", null));
+    }
+
+    public void alert(String text) {
+        instance.getApplicationContext().getMainExecutor().execute(
+                () -> Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show());
+
     }
 
 }

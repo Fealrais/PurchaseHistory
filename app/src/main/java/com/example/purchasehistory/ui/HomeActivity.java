@@ -8,7 +8,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.databinding.ActivityHomeBinding;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
