@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main","ci-test" ]
 
-permissions: wriwrite-all
+permissions: write-all
 
 jobs:
   android-build:
