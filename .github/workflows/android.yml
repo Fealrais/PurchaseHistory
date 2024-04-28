@@ -4,6 +4,8 @@ on:
   push:
     branches: [ "main","ci-test" ]
 
+permissions: write-all
+
 jobs:
   android-build:
     name: Android Build And Deploy
@@ -21,9 +23,9 @@ jobs:
         with:
           java-version: 17
 
-
       - name: Setup Android SDK 
         uses: android-actions/setup-android@v3 
+        
       - name: Setup build tool version variable
         shell: bash
         run: |
@@ -57,6 +59,7 @@ jobs:
           ./gradlew assembleRelease --no-daemon
 
       - name: Sign Android release
+        id: sign_app
         uses: r0adkll/sign-android-release@v1
         with:
           releaseDirectory: ./app/build/outputs/apk/release
