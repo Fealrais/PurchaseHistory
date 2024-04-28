@@ -2,7 +2,7 @@ name: Android Build apk and Upload Release
 
 on:
   push:
-    branches: [ "main","ci-test" ]
+    branches: [ "main" ]
 
 permissions: write-all
 
@@ -59,6 +59,7 @@ jobs:
           ./gradlew assembleRelease --no-daemon
 
       - name: Sign Android release
+        id: sign_app
         uses: r0adkll/sign-android-release@v1
         with:
           releaseDirectory: ./app/build/outputs/apk/release
