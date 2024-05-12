@@ -66,13 +66,15 @@ dependencies {
 //  Hilt Dependency injection
     implementation("com.google.dagger:hilt-android:2.44.2")
     implementation("com.google.dagger:hilt-android-gradle-plugin:2.44.2")
-    implementation("org.projectlombok:lombok:1.18.28")
     implementation("androidx.activity:activity-compose:1.7.0")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+//  UI
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     annotationProcessor("com.google.dagger:hilt-compiler:2.44.2")
@@ -84,6 +86,7 @@ dependencies {
 
 //    Lombok
     //noinspection AnnotationProcessorOnCompilePath
+    implementation("org.projectlombok:lombok:1.18.28")
     annotationProcessor("org.projectlombok:lombok:1.18.32")
 
     testImplementation("junit:junit:4.13.2")

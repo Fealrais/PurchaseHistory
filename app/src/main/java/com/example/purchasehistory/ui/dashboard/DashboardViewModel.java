@@ -25,7 +25,7 @@ public class DashboardViewModel extends ViewModel {
         try {
             return purchaseClient.getAllPurchases();
         } catch (RuntimeException e) {
-            PurchaseHistoryApplication.getInstance().alert(e.getMessage());
+            PurchaseHistoryApplication.getInstance().alert("Error " + e.getMessage());
             return new ArrayList<>();
         }
     }

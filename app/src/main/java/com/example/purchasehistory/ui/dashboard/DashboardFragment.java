@@ -1,6 +1,7 @@
 package com.example.purchasehistory.ui.dashboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @AndroidEntryPoint
 public class DashboardFragment extends Fragment {
-
+    private final String TAG = this.getClass().getSimpleName();
     private FragmentDashboardBinding binding;
     private DashboardViewModel dashboardViewModel;
     @Inject
@@ -36,6 +37,16 @@ public class DashboardFragment extends Fragment {
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        binding.swiperefresh.setOnRefreshListener(() -> {
+
+            Log.i(TAG,"onRefresh called");
+            purchasesAdapter.getPurchaseViews().clear();
+            purchasesAdapter.notifyDataSetChanged();
+            List<PurchaseView> allPurchases = dashboardViewModel.getAllPurchases();
+            purchasesAdapter.getPurchaseViews().addAll(allPurchases);
+            purchasesAdapter.notifyDataSetChanged();
+            binding.swiperefresh.setRefreshing(false);
+        });
         initializePurchasesRecyclerView();
         return root;
     }

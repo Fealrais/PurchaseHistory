@@ -29,7 +29,7 @@ public class PurchaseClient extends HttpClient {
             if (res.isSuccessful() && body != null) {
                 String json = body.string();
                 Log.i("httpResponse", "Create Purchase: " + json);
-                return gson.fromJson(json, PurchaseView.class);
+                return gson.fromJson(json, PurchaseResponse.class).toPurchaseView();
             } else throw new IOException("Failed to initialize game");
         } catch (IOException ignored) {
         }

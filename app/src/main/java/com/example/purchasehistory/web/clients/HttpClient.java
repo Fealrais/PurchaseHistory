@@ -11,8 +11,8 @@ import okhttp3.*;
 import java.io.IOException;
 
 public class HttpClient {
-    public static String HOST_NAME = "185.240.147.108";
-    public static String BACKEND_URL = "https://" + HOST_NAME + ":9000/api";
+    public static String HOST_NAME = "https://angelp-home.duckdns.org";
+    public static String BACKEND_URL = HOST_NAME + ":9000/api";
     protected final OkHttpClient client;
     protected final AuthInterceptor authInterceptor = new AuthInterceptor();
     protected final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSS").create();;

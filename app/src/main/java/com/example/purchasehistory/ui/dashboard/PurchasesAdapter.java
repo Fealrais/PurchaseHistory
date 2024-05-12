@@ -9,12 +9,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.example.purchasehistory.R;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class PurchasesAdapter extends RecyclerView.Adapter<PurchasesViewHolder> {
     private DashboardViewModel dashboardViewModel;
+    @Getter
     private final List<PurchaseView> purchaseViews;
     private final FragmentActivity fragmentActivity;
 
