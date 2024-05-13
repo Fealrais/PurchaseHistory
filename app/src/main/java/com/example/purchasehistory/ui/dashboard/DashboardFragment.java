@@ -37,16 +37,7 @@ public class DashboardFragment extends Fragment {
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        binding.swiperefresh.setOnRefreshListener(() -> {
-
-            Log.i(TAG,"onRefresh called");
-            purchasesAdapter.getPurchaseViews().clear();
-            purchasesAdapter.notifyDataSetChanged();
-            List<PurchaseView> allPurchases = dashboardViewModel.getAllPurchases();
-            purchasesAdapter.getPurchaseViews().addAll(allPurchases);
-            purchasesAdapter.notifyDataSetChanged();
-            binding.swiperefresh.setRefreshing(false);
-        });
+        binding.swiperefresh.setOnRefreshListener(this::onSwipeRefresh);
         initializePurchasesRecyclerView();
         return root;
     }
@@ -69,5 +60,18 @@ public class DashboardFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void onSwipeRefresh() {
+        Log.i(TAG, "onRefresh called");
+        new Thread(() -> {
+            purchasesAdapter.getPurchaseViews().clear();
+            List<PurchaseView> allPurchases = dashboardViewModel.getAllPurchases();
+            Log.i(TAG, "Received purchases list with size of " + allPurchases.size());
+            purchasesAdapter.getPurchaseViews().addAll(allPurchases);
+            getActivity().runOnUiThread(() -> purchasesAdapter.notifyDataSetChanged());
+            Log.i(TAG, "Adapter notified");
+            binding.swiperefresh.setRefreshing(false);
+        }).start();
     }
 }
