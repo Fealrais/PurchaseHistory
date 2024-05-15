@@ -24,6 +24,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_qr">QRScannerActivity</string>
     <string name="title_activity_qrscanner">QRScanner</string>
+    <string name="title_activity_graph">Statistics</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="addPurchaseButton">Add purchase manually</string>
     <string name="qr_manual_add_title">Add a bill manually</string>
@@ -33,5 +34,16 @@
     <string name="time">Time</string>
     <string name="reset_text">Reset</string>
     <string name="qr_open_camera_button_hint">Open Camera for QR code</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="currency_zero">0.00</string>
+    <string name="edit_text">Edit</string>
+    <string name="add_button_text">Add</string>
+    <string name="create_category">New category</string>
+    <string name="cancel">Cancel</string>
+    <string name="name">Name</string>
+    <string name="color">Color</string>
+    <string name="category_color">Category Color</string>
+    <string name="category_name">Category Name</string>
 
 </resources>

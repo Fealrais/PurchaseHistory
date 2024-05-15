@@ -3,7 +3,7 @@ package com.example.purchasehistory.web.clients;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import com.angelp.purchasehistorybackend.models.views.incoming.UserVO;
+import com.angelp.purchasehistorybackend.models.views.incoming.UserDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.data.model.UsernamePassword;
@@ -71,7 +71,7 @@ public class AuthClient extends HttpClient {
 
     public Optional<UserView> register(String username, String password, String email) {
         UserView result = null;
-        try (Response res = post(BACKEND_URL + "/register", new UserVO(username, password, email))) {
+        try (Response res = post(BACKEND_URL + "/register", new UserDTO(username, password, email))) {
             if (res.isSuccessful() && res.body() != null) {
                 String json = res.body().string();
                 Log.i("httpResponse", "register: " + json);

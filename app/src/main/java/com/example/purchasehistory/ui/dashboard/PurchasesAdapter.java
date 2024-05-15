@@ -19,6 +19,8 @@ public class PurchasesAdapter extends RecyclerView.Adapter<PurchasesViewHolder> 
     @Getter
     private final List<PurchaseView> purchaseViews;
     private final FragmentActivity fragmentActivity;
+    private PurchaseEditDialog editDialog;
+
 
     public PurchasesAdapter(List<PurchaseView> purchaseViews, FragmentActivity fragmentActivity) {
         this.purchaseViews = purchaseViews;
@@ -38,13 +40,18 @@ public class PurchasesAdapter extends RecyclerView.Adapter<PurchasesViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull @NotNull PurchasesViewHolder holder, int position) {
         PurchaseView purchaseView = purchaseViews.get(position);
-
+        editDialog = new PurchaseEditDialog();
         if (purchaseView.getCreatedDate() != null)
-            holder.getBinding().purchaseCreatedDate.setText(String.format("Created: %s",purchaseView.getCreatedDate()));
+            holder.getBinding().purchaseCreatedDate.setText(String.format("Created: %s", purchaseView.getCreatedDate()));
         if (purchaseView.getPrice() != null)
             holder.getBinding().purchasePriceText.setText(String.format(purchaseView.getPrice().toString()));
         if (purchaseView.getTimestamp() != null)
             holder.getBinding().purchaseTimeText.setText(purchaseView.getTimestamp().toString());
+//        if (purchaseView.getTimestamp() != null)
+//            holder.getBinding().purchaseEditButton.setOnClickListener((v) -> {
+//                editDialog.setPurchase(purchaseView);
+//                editDialog.show(editDialog.getParentFragmentManager(), "editDialog" + purchaseView.getBillId());
+//            });
     }
 
 

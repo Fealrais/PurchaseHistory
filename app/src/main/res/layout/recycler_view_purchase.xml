@@ -8,26 +8,37 @@
         android:id="@+id/purchaseCreatedDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="145dp"
-        app:layout_constraintEnd_toStartOf="@+id/purchasePriceText"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/purchasePriceText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:padding="1dp"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toStartOf="@+id/purchaseTimeText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/purchaseCreatedDate"
+        app:layout_constraintTop_toTopOf="@+id/purchaseCreatedDate" />
 
     <TextView
         android:id="@+id/purchaseTimeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:padding="1dp"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/purchasePriceText"
+        app:layout_constraintTop_toTopOf="@+id/purchasePriceText" />
+    <!--
+        <Button
+            android:id="@+id/purchase_edit_button"
+            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="10dp"
+            android:padding="1dp"
+            android:text="@string/edit_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

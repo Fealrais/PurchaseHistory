@@ -10,56 +10,62 @@
         android:id="@+id/qr_manualAddLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="@string/qr_manual_add_title"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/qr_priceInput"
-        android:layout_width="187dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="10dp"
         android:autofillHints="The total cost of the bill"
         android:ems="10"
         android:hint="@string/price"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
+        android:text="@string/currency_zero"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qr_manualAddLabel" />
 
-    <EditText
+    <Button
         android:id="@+id/qr_timeInput"
-        android:layout_width="197dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:autofillHints=""
         android:ems="10"
-        android:inputType="time"
         android:hint="@string/time"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintEnd_toEndOf="@+id/qr_priceInput"
         app:layout_constraintStart_toEndOf="@+id/qr_dateInput"
-        app:layout_constraintTop_toTopOf="@+id/qr_dateInput"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="@+id/qr_dateInput" />
 
-    <EditText
+    <Button
         android:id="@+id/qr_dateInput"
-        android:layout_width="187dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="28dp"
-        android:hint="@string/date"
+        android:layout_marginTop="12dp"
+        android:autofillHints=""
         android:ems="10"
-        android:inputType="date"
+        android:hint="@string/date"
+        app:layout_constraintEnd_toStartOf="@+id/qr_timeInput"
         app:layout_constraintStart_toStartOf="@+id/qr_priceInput"
-        app:layout_constraintTop_toBottomOf="@+id/qr_priceInput"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/qr_priceInput" />
 
     <Spinner
         android:id="@+id/qr_categorySpinner"
-        android:layout_width="385dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/qr_categoryAddButton"
         app:layout_constraintStart_toStartOf="@+id/qr_dateInput"
         app:layout_constraintTop_toBottomOf="@+id/qr_dateInput" />
 
@@ -74,12 +80,12 @@
         app:layout_constraintTop_toBottomOf="@+id/qr_categorySpinner" />
 
     <Button
-        android:text="@string/reset_text"
         android:id="@+id/qr_clearButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
+        android:text="@string/reset_text"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/qr_submitButton"
         app:layout_constraintTop_toTopOf="@+id/qr_submitButton" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -93,4 +99,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="@string/qr_open_camera_button_hint" />
+
+    <Button
+        android:id="@+id/qr_categoryAddButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/add_button_text"
+        app:layout_constraintEnd_toEndOf="@+id/qr_timeInput"
+        app:layout_constraintStart_toEndOf="@+id/qr_categorySpinner"
+        app:layout_constraintTop_toTopOf="@+id/qr_categorySpinner" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.example.purchasehistory.data.model;
 
+import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import lombok.AllArgsConstructor;
@@ -27,16 +28,19 @@ public class PurchaseResponse {
     private UserView lastModifiedBy;
     private String lastModifiedDate;
 
+    private CategoryView categoryView;
+
     public PurchaseView toPurchaseView() {
         return new PurchaseView(
                 qrContent,
                 price,
-                timestamp== null? null: LocalDateTime.parse(timestamp),
+                timestamp == null ? null : LocalDateTime.parse(timestamp),
                 billId,
                 storeId,
+                categoryView,
                 createdBy,
-                createdDate== null? null:LocalDateTime.parse(createdDate),
+                createdDate == null ? null : LocalDateTime.parse(createdDate),
                 lastModifiedBy,
-                lastModifiedDate== null? null:LocalDateTime.parse(lastModifiedDate));
+                lastModifiedDate == null ? null : LocalDateTime.parse(lastModifiedDate));
     }
 }
