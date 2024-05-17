@@ -18,12 +18,48 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/qr_billLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="@string/qr_bill_id_text"
+        app:layout_constraintEnd_toStartOf="@+id/qr_billIdValue"
+        app:layout_constraintTop_toTopOf="@+id/qr_storeLabel" />
+
+    <TextView
+        android:id="@+id/qr_billIdValue"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/qr_billLabel" />
+
+    <TextView
+        android:id="@+id/qr_storeLabel"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/qr_terminal_id_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qr_manualAddLabel" />
+
+    <TextView
+        android:id="@+id/qr_storeIdValue"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/qr_storeLabel"
+        app:layout_constraintTop_toTopOf="@+id/qr_storeLabel" />
+
     <EditText
         android:id="@+id/qr_priceInput"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:autofillHints="The total cost of the bill"
         android:ems="10"
@@ -32,8 +68,9 @@
         android:minHeight="48dp"
         android:text="@string/currency_zero"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qr_manualAddLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/qr_storeLabel" />
 
     <Button
         android:id="@+id/qr_timeInput"
@@ -109,4 +146,5 @@
         app:layout_constraintEnd_toEndOf="@+id/qr_timeInput"
         app:layout_constraintStart_toEndOf="@+id/qr_categorySpinner"
         app:layout_constraintTop_toTopOf="@+id/qr_categorySpinner" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

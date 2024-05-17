@@ -45,5 +45,10 @@
     <string name="color">Color</string>
     <string name="category_color">Category Color</string>
     <string name="category_name">Category Name</string>
+    <string name="terminal_id_text">Terminal ID:</string>
+    <string name="bill_id_text">Bill ID:</string>
+    <string name="qr_terminal_id_text">Terminal ID:</string>
+    <string name="qr_bill_id_text">Bill ID:</string>
+    <string name="accordionToggleText">Toggle accordion</string>
 
 </resources>

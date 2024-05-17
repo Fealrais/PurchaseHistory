@@ -28,7 +28,7 @@ public class PurchaseResponse {
     private UserView lastModifiedBy;
     private String lastModifiedDate;
 
-    private CategoryView categoryView;
+    private CategoryView category;
 
     public PurchaseView toPurchaseView() {
         return new PurchaseView(
@@ -37,7 +37,7 @@ public class PurchaseResponse {
                 timestamp == null ? null : LocalDateTime.parse(timestamp),
                 billId,
                 storeId,
-                categoryView,
+                category,
                 createdBy,
                 createdDate == null ? null : LocalDateTime.parse(createdDate),
                 lastModifiedBy,

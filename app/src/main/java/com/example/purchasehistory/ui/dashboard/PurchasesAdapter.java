@@ -1,5 +1,6 @@
 package com.example.purchasehistory.ui.dashboard;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.example.purchasehistory.R;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class PurchasesAdapter extends RecyclerView.Adapter<PurchasesViewHolder> {
@@ -20,6 +22,8 @@ public class PurchasesAdapter extends RecyclerView.Adapter<PurchasesViewHolder> 
     private final List<PurchaseView> purchaseViews;
     private final FragmentActivity fragmentActivity;
     private PurchaseEditDialog editDialog;
+    private final DateTimeFormatter readableFormatter = DateTimeFormatter.ofPattern("dd.MM.yy hh:mm:ss");
+
 
 
     public PurchasesAdapter(List<PurchaseView> purchaseViews, FragmentActivity fragmentActivity) {
@@ -41,12 +45,16 @@ public class PurchasesAdapter extends RecyclerView.Adapter<PurchasesViewHolder> 
     public void onBindViewHolder(@NonNull @NotNull PurchasesViewHolder holder, int position) {
         PurchaseView purchaseView = purchaseViews.get(position);
         editDialog = new PurchaseEditDialog();
-        if (purchaseView.getCreatedDate() != null)
-            holder.getBinding().purchaseCreatedDate.setText(String.format("Created: %s", purchaseView.getCreatedDate()));
+        if (purchaseView.getCreatedDate() != null) {
+            holder.getBinding().purchaseCreatedDate.setText(purchaseView.getCreatedDate().format(readableFormatter));
+        }
         if (purchaseView.getPrice() != null)
             holder.getBinding().purchasePriceText.setText(String.format(purchaseView.getPrice().toString()));
         if (purchaseView.getTimestamp() != null)
-            holder.getBinding().purchaseTimeText.setText(purchaseView.getTimestamp().toString());
+            holder.getBinding().purchaseTimeText.setText(purchaseView.getTimestamp().format(readableFormatter));
+        if (purchaseView.getCategory() != null)
+            holder.getBinding().bgImage.setColorFilter(Color.parseColor(purchaseView.getCategory().getColor().toUpperCase()));
+        else holder.getBinding().bgImage.clearColorFilter();
 //        if (purchaseView.getTimestamp() != null)
 //            holder.getBinding().purchaseEditButton.setOnClickListener((v) -> {
 //                editDialog.setPurchase(purchaseView);
