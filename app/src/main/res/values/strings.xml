@@ -50,5 +50,6 @@
     <string name="qr_terminal_id_text">Terminal ID:</string>
     <string name="qr_bill_id_text">Bill ID:</string>
     <string name="accordionToggleText">Toggle accordion</string>
+    <string name="lorem">Lorem ipsum</string>
 
 </resources>
