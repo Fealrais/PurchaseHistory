@@ -17,7 +17,9 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.databinding.ActivityRegisterBinding;
 import com.example.purchasehistory.util.AfterTextChangedWatcher;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class RegisterActivity extends AppCompatActivity {
 
     private RegisterViewModel registerViewModel;

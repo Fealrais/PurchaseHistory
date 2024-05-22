@@ -71,7 +71,11 @@ public class GraphFragment extends Fragment {
                         })
                         .collect(Collectors.toList());
                 Log.i(TAG, "initLineGraph: series calculated");
-                histogramSeries.setData(collect);
+                try{
+                    histogramSeries.setData(collect);
+                }catch(IllegalStateException e){
+                    Log.e(TAG, "initLineGraph: "+e.getMessage());
+                }
             }).start();
             return Unit.INSTANCE;
         });

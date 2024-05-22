@@ -8,16 +8,21 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.data.model.LoginResult;
 import com.example.purchasehistory.web.clients.AuthClient;
+import dagger.hilt.android.lifecycle.HiltViewModel;
 
 import javax.inject.Inject;
 import java.util.Optional;
 
+@HiltViewModel
 public class RegisterViewModel extends ViewModel {
 
     private final MutableLiveData<RegisterFormState> registerFormState = new MutableLiveData<>();
     private final MutableLiveData<LoginResult> registerResult = new MutableLiveData<>();
-    @Inject
     AuthClient authClient;
+    @Inject
+    public RegisterViewModel(AuthClient authClient) {
+        this.authClient = authClient;
+    }
 
     LiveData<RegisterFormState> getRegisterFormState() {
         return registerFormState;

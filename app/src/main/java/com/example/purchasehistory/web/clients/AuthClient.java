@@ -63,14 +63,22 @@ public class AuthClient extends HttpClient {
     }
 
     public void logout() {
-        SharedPreferences player = PurchaseHistoryApplication.getContext().getSharedPreferences("player", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = player.edit();
-        editor.clear(); //clear all stored data
-        editor.apply();
+        try (Response res = postFormData(BACKEND_URL + "/logout", new UsernamePassword("","").getRequestBody())) {
+            if(res.isSuccessful())
+                Log.i("Response logout", "Successfully logged out");
+            else
+                Log.i("Response logout", "Could not log out");
+
+            SharedPreferences player = PurchaseHistoryApplication.getContext().getSharedPreferences("player", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = player.edit();
+            editor.clear(); //clear all stored data
+            editor.apply();
+        } catch (IOException ignored) {
+        }
+
     }
 
     public Optional<UserView> register(String username, String password, String email) {
-        UserView result = null;
         try (Response res = post(BACKEND_URL + "/register", new UserDTO(username, password, email))) {
             if (res.isSuccessful() && res.body() != null) {
                 String json = res.body().string();
@@ -80,6 +88,6 @@ public class AuthClient extends HttpClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return Optional.ofNullable(result);
+        return Optional.empty();
     }
 }

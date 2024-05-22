@@ -22,11 +22,14 @@
         android:theme="@style/Theme.PurchaseHistory"
         tools:targetApi="34">
         <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.qr.CaptureActivityPortrait"
+            android:exported="false"
             android:screenOrientation="sensorPortrait"
             android:stateNotNeeded="true"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:exported="false" />
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".ui.HomeActivity"
             android:exported="false"

@@ -75,6 +75,7 @@ dependencies {
 //  UI
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
     implementation("com.tradingview:lightweightcharts:3.8.0")
+    implementation("androidx.preference:preference:1.2.1")
 
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")

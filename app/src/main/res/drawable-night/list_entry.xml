@@ -6,8 +6,8 @@
             <solid android:color="@color/white" android:alpha="50" />
             <stroke
                 android:width="1dp"
-                android:alpha="30"
-                android:color="@color/black" />
+                android:alpha="90"
+                android:color="@color/white" />
         </shape>
     </item>
 </selector>
