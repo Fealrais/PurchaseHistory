@@ -105,11 +105,11 @@ public class QrScannerFragment extends Fragment {
         binding.qrPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                PurchaseDTO value = qrScannerViewModel.getPurchaseDTO().getValue() == null ? new PurchaseDTO() : qrScannerViewModel.getPurchaseDTO().getValue();
+                PurchaseDTO value = new PurchaseDTO();
                 String str = binding.qrPriceInput.getText().toString();
                 if (str.trim().isEmpty()) value.setPrice(new BigDecimal(BigInteger.ZERO));
                 else value.setPrice(new BigDecimal(str));
-                qrScannerViewModel.getPurchaseDTO().postValue(value);
+                qrScannerViewModel.updatePurchaseDTO(value);
             }
         });
         binding.qrTimeInput.setOnClickListener((v) -> timePicker.show(getParentFragmentManager(), "timePicker"));
@@ -119,20 +119,19 @@ public class QrScannerFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 CategoryView categoryView = allCategories.get(position);
-                PurchaseDTO value = qrScannerViewModel.getPurchaseDTO().getValue() == null ? new PurchaseDTO() : qrScannerViewModel.getPurchaseDTO().getValue();
+                PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
                 value.setCategoryId(categoryView.getId());
-                qrScannerViewModel.getPurchaseDTO().postValue(value);
+                qrScannerViewModel.updatePurchaseDTO(value);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                PurchaseDTO value = qrScannerViewModel.getPurchaseDTO().getValue() == null ? new PurchaseDTO() : qrScannerViewModel.getPurchaseDTO().getValue();
+                PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
                 value.setCategoryId(null);
                 qrScannerViewModel.getPurchaseDTO().postValue(value);
-
             }
         });
-        qrScannerViewModel.getPurchaseDTO().observe(getViewLifecycleOwner(), (dto)->{
+        qrScannerViewModel.getPurchaseDTO().observe(getViewLifecycleOwner(), (dto) -> {
             String storeId = dto.getStoreId() == null ? "-" : dto.getStoreId();
             binding.qrStoreIdValue.setText(storeId);
             String billId = dto.getBillId() == null ? "-" : dto.getBillId();
@@ -170,7 +169,7 @@ public class QrScannerFragment extends Fragment {
 
     private void initQRForm() {
         binding.qrFloatingQrButton.setOnClickListener((view) -> initQRCodeScanner());
-        binding.qrClearButton.setOnClickListener(this::resetForm);
+        binding.qrClearButton.setOnClickListener(v -> resetForm());
         binding.qrSubmitButton.setOnClickListener((view) -> {
             Log.i(TAG, "Submit is WIP");
             onSubmit(qrScannerViewModel.getPurchaseDTO().getValue());
@@ -178,7 +177,7 @@ public class QrScannerFragment extends Fragment {
 
     }
 
-    private void resetForm(View view) {
+    private void resetForm() {
         qrScannerViewModel.getPurchaseDTO().setValue(new PurchaseDTO());
         binding.qrCategorySpinner.setSelection(0);
         binding.qrPriceInput.getText().clear();
@@ -203,9 +202,10 @@ public class QrScannerFragment extends Fragment {
     private void onSubmit(PurchaseDTO data) {
         new Thread(() -> {
             PurchaseView purchaseView = qrScannerViewModel.createPurchaseView(data);
-            if (purchaseView != null)
+            if (purchaseView != null) {
                 PurchaseHistoryApplication.getInstance().alert("Created purchase #" + purchaseView.getBillId() + ". Cost:" + purchaseView.getPrice());
-            else
+                resetForm();
+            } else
                 PurchaseHistoryApplication.getInstance().alert("Failed to register purchase #");
         }).start();
     }

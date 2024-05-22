@@ -66,5 +66,8 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="settings_button_text">Settings</string>
     <string name="logout">Logout</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="purchaseEdit_update_purchase_title">Update purchase #</string>
 
 </resources>

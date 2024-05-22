@@ -75,7 +75,7 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (body != null) {
                 String json = body.string();
-                Log.i("httpResponse", "Get all purchases: " + json);
+                Log.i("httpResponse", "Get all categories: " + json);
                 if (res.isSuccessful())
                     return Arrays.stream(gson.fromJson(json, CategoryView[].class)).collect(Collectors.toList());
                 else {

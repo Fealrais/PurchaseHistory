@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class PurchaseResponse {
+    private Long id;
     private String qrContent;
     private BigDecimal price;
     private String timestamp;
@@ -32,6 +33,7 @@ public class PurchaseResponse {
 
     public PurchaseView toPurchaseView() {
         return new PurchaseView(
+                id,
                 qrContent,
                 price,
                 timestamp == null ? null : LocalDateTime.parse(timestamp),

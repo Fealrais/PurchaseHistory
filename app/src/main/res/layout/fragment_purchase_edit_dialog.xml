@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="350dp">
+
+
+    <TextView
+        android:id="@+id/purchaseEdit_update_purchase_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/purchaseEdit_update_purchase_title"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/purchaseEdit_billLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="@string/qr_bill_id_text"
+        app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_billIdValue"
+        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_storeLabel" />
+
+    <TextView
+        android:id="@+id/purchaseEdit_billIdValue"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_billLabel" />
+
+    <TextView
+        android:id="@+id/purchaseEdit_storeLabel"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/qr_terminal_id_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_update_purchase_text" />
+
+    <TextView
+        android:id="@+id/purchaseEdit_storeIdValue"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/purchaseEdit_storeLabel"
+        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_storeLabel" />
+
+    <EditText
+        android:id="@+id/purchaseEdit_priceInput"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:autofillHints="The total cost of the bill"
+        android:ems="10"
+        android:hint="@string/price"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        android:text="@string/currency_zero"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_storeLabel" />
+
+    <Button
+        android:id="@+id/purchaseEdit_timeInput"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/time"
+        app:layout_constraintEnd_toEndOf="@+id/purchaseEdit_priceInput"
+        app:layout_constraintStart_toEndOf="@+id/purchaseEdit_dateInput"
+        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_dateInput" />
+
+    <Button
+        android:id="@+id/purchaseEdit_dateInput"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/date"
+        app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_timeInput"
+        app:layout_constraintStart_toStartOf="@+id/purchaseEdit_priceInput"
+        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_priceInput" />
+
+    <Spinner
+        android:id="@+id/purchaseEdit_categorySpinner"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_categoryAddButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_dateInput" />
+
+    <Button
+        android:id="@+id/purchaseEdit_categoryAddButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/add_button_text"
+        app:layout_constraintEnd_toEndOf="@+id/purchaseEdit_timeInput"
+        app:layout_constraintStart_toEndOf="@+id/purchaseEdit_categorySpinner"
+        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_categorySpinner" />
+    <ImageButton
+        android:id="@+id/purchaseEdit_deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/danger"
+
+        android:contentDescription="@string/delete"
+        android:padding="10dp"
+        android:src="@drawable/baseline_delete_24"
+        app:layout_constraintBottom_toBottomOf="@+id/purchaseEdit_clearButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/purchaseEdit_clearButton"
+        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_clearButton" />
+
+    <Button
+        android:id="@+id/purchaseEdit_saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/save"
+        app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_clearButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_categorySpinner" />
+
+    <Button
+        android:id="@+id/purchaseEdit_clearButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_text"
+        app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_deleteButton"
+        app:layout_constraintStart_toEndOf="@+id/purchaseEdit_saveButton"
+        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_saveButton" />
+</androidx.constraintlayout.widget.ConstraintLayout>

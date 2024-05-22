@@ -62,7 +62,7 @@ public class AuthClient extends HttpClient {
         return Optional.ofNullable(result);
     }
 
-    public void logout() {
+    public boolean logout() {
         try (Response res = postFormData(BACKEND_URL + "/logout", new UsernamePassword("","").getRequestBody())) {
             if(res.isSuccessful())
                 Log.i("Response logout", "Successfully logged out");
@@ -73,9 +73,10 @@ public class AuthClient extends HttpClient {
             SharedPreferences.Editor editor = player.edit();
             editor.clear(); //clear all stored data
             editor.apply();
+            return true;
         } catch (IOException ignored) {
         }
-
+        return false;
     }
 
     public Optional<UserView> register(String username, String password, String email) {

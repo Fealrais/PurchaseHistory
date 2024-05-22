@@ -68,9 +68,11 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (itemId == R.id.menu_item_logout) {
             new Thread(() -> {
-                authClient.logout();
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                boolean logout = authClient.logout();
+                if (logout) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                }
             }).start();
         }
         return false;
