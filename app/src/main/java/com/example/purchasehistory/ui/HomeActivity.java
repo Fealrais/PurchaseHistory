@@ -16,14 +16,18 @@ import com.example.purchasehistory.databinding.ActivityHomeBinding;
 import com.example.purchasehistory.ui.login.LoginActivity;
 import com.example.purchasehistory.ui.settings.SettingsActivity;
 import com.example.purchasehistory.web.clients.AuthClient;
+import com.example.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
 
 @AndroidEntryPoint
 public class HomeActivity extends AppCompatActivity {
+    private static final int CREATE_FILE = 1;
     @Inject
     AuthClient authClient;
+    @Inject
+    PurchaseClient purchaseClient;
     private ActivityHomeBinding binding;
 
     @Override
@@ -73,6 +77,11 @@ public class HomeActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, LoginActivity.class);
                     startActivity(intent);
                 }
+            }).start();
+        } else if (itemId == R.id.menu_item_export_csv) {
+            new Thread(() -> {
+                Intent exportedCsvIntent = purchaseClient.getExportedCsv();
+                startActivityForResult(exportedCsvIntent, CREATE_FILE);
             }).start();
         }
         return false;

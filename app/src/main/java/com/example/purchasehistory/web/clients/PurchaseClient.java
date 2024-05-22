@@ -1,5 +1,8 @@
 package com.example.purchasehistory.web.clients;
 
+import android.content.Intent;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import com.angelp.purchasehistorybackend.models.views.incoming.CategoryDTO;
 import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
@@ -39,7 +42,7 @@ public class PurchaseClient extends HttpClient {
     }
 
     public PurchaseView editPurchase(PurchaseDTO purchaseDTO, Long id) {
-        try (Response res = put(BACKEND_URL + "/purchase/"+id, purchaseDTO)) {
+        try (Response res = put(BACKEND_URL + "/purchase/" + id, purchaseDTO)) {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
                 String json = body.string();
@@ -102,4 +105,27 @@ public class PurchaseClient extends HttpClient {
         return null;
     }
 
+    public Intent getExportedCsv() {
+        try (Response res = get(BACKEND_URL + "/purchase/export")) {
+            ResponseBody body = res.body();
+            if (res.isSuccessful() && body != null) {
+                String header = res.header("Content-Disposition");
+                return createFile(body.bytes(), header == null ? "unknown" : header.substring(header.indexOf("=")));
+            } else throw new IOException("Failed to initialize game");
+        } catch (IOException ignored) {
+        }
+        return null;
+    }
+
+    private Intent createFile(byte[] bytes, String name) {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/csv");
+        intent.putExtra(Intent.EXTRA_TITLE, "invoice.pdf");
+
+        // Optionally, specify a URI for the directory that should be opened in
+        // the system file picker when your app creates the document.
+        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+        return intent;
+    }
 }
