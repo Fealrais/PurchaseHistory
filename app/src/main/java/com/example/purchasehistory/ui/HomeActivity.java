@@ -72,11 +72,10 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (itemId == R.id.menu_item_logout) {
             new Thread(() -> {
-                boolean logout = authClient.logout();
-                if (logout) {
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
-                }
+                authClient.logout();
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+                startActivity(intent);
             }).start();
         } else if (itemId == R.id.menu_item_export_csv) {
             new Thread(() -> {

@@ -14,7 +14,7 @@ android {
         versionCode = 2
         versionName = "2.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.purchasehistory.setup.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -92,6 +92,10 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.32")
 
     testImplementation("junit:junit:4.13.2")
+    testImplementation("com.google.dagger:hilt-android-testing:2.44")
+    testAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+    androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     debugImplementation("androidx.compose.ui:ui-tooling")
