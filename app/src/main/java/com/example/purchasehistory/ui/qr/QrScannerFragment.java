@@ -42,6 +42,7 @@ public class QrScannerFragment extends Fragment {
     private static final String TAG = "QRCodeFragment";
     private static final String ScanResultExtra = "SCAN_RESULT";
     private QrScannerViewModel qrScannerViewModel;
+    private FragmentQrBinding binding;
     private final ActivityResultLauncher<Intent> getQRResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -57,8 +58,6 @@ public class QrScannerFragment extends Fragment {
                     }
                 }
             });
-
-
     private final ActivityResultLauncher<String> requestPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), (isGranted) -> {
         if (isGranted) {
             initQRCodeScanner();
@@ -66,7 +65,6 @@ public class QrScannerFragment extends Fragment {
             PurchaseHistoryApplication.getInstance().getApplicationContext().getMainExecutor().execute(() -> Toast.makeText(getContext(), "The application cannot function without this", Toast.LENGTH_SHORT).show());
         }
     });
-    private FragmentQrBinding binding;
     private List<CategoryView> allCategories;
     private TimePickerFragment timePicker;
     private DatePickerFragment datePicker;
@@ -79,15 +77,10 @@ public class QrScannerFragment extends Fragment {
         Log.i(TAG, "onCreateView: View created");
 
         qrScannerViewModel = new ViewModelProvider(this).get(QrScannerViewModel.class);
-        openCameraFlow(inflater);
         binding = FragmentQrBinding.inflate(inflater, container, false);
-        initQRForm();
-        timePicker = new TimePickerFragment();
-        datePicker = new DatePickerFragment();
-        categoryDialog = new CreateCategoryDialog();
-        getChildFragmentManager().setFragmentResultListener("categoryDialogKey", getViewLifecycleOwner(), (requestKey, result) -> {
-            CategoryView newCategoryView;
-            newCategoryView = (CategoryView) result.getSerializable("newCategoryView");
+        initQRForm(inflater);
+        getChildFragmentManager().setFragmentResultListener("categoryResult", getViewLifecycleOwner(), (requestKey, result) -> {
+            CategoryView newCategoryView = result.getParcelable("newCategoryView");
             if (newCategoryView != null) categoryAdapter.add(newCategoryView);
         });
 
@@ -167,8 +160,11 @@ public class QrScannerFragment extends Fragment {
         }
     }
 
-    private void initQRForm() {
-        binding.qrFloatingQrButton.setOnClickListener((view) -> initQRCodeScanner());
+    private void initQRForm(LayoutInflater inflater) {
+        timePicker = new TimePickerFragment();
+        datePicker = new DatePickerFragment();
+        categoryDialog = new CreateCategoryDialog();
+        binding.qrFloatingQrButton.setOnClickListener((view) -> openCameraFlow(inflater));
         binding.qrClearButton.setOnClickListener(v -> resetForm());
         binding.qrSubmitButton.setOnClickListener((view) -> {
             Log.i(TAG, "Submit is WIP");
@@ -178,7 +174,7 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void resetForm() {
-        qrScannerViewModel.getPurchaseDTO().setValue(new PurchaseDTO());
+        qrScannerViewModel.getPurchaseDTO().postValue(new PurchaseDTO());
         binding.qrCategorySpinner.setSelection(0);
         binding.qrPriceInput.getText().clear();
         binding.qrDateInput.setText(R.string.date);

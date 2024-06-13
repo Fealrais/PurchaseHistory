@@ -1,13 +1,16 @@
 package com.example.purchasehistory.web.clients;
 
-import android.content.Intent;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Environment;
-import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import com.angelp.purchasehistorybackend.models.views.incoming.CategoryDTO;
 import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
+import com.example.purchasehistory.PurchaseHistoryApplication;
+import com.example.purchasehistory.data.model.Category;
 import com.example.purchasehistory.data.model.PurchaseResponse;
 import com.google.gson.JsonParseException;
 import okhttp3.Response;
@@ -16,6 +19,7 @@ import okhttp3.ResponseBody;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,40 +96,51 @@ public class PurchaseClient extends HttpClient {
         return null;
     }
 
-    public CategoryView createCategory(CategoryDTO categoryDTO) {
+    public Category createCategory(CategoryDTO categoryDTO) {
         try (Response res = post(BACKEND_URL + "/category", categoryDTO)) {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
                 String json = body.string();
                 Log.i("httpResponse", "Create Purchase: " + json);
-                return gson.fromJson(json, CategoryView.class);
+                return gson.fromJson(json, Category.class);
             } else throw new IOException("Failed to initialize game");
         } catch (IOException ignored) {
         }
         return null;
     }
 
-    public Intent getExportedCsv() {
+    public Uri getExportedCsv() {
         try (Response res = get(BACKEND_URL + "/purchase/export")) {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
                 String header = res.header("Content-Disposition");
-                return createFile(body.bytes(), header == null ? "unknown" : header.substring(header.indexOf("=")));
-            } else throw new IOException("Failed to initialize game");
-        } catch (IOException ignored) {
+                String filename = header == null ? "unknown" : header.substring(header.indexOf("=") + 1);
+                return createFile(filename, body.bytes());
+            } else throw new IOException("Could not download file");
+        } catch (IOException e) {
+            Log.e(TAG, "getExportedCsv: " + e.getMessage());
         }
         return null;
     }
 
-    private Intent createFile(byte[] bytes, String name) {
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("text/csv");
-        intent.putExtra(Intent.EXTRA_TITLE, "invoice.pdf");
+    private Uri createFile(String name, byte[] bytes) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Downloads.DISPLAY_NAME, name);
+        contentValues.put(MediaStore.Downloads.MIME_TYPE, "text/csv");
+        contentValues.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
 
-        // Optionally, specify a URI for the directory that should be opened in
-        // the system file picker when your app creates the document.
-        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
-        return intent;
+        Uri uri = PurchaseHistoryApplication.getContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+
+        if (uri != null) {
+            try (OutputStream outputStream = PurchaseHistoryApplication.getContext().getContentResolver().openOutputStream(uri)) {
+                if (outputStream != null) {
+                    outputStream.write(bytes);
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "createFile: " + e.getMessage());
+            }
+        }
+        return uri;
     }
+
 }

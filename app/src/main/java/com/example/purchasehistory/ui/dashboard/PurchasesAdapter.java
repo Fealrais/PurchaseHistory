@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
+import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.R;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -21,13 +21,11 @@ import java.util.List;
 import static com.example.purchasehistory.data.Constants.PURCHASE_EDIT_DIALOG_ID_KEY;
 
 public class PurchasesAdapter extends RecyclerView.Adapter<PurchasesViewHolder> {
-    private DashboardViewModel dashboardViewModel;
     @Getter
     private final List<PurchaseView> purchaseViews;
     private final FragmentActivity fragmentActivity;
-    private PurchaseEditDialog editDialog;
     private final DateTimeFormatter readableFormatter = DateTimeFormatter.ofPattern("dd.MM.yy hh:mm:ss");
-
+    private PurchaseEditDialog editDialog;
 
 
     public PurchasesAdapter(List<PurchaseView> purchaseViews, FragmentActivity fragmentActivity) {
@@ -41,7 +39,6 @@ public class PurchasesAdapter extends RecyclerView.Adapter<PurchasesViewHolder> 
     public PurchasesViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_purchase, parent, false);
-        dashboardViewModel = new ViewModelProvider(fragmentActivity).get(DashboardViewModel.class);
         return new PurchasesViewHolder(view);
     }
 
@@ -61,12 +58,15 @@ public class PurchasesAdapter extends RecyclerView.Adapter<PurchasesViewHolder> 
         else holder.getBinding().bgImage.clearColorFilter();
         if (purchaseView.getTimestamp() != null)
             holder.getBinding().purchaseEditButton.setOnClickListener((v) -> {
-                PurchaseDTO purchaseDTO = generatePurchaseDTO(purchaseView);
-                editDialog.setPurchase(purchaseDTO);
-                Bundle bundle = new Bundle();
-                bundle.putLong(PURCHASE_EDIT_DIALOG_ID_KEY,purchaseView.getId());
-                editDialog.setArguments(bundle);
-                editDialog.show(fragmentActivity.getSupportFragmentManager(), "editDialog" + purchaseView.getBillId());
+                if (purchaseView.getId() != null) {
+                    PurchaseDTO purchaseDTO = generatePurchaseDTO(purchaseView);
+                    editDialog.setPurchase(purchaseDTO);
+                    Bundle bundle = new Bundle();
+                    bundle.putLong(PURCHASE_EDIT_DIALOG_ID_KEY, purchaseView.getId());
+                    editDialog.setArguments(bundle);
+                    editDialog.show(fragmentActivity.getSupportFragmentManager(), "editDialog" + purchaseView.getBillId());
+                } else PurchaseHistoryApplication.getInstance().alert("Purchase does not have an id");
+
             });
     }
 
@@ -77,6 +77,7 @@ public class PurchasesAdapter extends RecyclerView.Adapter<PurchasesViewHolder> 
         purchaseDTO.setTimestamp(purchaseView.getTimestamp());
         purchaseDTO.setBillId(purchaseView.getBillId());
         purchaseDTO.setStoreId(purchaseView.getStoreId());
+        if (purchaseView.getCategory() != null) purchaseDTO.setCategoryId(purchaseView.getCategory().getId());
         return purchaseDTO;
     }
 

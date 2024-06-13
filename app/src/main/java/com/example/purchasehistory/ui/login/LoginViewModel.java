@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
+import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.data.model.LoginResult;
 import com.example.purchasehistory.web.clients.AuthClient;
@@ -39,6 +40,7 @@ public class LoginViewModel extends ViewModel {
 
             if (loggedUser.isPresent()) {
                 UserView userView = loggedUser.get();
+                PurchaseHistoryApplication.getInstance().loggedUser.postValue(userView);
                 loginResult.postValue(new LoginResult(userView));
             } else {
                 loginResult.postValue(new LoginResult(R.string.login_failed));

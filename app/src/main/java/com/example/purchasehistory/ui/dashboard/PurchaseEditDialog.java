@@ -18,6 +18,7 @@ import com.example.purchasehistory.components.form.CreateCategoryDialog;
 import com.example.purchasehistory.components.form.DatePickerFragment;
 import com.example.purchasehistory.components.form.TimePickerFragment;
 import com.example.purchasehistory.databinding.FragmentPurchaseEditDialogBinding;
+import com.example.purchasehistory.util.CommonUtils;
 import com.example.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.Getter;
@@ -25,6 +26,7 @@ import lombok.Setter;
 
 import javax.inject.Inject;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,15 +37,15 @@ import static com.example.purchasehistory.data.Constants.PURCHASE_EDIT_DIALOG_ID
 @AndroidEntryPoint
 public class PurchaseEditDialog extends DialogFragment {
 
+    @Inject
+    PurchaseClient purchaseClient;
     private PurchaseDTO purchase;
     private FragmentPurchaseEditDialogBinding binding;
     private TimePickerFragment timePicker;
     private DatePickerFragment datePicker;
     private CreateCategoryDialog categoryDialog;
     private ArrayAdapter<CategoryView> categoryAdapter;
-    private List<CategoryView> allCategories;
-    @Inject
-    PurchaseClient purchaseClient;
+    private List<CategoryView> allCategories = new ArrayList<>();
     private Long purchaseId;
 
 
@@ -55,9 +57,9 @@ public class PurchaseEditDialog extends DialogFragment {
         datePicker = new DatePickerFragment();
         categoryDialog = new CreateCategoryDialog();
 
-        getChildFragmentManager().setFragmentResultListener("categoryDialogKey", getViewLifecycleOwner(), (requestKey, result) -> {
+        getParentFragmentManager().setFragmentResultListener("categoryResult", getViewLifecycleOwner(), (requestKey, result) -> {
             CategoryView newCategoryView;
-            newCategoryView = (CategoryView) result.getSerializable("newCategoryView");
+            newCategoryView = result.getParcelable("newCategoryView");
             if (newCategoryView != null) categoryAdapter.add(newCategoryView);
         });
 
@@ -81,7 +83,12 @@ public class PurchaseEditDialog extends DialogFragment {
         new Thread(() -> {
             allCategories = purchaseClient.getAllCategories();
             categoryAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, allCategories);
-            getActivity().runOnUiThread(() -> binding.purchaseEditCategorySpinner.setAdapter(categoryAdapter));
+            getActivity().runOnUiThread(() -> {
+                binding.purchaseEditCategorySpinner.setAdapter(categoryAdapter);
+                int index = CommonUtils.findIndex(allCategories, (category) -> category.getId().equals(purchase.getCategoryId()));
+                if (index >= 0)
+                    binding.purchaseEditCategorySpinner.setSelection(index);
+            });
         }).start();
         binding.purchaseEditCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

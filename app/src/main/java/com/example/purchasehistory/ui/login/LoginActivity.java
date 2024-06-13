@@ -13,8 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
-import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.databinding.ActivityLoginBinding;
 import com.example.purchasehistory.util.AfterTextChangedWatcher;
@@ -24,12 +22,11 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
-    private ActivityLoginBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        com.example.purchasehistory.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         loginViewModel = new ViewModelProvider(this)
@@ -56,12 +53,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        PurchaseHistoryApplication.getInstance().getLoggedUser().observe(this, loginResult -> {
+        loginViewModel.getLoginResult().observe(this, loginResult -> {
             loadingProgressBar.setVisibility(View.GONE);
-            if (loginResult == null) {
+            if (loginResult.getSuccess() == null) {
                 showLoginFailed(R.string.invalid_credentials);
             } else {
-                updateUiWithUser(loginResult);
+                updateUiWithUser(loginResult.getSuccess().getUsername());
                 setResult(Activity.RESULT_OK);
                 finish();
             }
@@ -98,8 +95,8 @@ public class LoginActivity extends AppCompatActivity {
                 passwordEditText.getText().toString()), "Login").start();
     }
 
-    private void updateUiWithUser(UserView model) {
-        String welcome = String.format(getString(R.string.welcome), model.getUsername());
+    private void updateUiWithUser(String username) {
+        String welcome = String.format(getString(R.string.welcome), username);
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
         finish();
     }

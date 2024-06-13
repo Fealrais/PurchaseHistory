@@ -1,3 +1,5 @@
+import com.android.sdklib.AndroidVersion
+
 plugins {
     id("com.android.application")
     id("com.google.dagger.hilt.android")
@@ -10,7 +12,7 @@ android {
     defaultConfig {
         applicationId = "com.example.purchasehistory"
         minSdk = 29
-        targetSdk = 33
+        targetSdk = AndroidVersion.VersionCodes.Q
         versionCode = 2
         versionName = "2.0"
 

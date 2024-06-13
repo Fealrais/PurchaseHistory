@@ -1,16 +1,21 @@
 package com.example.purchasehistory.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.databinding.ActivityHomeBinding;
 import com.example.purchasehistory.ui.login.LoginActivity;
@@ -79,10 +84,27 @@ public class HomeActivity extends AppCompatActivity {
             }).start();
         } else if (itemId == R.id.menu_item_export_csv) {
             new Thread(() -> {
-                Intent exportedCsvIntent = purchaseClient.getExportedCsv();
-                startActivityForResult(exportedCsvIntent, CREATE_FILE);
+                Uri exportedCsv = purchaseClient.getExportedCsv();
+                Log.i("DOWNLOAD", "Downloaded CSV to "+exportedCsv.getPath());
+                PurchaseHistoryApplication.getInstance().alert("Downloaded CSV to "+exportedCsv.getPath());
+                openCsvFile(PurchaseHistoryApplication.getContext(), exportedCsv);
             }).start();
         }
         return false;
+    }
+    private void openCsvFile(Context context, Uri uri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "text/csv");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        // Check if there's an activity available to handle this intent
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        } else {
+            // Handle the case when there's no activity available to handle the intent
+            // E.g., show a Toast message
+            Toast.makeText(context, "No application available to open CSV files", Toast.LENGTH_SHORT).show();
+        }
     }
 }
