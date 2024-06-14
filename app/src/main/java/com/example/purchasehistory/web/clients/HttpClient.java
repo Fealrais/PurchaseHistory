@@ -56,13 +56,13 @@ public class HttpClient {
     public Response put(String url, Object body) throws IOException {
         String json = gson.toJson(body);
         RequestBody requestBody = RequestBody.create(MediaType.get("application/json"), json);
-        Log.i(TAG, String.format("Sending POST: '%s' Body:%s", url, json));
+        Log.i(TAG, String.format("Sending PUT: '%s' Body:%s", url, json));
         Request request = new Request.Builder()
                 .url(url)
                 .put(requestBody)
                 .build();
         Response response = client.newCall(request).execute();
-        Log.i(TAG, String.format("Received response POST: '%s' ", url));
+        Log.i(TAG, String.format("Received response PUT: '%s' ", url));
         handleError(response);
         return response;
     }

@@ -200,7 +200,8 @@ public class QrScannerFragment extends Fragment {
             PurchaseView purchaseView = qrScannerViewModel.createPurchaseView(data);
             if (purchaseView != null) {
                 PurchaseHistoryApplication.getInstance().alert("Created purchase #" + purchaseView.getBillId() + ". Cost:" + purchaseView.getPrice());
-                resetForm();
+                if (getActivity() != null)
+                    getActivity().runOnUiThread(this::resetForm);
             } else
                 PurchaseHistoryApplication.getInstance().alert("Failed to register purchase #");
         }).start();

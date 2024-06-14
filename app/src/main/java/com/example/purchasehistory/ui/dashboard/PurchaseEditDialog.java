@@ -72,7 +72,10 @@ public class PurchaseEditDialog extends DialogFragment {
             purchase.setDate(v);
             fillEditForm(purchase);
         });
-        binding.purchaseEditClearButton.setOnClickListener(v -> resetForm());
+        binding.purchaseEditClearButton.setOnClickListener(v -> {
+            if (getActivity() != null)
+                getActivity().runOnUiThread(this::resetForm);
+        });
         binding.purchaseEditSaveButton.setOnClickListener((view) -> {
             Log.i(getTag(), "Edit button clicked");
             onSubmit(purchase, purchaseId);
@@ -142,7 +145,8 @@ public class PurchaseEditDialog extends DialogFragment {
                 PurchaseView purchaseView = purchaseClient.editPurchase(data, id);
                 if (purchaseView != null) {
                     PurchaseHistoryApplication.getInstance().alert("Created purchase #" + purchaseView.getBillId() + ". Cost:" + purchaseView.getPrice());
-                    resetForm();
+                    if (getActivity() != null)
+                        getActivity().runOnUiThread(this::resetForm);
                 } else
                     PurchaseHistoryApplication.getInstance().alert("Failed to register purchase #");
             }).start();

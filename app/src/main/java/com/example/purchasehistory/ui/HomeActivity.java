@@ -28,7 +28,6 @@ import javax.inject.Inject;
 
 @AndroidEntryPoint
 public class HomeActivity extends AppCompatActivity {
-    private static final int CREATE_FILE = 1;
     @Inject
     AuthClient authClient;
     @Inject
