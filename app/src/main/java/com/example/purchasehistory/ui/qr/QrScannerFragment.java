@@ -35,6 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @AndroidEntryPoint
@@ -65,7 +66,7 @@ public class QrScannerFragment extends Fragment {
             PurchaseHistoryApplication.getInstance().getApplicationContext().getMainExecutor().execute(() -> Toast.makeText(getContext(), "The application cannot function without this", Toast.LENGTH_SHORT).show());
         }
     });
-    private List<CategoryView> allCategories;
+    private List<CategoryView> allCategories = new ArrayList<>();
     private TimePickerFragment timePicker;
     private DatePickerFragment datePicker;
     private CreateCategoryDialog categoryDialog;
@@ -86,14 +87,15 @@ public class QrScannerFragment extends Fragment {
 
 
         timePicker.getTimeResult().observe(getViewLifecycleOwner(), (v) -> {
-            PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
-            value.setTime(v);
-            fillQRForm(value);
+                PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
+                value.setTime(v);
+                fillQRForm(value);
+
         });
         datePicker.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
-            PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
-            value.setDate(v);
-            fillQRForm(value);
+                PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
+                value.setDate(v);
+                fillQRForm(value);
         });
         binding.qrPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override

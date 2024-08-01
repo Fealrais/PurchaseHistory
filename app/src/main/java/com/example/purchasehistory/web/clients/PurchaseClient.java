@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -93,7 +94,7 @@ public class PurchaseClient extends HttpClient {
         } catch (IOException | JsonParseException e) {
             Log.e(TAG, "getAllPurchases ERROR: " + e.getMessage());
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public Category createCategory(CategoryDTO categoryDTO) {
