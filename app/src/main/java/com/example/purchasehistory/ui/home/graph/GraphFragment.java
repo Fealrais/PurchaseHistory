@@ -1,4 +1,4 @@
-package com.example.purchasehistory.ui.graph;
+package com.example.purchasehistory.ui.home.graph;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.example.purchasehistory.databinding.FragmentGraphBinding;
-import com.example.purchasehistory.ui.dashboard.DashboardViewModel;
+import com.example.purchasehistory.ui.home.dashboard.DashboardViewModel;
 import com.tradingview.lightweightcharts.api.chart.models.color.IntColor;
 import com.tradingview.lightweightcharts.api.interfaces.SeriesApi;
 import com.tradingview.lightweightcharts.api.options.models.ChartOptions;
@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import kotlin.Unit;
 import lombok.NoArgsConstructor;
 
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,7 +66,7 @@ public class GraphFragment extends Fragment {
                         .map(purchase -> {
                             int color = Color.parseColor(purchase.getCategory() == null ? "#c4c4c4" : purchase.getCategory().getColor());
                             return new HistogramData(
-                                    new Time.Utc(purchase.getTimestamp().toEpochSecond(ZoneOffset.UTC)),
+                                    new Time.Utc(purchase.getTimestamp().atZone(ZoneId.systemDefault()).toEpochSecond()),
                                     purchase.getPrice().floatValue(), new IntColor(color));
                         })
                         .collect(Collectors.toList());

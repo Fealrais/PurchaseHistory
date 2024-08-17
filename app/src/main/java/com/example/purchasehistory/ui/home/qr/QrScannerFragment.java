@@ -1,4 +1,4 @@
-package com.example.purchasehistory.ui.qr;
+package com.example.purchasehistory.ui.home.qr;
 
 import android.Manifest;
 import android.app.Activity;
@@ -34,6 +34,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -163,8 +165,8 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void initQRForm(LayoutInflater inflater) {
-        timePicker = new TimePickerFragment();
-        datePicker = new DatePickerFragment();
+        timePicker = new TimePickerFragment(LocalTime.now());
+        datePicker = new DatePickerFragment(LocalDate.now());
         categoryDialog = new CreateCategoryDialog();
         binding.qrFloatingQrButton.setOnClickListener((view) -> openCameraFlow(inflater));
         binding.qrClearButton.setOnClickListener(v -> resetForm());

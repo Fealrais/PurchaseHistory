@@ -1,4 +1,4 @@
-package com.example.purchasehistory.ui;
+package com.example.purchasehistory.ui.home;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +19,7 @@ import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.databinding.ActivityHomeBinding;
 import com.example.purchasehistory.ui.login.LoginActivity;
-import com.example.purchasehistory.ui.settings.SettingsActivity;
+import com.example.purchasehistory.ui.home.settings.SettingsActivity;
 import com.example.purchasehistory.web.clients.AuthClient;
 import com.example.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;

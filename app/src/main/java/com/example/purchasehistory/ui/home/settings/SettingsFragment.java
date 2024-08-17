@@ -1,4 +1,4 @@
-package com.example.purchasehistory.ui.settings;
+package com.example.purchasehistory.ui.home.settings;
 
 import android.os.Bundle;
 import androidx.preference.PreferenceFragmentCompat;

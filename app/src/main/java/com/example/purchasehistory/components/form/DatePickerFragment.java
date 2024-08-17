@@ -7,17 +7,28 @@ import android.widget.DatePicker;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.MutableLiveData;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.util.Calendar;
+
 @Getter
-public class DatePickerFragment extends DialogFragment
-        implements DatePickerDialog.OnDateSetListener {
+public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+    private final MutableLiveData<LocalDate> dateResult;
 
+    public DatePickerFragment(LocalDate date) {
+        dateResult = new MutableLiveData<>(date != null ? date : LocalDate.now());
+    }
+    public DatePickerFragment(LocalDate date, LocalDate def) {
+        dateResult = new MutableLiveData<>(date != null ? date : def);
+    }
 
-    private MutableLiveData<LocalDate> dateResult = new MutableLiveData<>(LocalDate.now());
+    public DatePickerFragment() {
+        dateResult = new MutableLiveData<>();
+    }
+
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public @NotNull Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker.
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
@@ -29,6 +40,10 @@ public class DatePickerFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        this.dateResult.postValue(LocalDate.of(year,month,day));
+        this.dateResult.postValue(LocalDate.of(year, month + 1, day));
+    }
+
+    public void setValue(LocalDate date) {
+        this.dateResult.postValue(date);
     }
 }

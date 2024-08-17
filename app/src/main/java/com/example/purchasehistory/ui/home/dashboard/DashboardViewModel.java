@@ -1,4 +1,4 @@
-package com.example.purchasehistory.ui.dashboard;
+package com.example.purchasehistory.ui.home.dashboard;
 
 import androidx.lifecycle.ViewModel;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;

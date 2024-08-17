@@ -8,11 +8,14 @@ import android.util.Log;
 import com.angelp.purchasehistorybackend.models.views.incoming.CategoryDTO;
 import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
+import com.angelp.purchasehistorybackend.models.views.outgoing.PageView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.example.purchasehistory.PurchaseHistoryApplication;
+import com.example.purchasehistory.data.filters.PurchaseFilter;
 import com.example.purchasehistory.data.model.Category;
 import com.example.purchasehistory.data.model.PurchaseResponse;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -68,6 +71,44 @@ public class PurchaseClient extends HttpClient {
                 if (res.isSuccessful())
                     return Arrays.stream(gson.fromJson(json, PurchaseResponse[].class)).map(PurchaseResponse::toPurchaseView).collect(Collectors.toList());
                 else {
+                    ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
+                    throw new RuntimeException(errorResponse.getDetail());
+                }
+            }
+        } catch (IOException | JsonParseException e) {
+            Log.e(TAG, "getAllPurchases ERROR: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public List<PurchaseView> getAllPurchases(PurchaseFilter filter) throws RuntimeException {
+        try (Response res = get(BACKEND_URL + "/purchase/filtered?"+filter)) {
+            ResponseBody body = res.body();
+            if (body != null) {
+                String json = body.string();
+                Log.i("httpResponse", "Get all purchases: " + json);
+                if (res.isSuccessful())
+                    return Arrays.stream(gson.fromJson(json, PurchaseResponse[].class)).map(PurchaseResponse::toPurchaseView).collect(Collectors.toList());
+                else {
+                    ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
+                    throw new RuntimeException(errorResponse.getDetail());
+                }
+            }
+        } catch (IOException | JsonParseException e) {
+            Log.e(TAG, "getAllPurchases ERROR: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public PageView<PurchaseView> getPurchases(PurchaseFilter filter) throws RuntimeException {
+        try (Response res = get(BACKEND_URL + "/purchase/paged?"+filter)) {
+            ResponseBody body = res.body();
+            if (body != null) {
+                String json = body.string();
+                Log.i("httpResponse", "Get all purchases: " + json);
+                if (res.isSuccessful()) {
+                    return gson.fromJson(json, new TypeToken<PageView<PurchaseView>>() {}.getType());
+                } else {
                     ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
                     throw new RuntimeException(errorResponse.getDetail());
                 }

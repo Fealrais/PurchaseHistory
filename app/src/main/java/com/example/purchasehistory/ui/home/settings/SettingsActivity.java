@@ -1,4 +1,4 @@
-package com.example.purchasehistory.ui.settings;
+package com.example.purchasehistory.ui.home.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.databinding.ActivitySettingsBinding;
-import com.example.purchasehistory.ui.HomeActivity;
+import com.example.purchasehistory.ui.home.HomeActivity;
 
 public class SettingsActivity extends AppCompatActivity {
     ActivitySettingsBinding binding;

@@ -1,4 +1,4 @@
-package com.example.purchasehistory.ui.qr;
+package com.example.purchasehistory.ui.home.qr;
 
 import com.journeyapps.barcodescanner.CaptureActivity;
 

@@ -70,5 +70,11 @@
     <string name="save">Save</string>
     <string name="purchaseEdit_update_purchase_title">Update purchase #</string>
     <string name="menu_export_data_as_csv">Export data as CSV</string>
+    <string name="title_purchases_list">List purchases</string>
+    <string name="retry_btn">Retry</string>
+    <string name="dashboard_wip">Dashboard is empty, Work in progress. plz ignore ☺</string>
+    <string name="filterButton">Filter</string>
+    <string name="to">To</string>
+    <string name="from">From</string>
 
 </resources>

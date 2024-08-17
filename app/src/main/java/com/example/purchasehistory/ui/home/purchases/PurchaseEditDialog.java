@@ -1,4 +1,4 @@
-package com.example.purchasehistory.ui.dashboard;
+package com.example.purchasehistory.ui.home.purchases;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 import static com.example.purchasehistory.data.Constants.PURCHASE_EDIT_DIALOG_ID_KEY;
 
@@ -46,6 +47,7 @@ public class PurchaseEditDialog extends DialogFragment {
     private CreateCategoryDialog categoryDialog;
     private ArrayAdapter<CategoryView> categoryAdapter;
     private List<CategoryView> allCategories = new ArrayList<>();
+    private Consumer<PurchaseView> onSuccess;
     private Long purchaseId;
 
 
@@ -53,8 +55,13 @@ public class PurchaseEditDialog extends DialogFragment {
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i(getTag(), "onCreateView: View created");
         binding = FragmentPurchaseEditDialogBinding.inflate(inflater, container, false);
-        timePicker = new TimePickerFragment();
-        datePicker = new DatePickerFragment();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            this.purchaseId = bundle.getLong(PURCHASE_EDIT_DIALOG_ID_KEY, 0L);
+            binding.purchaseEditUpdatePurchaseText.setText(String.format(Locale.getDefault(), "Update purchase #%d", purchaseId));
+        }
+        timePicker = new TimePickerFragment(purchase.getTime());
+        datePicker = new DatePickerFragment(purchase.getDate());
         categoryDialog = new CreateCategoryDialog();
 
         getParentFragmentManager().setFragmentResultListener("categoryResult", getViewLifecycleOwner(), (requestKey, result) -> {
@@ -66,11 +73,11 @@ public class PurchaseEditDialog extends DialogFragment {
 
         timePicker.getTimeResult().observe(getViewLifecycleOwner(), (v) -> {
             purchase.setTime(v);
-            fillEditForm(purchase);
+            binding.purchaseEditTimeInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_TIME));
         });
         datePicker.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
             purchase.setDate(v);
-            fillEditForm(purchase);
+            binding.purchaseEditDateInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
         });
         binding.purchaseEditClearButton.setOnClickListener(v -> {
             if (getActivity() != null)
@@ -105,11 +112,6 @@ public class PurchaseEditDialog extends DialogFragment {
                 purchase.setCategoryId(null);
             }
         });
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            this.purchaseId = bundle.getLong(PURCHASE_EDIT_DIALOG_ID_KEY, 0L);
-            binding.purchaseEditUpdatePurchaseText.setText(String.format(Locale.getDefault(), "Update purchase #%d", purchaseId));
-        }
         fillEditForm(purchase);
         return binding.getRoot();
     }
@@ -119,8 +121,8 @@ public class PurchaseEditDialog extends DialogFragment {
             if (view.getPrice() != null)
                 binding.purchaseEditPriceInput.setText(String.format(view.getPrice().toString()));
             if (view.getTimestamp() != null) {
-                binding.purchaseEditDateInput.setText(view.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_DATE));
-                binding.purchaseEditTimeInput.setText(view.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_TIME));
+                timePicker.setValue(view.getTime());
+                datePicker.setValue(view.getDate());
             }
             if (view.getBillId() != null)
                 binding.purchaseEditBillIdValue.setText(view.getBillId());
@@ -144,9 +146,14 @@ public class PurchaseEditDialog extends DialogFragment {
             new Thread(() -> {
                 PurchaseView purchaseView = purchaseClient.editPurchase(data, id);
                 if (purchaseView != null) {
-                    PurchaseHistoryApplication.getInstance().alert("Created purchase #" + purchaseView.getBillId() + ". Cost:" + purchaseView.getPrice());
-                    if (getActivity() != null)
-                        getActivity().runOnUiThread(this::resetForm);
+                    PurchaseHistoryApplication.getInstance().alert("Updated purchase #" + purchaseView.getBillId() + ". Cost:" + purchaseView.getPrice());
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            resetForm();
+                            if (onSuccess != null) onSuccess.accept(purchaseView);
+                        });
+                    }
+                    dismiss();
                 } else
                     PurchaseHistoryApplication.getInstance().alert("Failed to register purchase #");
             }).start();

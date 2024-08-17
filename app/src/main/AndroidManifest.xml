@@ -22,18 +22,19 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.PurchaseHistory"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
         <activity
-            android:name=".ui.settings.SettingsActivity"
+            android:name=".ui.home.settings.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.qr.CaptureActivityPortrait"
+            android:name=".ui.home.qr.CaptureActivityPortrait"
             android:exported="false"
             android:screenOrientation="sensorPortrait"
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".ui.HomeActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home" />
         <activity

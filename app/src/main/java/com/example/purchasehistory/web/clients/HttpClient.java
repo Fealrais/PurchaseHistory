@@ -3,6 +3,7 @@ package com.example.purchasehistory.web.clients;
 import android.util.Log;
 import android.widget.Toast;
 import com.example.purchasehistory.PurchaseHistoryApplication;
+import com.example.purchasehistory.data.filters.PageRequest;
 import com.example.purchasehistory.web.LocalDateGsonAdapter;
 import com.example.purchasehistory.web.interceptors.AuthInterceptor;
 import com.google.gson.Gson;
@@ -14,10 +15,10 @@ import java.time.LocalDateTime;
 
 public class HttpClient {
     public static String HOST_NAME = "https://angelp-home.duckdns.org";
-    public static String BACKEND_URL = HOST_NAME + ":8080/api";
+    public static String BACKEND_URL = HOST_NAME + ":9000/api";
     protected final OkHttpClient client;
     protected final AuthInterceptor authInterceptor = new AuthInterceptor();
-    protected final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class,new LocalDateGsonAdapter()).create();
+    protected final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateGsonAdapter()).create();
     private final String TAG = this.getClass().getSimpleName();
 
     public HttpClient() {
@@ -30,6 +31,18 @@ public class HttpClient {
     public Response get(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
+                .get()
+                .build();
+        Log.i(TAG, String.format("Sending GET: '%s'", url));
+        Response response = client.newCall(request).
+                execute();
+        Log.i(TAG, String.format("Received response GET: '%s' ", url));
+        handleError(response);
+        return response;
+    }
+    public Response get(String url, PageRequest pageRequest) throws IOException {
+        Request request = new Request.Builder()
+                .url(pageRequest.buildURL(url))
                 .get()
                 .build();
         Log.i(TAG, String.format("Sending GET: '%s'", url));
@@ -53,6 +66,7 @@ public class HttpClient {
         handleError(response);
         return response;
     }
+
     public Response put(String url, Object body) throws IOException {
         String json = gson.toJson(body);
         RequestBody requestBody = RequestBody.create(MediaType.get("application/json"), json);

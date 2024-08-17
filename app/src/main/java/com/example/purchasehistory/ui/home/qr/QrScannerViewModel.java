@@ -1,4 +1,4 @@
-package com.example.purchasehistory.ui.qr;
+package com.example.purchasehistory.ui.home.qr;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,7 +17,7 @@ import java.util.List;
 @HiltViewModel
 public class QrScannerViewModel extends ViewModel {
     @Getter
-    private MutableLiveData<PurchaseDTO> purchaseDTO = new MutableLiveData<>(new PurchaseDTO());
+    private final MutableLiveData<PurchaseDTO> purchaseDTO = new MutableLiveData<>(new PurchaseDTO());
 
     PurchaseClient purchaseClient;
 

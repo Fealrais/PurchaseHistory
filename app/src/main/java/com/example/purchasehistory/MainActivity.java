@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.example.purchasehistory.databinding.ActivityMainBinding;
-import com.example.purchasehistory.ui.HomeActivity;
+import com.example.purchasehistory.ui.home.HomeActivity;
 import com.example.purchasehistory.ui.login.LoginActivity;
 import com.example.purchasehistory.ui.register.RegisterActivity;
 import com.example.purchasehistory.web.clients.AuthClient;
