@@ -97,17 +97,14 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
                 return String.format(Locale.ENGLISH, "%.2f", value);
             }
         });
-        PieData data = new PieData(dataSet);
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-        binding.pieChart.setData(data);
-        binding.pieChart.highlightValues(null);
 
+        PieData newData = new PieData(dataSet);
 
         getActivity().runOnUiThread(() -> {
+            binding.pieChart.setData(newData);
             binding.pieChart.notifyDataSetChanged();
+            binding.pieChart.animateY(1000);
             binding.pieChart.invalidate();
-            binding.pieChart.animateY(1400, Easing.EaseInOutQuad);
         });
     }
 
@@ -174,15 +171,13 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
     public void refresh(PurchaseFilter filter) {
         this.filter = filter;
-        binding.pieChart.clear();
-        getActivity().runOnUiThread(() -> {
-            binding.pieChart.notifyDataSetChanged();
-            binding.pieChart.invalidate();
-            binding.pieChart.animateY(1400, Easing.EaseInOutQuad);
-        });
-
         new Thread(() -> {
             setData(filter);
+            getActivity().runOnUiThread(() -> {
+                binding.pieChart.notifyDataSetChanged();
+                binding.pieChart.invalidate();
+                binding.pieChart.animateY(1400, Easing.EaseInOutQuad);
+            });
         }).start();
     }
 }

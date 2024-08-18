@@ -32,13 +32,15 @@ public class PurchaseFilter implements Parcelable {
     private LocalDate from;
     private LocalDate to;
     private Long categoryId;
-//    private PageRequest pageRequest;
+    //    private PageRequest pageRequest;
     private UUID userId;
 
     protected PurchaseFilter(Parcel in) {
         setFrom(getDateFromParcel(in));
         setTo(getDateFromParcel(in));
-        setCategoryId(in.readLong());
+        long categoryId = in.readLong();
+        if (categoryId >= 0)
+            setCategoryId(categoryId);
         String userString = in.readString();
         if (userString != null && !userString.isBlank())
             setUserId(UUID.fromString(userString));
@@ -73,7 +75,7 @@ public class PurchaseFilter implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeLong(from == null ? -1L : from.toEpochDay());
         dest.writeLong(to == null ? -1L : to.toEpochDay());
-        dest.writeLong(categoryId);
+        dest.writeLong(categoryId == null ? -1L : categoryId);
         dest.writeString(userId == null ? "" : userId.toString());
 //        dest.writeParcelable(pageRequest);
     }

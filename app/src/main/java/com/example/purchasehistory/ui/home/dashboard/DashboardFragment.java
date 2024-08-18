@@ -5,13 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.purchasehistory.data.filters.PurchaseFilter;
 import com.example.purchasehistory.databinding.FragmentDashboardBinding;
 import com.example.purchasehistory.ui.home.dashboard.pie.PieChartFragment;
 import com.example.purchasehistory.ui.home.purchases.PurchaseFilterDialog;
 import dagger.hilt.android.AndroidEntryPoint;
-import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +21,7 @@ import java.util.function.Consumer;
 
 @AndroidEntryPoint
 public class DashboardFragment extends Fragment {
+    private final String DASHBOARD_FILTER = "dashboard_filter";
     private final String TAG = this.getClass().getSimpleName();
     private final DateTimeFormatter dtf = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
     private FragmentDashboardBinding binding;
@@ -29,28 +31,32 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
-        setFilter(new PurchaseFilter());
         filterDialog = new PurchaseFilterDialog();
+        this.applyFilter(filter);
 
         getParentFragmentManager()
                 .beginTransaction()
                 .replace(binding.fragmentContainerView.getId(), PieChartFragment.newInstance(filter))
                 .commit();
         binding.dashboardFilterButton.setOnClickListener(v -> openFilter((newFilter) -> {
-            this.setFilter(newFilter);
+            this.filter = newFilter;
+            this.applyFilter(newFilter);
             filterDialog.dismiss();
-            onSwipeRefresh(filter);
+            onSwipeRefresh(newFilter);
         }));
         return binding.getRoot();
     }
 
-    private void setFilter(PurchaseFilter newFilter) {
-        this.filter = newFilter;
+    private PurchaseFilter loadFilterArg(Bundle bundle) {
+        if (bundle == null || bundle.getParcelable(DASHBOARD_FILTER) == null)
+            return new PurchaseFilter();
+        return bundle.getParcelable(DASHBOARD_FILTER);
+    }
+
+    private void applyFilter(PurchaseFilter newFilter) {
         binding.dashboardFilterButton.setText(newFilter.isEmpty() ? "Filter" : "Filtered");
-
-
-        LocalDate from = filter.getFrom() != null? filter.getFrom(): LocalDate.now().withDayOfMonth(1);
-        LocalDate filterTo = filter.getTo() != null? filter.getTo(): LocalDate.now();
+        LocalDate from = filter.getFrom() != null ? filter.getFrom() : LocalDate.now().withDayOfMonth(1);
+        LocalDate filterTo = filter.getTo() != null ? filter.getTo() : LocalDate.now();
         binding.dashboardFilterDateText.setText(String.format("Showing period of %s - %s", from.format(dtf), filterTo.format(dtf)));
     }
 
@@ -62,9 +68,15 @@ public class DashboardFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.filter = loadFilterArg(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(DASHBOARD_FILTER, filter);
     }
 
     private void onSwipeRefresh(PurchaseFilter filter) {
