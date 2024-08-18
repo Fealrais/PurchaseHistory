@@ -30,10 +30,10 @@ import java.util.stream.Collectors;
 @AndroidEntryPoint
 public class GraphFragment extends Fragment {
 
-    private static final String TAG = "GraphFragment";
+    private final String TAG = this.getClass().getSimpleName();
+    private final ChartOptions chartOptions = new ChartOptions();
     private FragmentGraphBinding binding;
     private DashboardViewModel dashboardViewModel;
-    private final ChartOptions chartOptions = new ChartOptions();
     private SeriesApi histogramSeries;
 
     @Override
@@ -71,10 +71,10 @@ public class GraphFragment extends Fragment {
                         })
                         .collect(Collectors.toList());
                 Log.i(TAG, "initLineGraph: series calculated");
-                try{
+                try {
                     histogramSeries.setData(collect);
-                }catch(IllegalStateException e){
-                    Log.e(TAG, "initLineGraph: "+e.getMessage());
+                } catch (IllegalStateException e) {
+                    Log.e(TAG, "initLineGraph: " + e.getMessage());
                 }
             }).start();
             return Unit.INSTANCE;

@@ -4,7 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import com.angelp.purchasehistorybackend.models.views.incoming.CategoryDTO;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.data.model.Category;
@@ -17,7 +20,7 @@ import javax.inject.Inject;
 
 @AndroidEntryPoint
 public class CreateCategoryDialog extends DialogFragment {
-    private final String TAG = "CategoryDialog";
+    private final String TAG = this.getClass().getSimpleName();
     @Inject
     PurchaseClient purchaseClient;
     private CategoryDialogBinding binding;
@@ -58,5 +61,14 @@ public class CreateCategoryDialog extends DialogFragment {
             throw new RuntimeException("Color cannot be empty");
         if (!color.startsWith("#"))
             throw new RuntimeException("Color should be a hex value");
+    }
+
+    @Override
+    public void show(@NonNull @NotNull FragmentManager manager, @Nullable String tag) {
+        if (this.isAdded()) {
+            Log.w(TAG, "Fragment already added");
+            return;
+        }
+        super.show(manager, tag);
     }
 }

@@ -1,5 +1,8 @@
 package com.example.purchasehistory.data.filters;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import androidx.annotation.NonNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,15 +17,35 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseFilter {
+public class PurchaseFilter implements Parcelable {
+    public static final Creator<PurchaseFilter> CREATOR = new Creator<>() {
+        @Override
+        public PurchaseFilter createFromParcel(Parcel in) {
+            return new PurchaseFilter(in);
+        }
+
+        @Override
+        public PurchaseFilter[] newArray(int size) {
+            return new PurchaseFilter[size];
+        }
+    };
     private LocalDate from;
     private LocalDate to;
     private Long categoryId;
+//    private PageRequest pageRequest;
     private UUID userId;
-    private PageRequest pageRequest;
+
+    protected PurchaseFilter(Parcel in) {
+        setFrom(getDateFromParcel(in));
+        setTo(getDateFromParcel(in));
+        setCategoryId(in.readLong());
+        String userString = in.readString();
+        if (userString != null && !userString.isBlank())
+            setUserId(UUID.fromString(userString));
+    }
 
     public boolean isEmpty() {
-        return from == null  && to ==null && categoryId == null && userId == null;
+        return from == null && to == null && categoryId == null && userId == null;
     }
 
     @Override
@@ -36,8 +59,29 @@ public class PurchaseFilter {
             builder.append("categoryId=").append(categoryId).append("&");
         if (userId != null)
             builder.append("userId=").append(userId).append("&");
-        if (pageRequest != null)
-            builder.append(pageRequest);
+//        if (pageRequest != null)
+//            builder.append(pageRequest);
         return builder.toString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeLong(from == null ? -1L : from.toEpochDay());
+        dest.writeLong(to == null ? -1L : to.toEpochDay());
+        dest.writeLong(categoryId);
+        dest.writeString(userId == null ? "" : userId.toString());
+//        dest.writeParcelable(pageRequest);
+    }
+
+    private LocalDate getDateFromParcel(Parcel in) {
+        long EpochDate = in.readLong();
+        if (EpochDate != -1)
+            return LocalDate.ofEpochDay(EpochDate);
+        return null;
     }
 }

@@ -10,6 +10,7 @@ import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PageView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
+import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
 import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.data.filters.PurchaseFilter;
 import com.example.purchasehistory.data.model.Category;
@@ -82,7 +83,7 @@ public class PurchaseClient extends HttpClient {
     }
 
     public List<PurchaseView> getAllPurchases(PurchaseFilter filter) throws RuntimeException {
-        try (Response res = get(BACKEND_URL + "/purchase/filtered?"+filter)) {
+        try (Response res = get(BACKEND_URL + "/purchase/filtered?" + filter)) {
             ResponseBody body = res.body();
             if (body != null) {
                 String json = body.string();
@@ -101,13 +102,14 @@ public class PurchaseClient extends HttpClient {
     }
 
     public PageView<PurchaseView> getPurchases(PurchaseFilter filter) throws RuntimeException {
-        try (Response res = get(BACKEND_URL + "/purchase/paged?"+filter)) {
+        try (Response res = get(BACKEND_URL + "/purchase/paged?" + filter)) {
             ResponseBody body = res.body();
             if (body != null) {
                 String json = body.string();
                 Log.i("httpResponse", "Get all purchases: " + json);
                 if (res.isSuccessful()) {
-                    return gson.fromJson(json, new TypeToken<PageView<PurchaseView>>() {}.getType());
+                    return gson.fromJson(json, new TypeToken<PageView<PurchaseView>>() {
+                    }.getType());
                 } else {
                     ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
                     throw new RuntimeException(errorResponse.getDetail());
@@ -185,4 +187,22 @@ public class PurchaseClient extends HttpClient {
         return uri;
     }
 
+    public CategoryAnalyticsReport getCategoryAnalyticsReport(PurchaseFilter filter) {
+        try (Response res = get(BACKEND_URL + "/category/analytics?" + filter)) {
+            ResponseBody body = res.body();
+            if (body != null) {
+                String json = body.string();
+                Log.i("httpResponse", "getCategoryAnalyticsReport : " + json);
+                if (res.isSuccessful())
+                    return gson.fromJson(json, CategoryAnalyticsReport.class);
+                else {
+                    ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
+                    throw new RuntimeException(errorResponse.getDetail());
+                }
+            }
+        } catch (IOException | JsonParseException e) {
+            Log.e(TAG, "analytics ERROR: " + e.getMessage());
+        }
+        return null;
+    }
 }

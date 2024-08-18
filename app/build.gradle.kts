@@ -73,6 +73,9 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 //  UI
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+
+    // Chart and graph library
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.tradingview:lightweightcharts:3.8.0")
     implementation("androidx.preference:preference:1.2.1")
     implementation("androidx.paging:paging-guava:3.3.2")

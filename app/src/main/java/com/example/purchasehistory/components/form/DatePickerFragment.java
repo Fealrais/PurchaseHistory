@@ -3,8 +3,12 @@ package com.example.purchasehistory.components.form;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.DatePicker;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.MutableLiveData;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -15,10 +19,13 @@ import java.util.Calendar;
 @Getter
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     private final MutableLiveData<LocalDate> dateResult;
+    private final String TAG = this.getClass().getSimpleName();
+
 
     public DatePickerFragment(LocalDate date) {
         dateResult = new MutableLiveData<>(date != null ? date : LocalDate.now());
     }
+
     public DatePickerFragment(LocalDate date, LocalDate def) {
         dateResult = new MutableLiveData<>(date != null ? date : def);
     }
@@ -45,5 +52,14 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     public void setValue(LocalDate date) {
         this.dateResult.postValue(date);
+    }
+
+    @Override
+    public void show(@NonNull @NotNull FragmentManager manager, @Nullable String tag) {
+        if (this.isAdded()) {
+            Log.w(TAG, "Fragment already added");
+            return;
+        }
+        super.show(manager, tag);
     }
 }

@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.components.form.DatePickerFragment;
@@ -18,6 +20,7 @@ import com.example.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +32,7 @@ import java.util.function.Consumer;
 @Setter
 @AndroidEntryPoint
 public class PurchaseFilterDialog extends DialogFragment {
+    private final String TAG = this.getClass().getSimpleName();
 
     @Inject
     PurchaseClient purchaseClient;
@@ -69,7 +73,7 @@ public class PurchaseFilterDialog extends DialogFragment {
         binding.purchaseFilterToDate.setOnClickListener((v) -> datePickerTo.show(getParentFragmentManager(), "datePickerTo"));
         new Thread(() -> {
             categoryOptions = purchaseClient.getAllCategories();
-            categoryOptions.add(0,new CategoryView(null,"None","#fff"));
+            categoryOptions.add(0, new CategoryView(null, "None", "#fff"));
             categoryAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, categoryOptions);
             getActivity().runOnUiThread(() -> binding.purchaseFilterCategorySpinner.setAdapter(categoryAdapter));
         }).start();
@@ -79,6 +83,7 @@ public class PurchaseFilterDialog extends DialogFragment {
                 CategoryView categoryView = categoryOptions.get(position);
                 filter.setCategoryId(categoryView.getId());
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 filter.setCategoryId(null);
@@ -90,10 +95,10 @@ public class PurchaseFilterDialog extends DialogFragment {
 
     private void fillEditForm(PurchaseFilter view) {
         new Thread(() -> {
-            if(view.getFrom()!=null){
+            if (view.getFrom() != null) {
                 datePickerFrom.getDateResult().postValue(view.getFrom());
             }
-            if(view.getTo()!=null){
+            if (view.getTo() != null) {
                 datePickerTo.getDateResult().postValue(view.getTo());
             }
             if (view.getCategoryId() != null) {
@@ -120,5 +125,14 @@ public class PurchaseFilterDialog extends DialogFragment {
     public void onDestroy() {
         super.onDestroy();
         this.dismiss();
+    }
+
+    @Override
+    public void show(@NonNull @NotNull FragmentManager manager, @Nullable String tag) {
+        if (this.isAdded()) {
+            Log.w(TAG, "Fragment already added");
+            return;
+        }
+        super.show(manager, tag);
     }
 }

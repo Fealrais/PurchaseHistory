@@ -57,6 +57,7 @@ public class ListedPurchasesFragment extends Fragment {
         binding.filterButton.setOnClickListener(v -> openFilter((newFilter) -> {
             setFilter(newFilter);
             binding.filterButton.setText(newFilter.isEmpty() ? "Filter" : "Filtered");
+            filterDialog.dismiss();
             onSwipeRefresh();
         }));
         new Thread(() -> {

@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
@@ -23,6 +25,7 @@ import com.example.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.time.format.DateTimeFormatter;
@@ -37,6 +40,7 @@ import static com.example.purchasehistory.data.Constants.PURCHASE_EDIT_DIALOG_ID
 @Setter
 @AndroidEntryPoint
 public class PurchaseEditDialog extends DialogFragment {
+    private final String TAG = this.getClass().getSimpleName();
 
     @Inject
     PurchaseClient purchaseClient;
@@ -173,5 +177,14 @@ public class PurchaseEditDialog extends DialogFragment {
     public void onDestroy() {
         super.onDestroy();
         this.dismiss();
+    }
+
+    @Override
+    public void show(@NonNull @NotNull FragmentManager manager, @Nullable String tag) {
+        if (this.isAdded()) {
+            Log.w(TAG, "Fragment already added");
+            return;
+        }
+        super.show(manager, tag);
     }
 }

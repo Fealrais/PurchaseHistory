@@ -3,7 +3,6 @@ package com.example.purchasehistory.ui.home.purchases;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -54,9 +53,6 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         }
         if (purchaseView.getTimestamp() != null)
             binding.purchaseEditButton.setOnClickListener((v) -> {
-                if (editDialog.isAdded()) {
-                    Log.w(TAG, "Fragment already added");
-                }
                 if (purchaseView.getId() != null) {
                     PurchaseDTO purchaseDTO = generatePurchaseDTO(purchaseView);
                     editDialog.setPurchase(purchaseDTO);
