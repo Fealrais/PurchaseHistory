@@ -13,19 +13,23 @@ import com.example.purchasehistory.ui.home.purchases.PurchaseFilterDialog;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.function.Consumer;
 
 @AndroidEntryPoint
 public class DashboardFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
+    private final DateTimeFormatter dtf = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
     private FragmentDashboardBinding binding;
     private PurchaseFilterDialog filterDialog;
-    @Setter
-    private PurchaseFilter filter = new PurchaseFilter();
+    private PurchaseFilter filter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        setFilter(new PurchaseFilter());
         filterDialog = new PurchaseFilterDialog();
 
         getParentFragmentManager()
@@ -33,12 +37,21 @@ public class DashboardFragment extends Fragment {
                 .replace(binding.fragmentContainerView.getId(), PieChartFragment.newInstance(filter))
                 .commit();
         binding.dashboardFilterButton.setOnClickListener(v -> openFilter((newFilter) -> {
-            setFilter(newFilter);
-            binding.dashboardFilterButton.setText(newFilter.isEmpty() ? "Filter" : "Filtered");
+            this.setFilter(newFilter);
             filterDialog.dismiss();
             onSwipeRefresh(filter);
         }));
         return binding.getRoot();
+    }
+
+    private void setFilter(PurchaseFilter newFilter) {
+        this.filter = newFilter;
+        binding.dashboardFilterButton.setText(newFilter.isEmpty() ? "Filter" : "Filtered");
+
+
+        LocalDate from = filter.getFrom() != null? filter.getFrom(): LocalDate.now().withDayOfMonth(1);
+        LocalDate filterTo = filter.getTo() != null? filter.getTo(): LocalDate.now();
+        binding.dashboardFilterDateText.setText(String.format("Showing period of %s - %s", from.format(dtf), filterTo.format(dtf)));
     }
 
     private void openFilter(Consumer<PurchaseFilter> setFilter) {
