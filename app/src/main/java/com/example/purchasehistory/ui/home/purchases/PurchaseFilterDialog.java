@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.example.purchasehistory.data.Constants.getDefaultFilter;
+
 @Getter
 @Setter
 @AndroidEntryPoint
@@ -114,7 +116,7 @@ public class PurchaseFilterDialog extends DialogFragment {
     }
 
     private void resetForm() {
-        this.filter = new PurchaseFilter();
+        this.filter = getDefaultFilter();
         binding.purchaseFilterCategorySpinner.setSelection(0);
         binding.purchaseFilterToDate.setText(R.string.to);
         binding.purchaseFilterFromDate.setText(R.string.from);

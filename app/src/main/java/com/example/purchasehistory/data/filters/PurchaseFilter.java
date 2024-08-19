@@ -11,7 +11,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.UUID;
+
+import static com.example.purchasehistory.data.Constants.getDefaultFilter;
 
 @Getter
 @Setter
@@ -29,6 +32,7 @@ public class PurchaseFilter implements Parcelable {
             return new PurchaseFilter[size];
         }
     };
+    private final DateTimeFormatter dtf = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
     private LocalDate from;
     private LocalDate to;
     private Long categoryId;
@@ -64,6 +68,13 @@ public class PurchaseFilter implements Parcelable {
 //        if (pageRequest != null)
 //            builder.append(pageRequest);
         return builder.toString();
+    }
+
+    public String getReadableString() {
+        PurchaseFilter def = getDefaultFilter();
+        LocalDate from = getFrom() != null ? getFrom() : def.getFrom();
+        LocalDate filterTo = getTo() != null ? getTo() : def.getTo();
+        return "Filtered by period of:\n" + from.format(dtf) + " - " + filterTo.format(dtf) + "\n" + (getCategoryId() == null ? "" : "And by category");
     }
 
     @Override

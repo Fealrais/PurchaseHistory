@@ -8,22 +8,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.purchasehistory.data.filters.PurchaseFilter;
+import com.example.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.example.purchasehistory.databinding.FragmentDashboardBinding;
+import com.example.purchasehistory.ui.home.dashboard.list.PurchaseListPurchaseFragment;
 import com.example.purchasehistory.ui.home.dashboard.pie.PieChartFragment;
 import com.example.purchasehistory.ui.home.purchases.PurchaseFilterDialog;
 import dagger.hilt.android.AndroidEntryPoint;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.function.Consumer;
 
+import static com.example.purchasehistory.data.Constants.getDefaultFilter;
+
+@NoArgsConstructor
 @AndroidEntryPoint
 public class DashboardFragment extends Fragment {
     private final String DASHBOARD_FILTER = "dashboard_filter";
     private final String TAG = this.getClass().getSimpleName();
-    private final DateTimeFormatter dtf = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
     private FragmentDashboardBinding binding;
     private PurchaseFilterDialog filterDialog;
     private PurchaseFilter filter;
@@ -33,36 +35,33 @@ public class DashboardFragment extends Fragment {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         filterDialog = new PurchaseFilterDialog();
         this.applyFilter(filter);
-
         getParentFragmentManager()
                 .beginTransaction()
-                .replace(binding.fragmentContainerView.getId(), PieChartFragment.newInstance(filter))
+                .replace(binding.pieChartFragmentContainer.getId(), new PieChartFragment(filter,
+                        (newFilter) -> {
+                            applyFilter(newFilter);
+                            refreshFragment(newFilter, binding.listedPurchasesFragmentContainer.getId());
+                        }))
+                .replace(binding.listedPurchasesFragmentContainer.getId(), new PurchaseListPurchaseFragment(filter))
                 .commit();
-        binding.dashboardFilterButton.setOnClickListener(v -> openFilter((newFilter) -> {
-            this.filter = newFilter;
-            this.applyFilter(newFilter);
-            filterDialog.dismiss();
-            onSwipeRefresh(newFilter);
-        }));
+        binding.dashboardFilterButton.setOnClickListener(v -> openFilter(this::updateFilter));
         return binding.getRoot();
     }
 
     private PurchaseFilter loadFilterArg(Bundle bundle) {
         if (bundle == null || bundle.getParcelable(DASHBOARD_FILTER) == null)
-            return new PurchaseFilter();
+            return getDefaultFilter();
         return bundle.getParcelable(DASHBOARD_FILTER);
     }
 
     private void applyFilter(PurchaseFilter newFilter) {
         binding.dashboardFilterButton.setText(newFilter.isEmpty() ? "Filter" : "Filtered");
-        LocalDate from = filter.getFrom() != null ? filter.getFrom() : LocalDate.now().withDayOfMonth(1);
-        LocalDate filterTo = filter.getTo() != null ? filter.getTo() : LocalDate.now();
-        binding.dashboardFilterDateText.setText(String.format("Showing period of %s - %s", from.format(dtf), filterTo.format(dtf)));
+        binding.dashboardFilterDateText.setText(filter.getReadableString());
     }
 
     private void openFilter(Consumer<PurchaseFilter> setFilter) {
         if (filterDialog.getFilter() == null)
-            filterDialog.setFilter(new PurchaseFilter());
+            filterDialog.setFilter(getDefaultFilter());
         filterDialog.show(getParentFragmentManager(), "purchasesFilterDialog");
         filterDialog.setOnSuccess(setFilter);
     }
@@ -79,10 +78,22 @@ public class DashboardFragment extends Fragment {
         outState.putParcelable(DASHBOARD_FILTER, filter);
     }
 
-    private void onSwipeRefresh(PurchaseFilter filter) {
-        PieChartFragment fragment = binding.fragmentContainerView.getFragment();
-        fragment.refresh(filter);
+    private void refresh(PurchaseFilter filter) {
+        refreshFragment(filter, binding.pieChartFragmentContainer.getId());
+        refreshFragment(filter, binding.listedPurchasesFragmentContainer.getId());
+    }
+
+    private void refreshFragment(PurchaseFilter filter, int id) {
+        RefreshablePurchaseFragment purchaseListFragment = (RefreshablePurchaseFragment) getParentFragmentManager().findFragmentById(id);
+        if (purchaseListFragment != null) purchaseListFragment.refresh(filter);
     }
 
 
+    private void updateFilter(PurchaseFilter newFilter) {
+        this.filter = newFilter;
+        this.applyFilter(newFilter);
+        if (filterDialog.isAdded())
+            filterDialog.dismiss();
+        refresh(newFilter);
+    }
 }

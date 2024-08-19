@@ -1,4 +1,4 @@
-package com.example.purchasehistory.ui.home.purchases;
+package com.example.purchasehistory.ui.home.dashboard.list;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,37 +13,47 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.example.purchasehistory.data.filters.PurchaseFilter;
-import com.example.purchasehistory.databinding.FragmentListedPurchasesBinding;
+import com.example.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
+import com.example.purchasehistory.databinding.FragmentPurchasesListCardBinding;
+import com.example.purchasehistory.ui.home.purchases.PurchasesAdapter;
+import com.example.purchasehistory.ui.home.purchases.PurchasesViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-import static com.example.purchasehistory.data.Constants.getDefaultFilter;
-
+@NoArgsConstructor
 @AndroidEntryPoint
-public class ListedPurchasesFragment extends Fragment {
+public class PurchaseListPurchaseFragment extends Fragment implements RefreshablePurchaseFragment {
+    private static final String ARG_FILTER = "purchase_filter";
     private final String TAG = this.getClass().getSimpleName();
-
-    private FragmentListedPurchasesBinding binding;
+    private FragmentPurchasesListCardBinding binding;
     private PurchasesViewModel purchasesViewModel;
     private PurchasesAdapter purchasesAdapter;
-    private PurchaseFilterDialog filterDialog;
     @Setter
-    private PurchaseFilter filter = getDefaultFilter();
+    private PurchaseFilter filter;
+
+    public PurchaseListPurchaseFragment(PurchaseFilter filter) {
+        this.filter = filter;
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_FILTER, filter);
+        this.setArguments(args);
+    }
 
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         purchasesViewModel = new ViewModelProvider(this).get(PurchasesViewModel.class);
         initializePurchasesRecyclerView();
     }
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentListedPurchasesBinding.inflate(inflater, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentPurchasesListCardBinding.inflate(inflater, container, false);
+        if (getArguments() != null) {
+            filter = getArguments().getParcelable(ARG_FILTER);
+        }
         return binding.getRoot();
     }
 
@@ -53,17 +63,7 @@ public class ListedPurchasesFragment extends Fragment {
         binding = null;
     }
 
-
     private void initializePurchasesRecyclerView() {
-        filterDialog = new PurchaseFilterDialog();
-        binding.swiperefresh.setOnRefreshListener(this::onSwipeRefresh);
-        binding.filterButton.setOnClickListener(v -> openFilter((newFilter) -> {
-            setFilter(newFilter);
-            binding.filterButton.setText(newFilter.isEmpty() ? "Filter" : "Filtered");
-            binding.filterDateText.setText(filter.getReadableString());
-            filterDialog.dismiss();
-            onSwipeRefresh();
-        }));
         new Thread(() -> {
             List<PurchaseView> purchases = purchasesViewModel.getPurchaseClient().getAllPurchases(filter);
             purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
@@ -77,14 +77,7 @@ public class ListedPurchasesFragment extends Fragment {
         }).start();
     }
 
-    private void openFilter(Consumer<PurchaseFilter> setFilter) {
-        if (filterDialog.getFilter() == null)
-            filterDialog.setFilter(getDefaultFilter());
-        filterDialog.show(getParentFragmentManager(), "purchasesFilterDialog");
-        filterDialog.setOnSuccess(setFilter);
-    }
-
-    private void onSwipeRefresh() {
+    public void refresh(PurchaseFilter filter) {
         new Thread(() -> {
             purchasesAdapter.getPurchaseViews().clear();
             List<PurchaseView> allPurchases = purchasesViewModel.getPurchaseClient().getAllPurchases(filter);
@@ -92,7 +85,6 @@ public class ListedPurchasesFragment extends Fragment {
             purchasesAdapter.setPurchaseViews(allPurchases);
             getActivity().runOnUiThread(() -> purchasesAdapter.notifyDataSetChanged());
             Log.i(TAG, "Adapter notified");
-            binding.swiperefresh.setRefreshing(false);
         }).start();
     }
 

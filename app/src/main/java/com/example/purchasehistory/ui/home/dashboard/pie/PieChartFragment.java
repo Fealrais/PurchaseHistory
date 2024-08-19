@@ -2,15 +2,19 @@ package com.example.purchasehistory.ui.home.dashboard.pie;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsEntry;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
 import com.example.purchasehistory.data.filters.PurchaseFilter;
+import com.example.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.example.purchasehistory.databinding.FragmentPieChartBinding;
 import com.example.purchasehistory.ui.home.dashboard.DashboardViewModel;
 import com.github.mikephil.charting.animation.Easing;
@@ -25,31 +29,30 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 import dagger.hilt.android.AndroidEntryPoint;
+import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PieChartFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+@NoArgsConstructor
 @AndroidEntryPoint
-public class PieChartFragment extends Fragment implements OnChartValueSelectedListener {
+public class PieChartFragment extends Fragment implements OnChartValueSelectedListener, RefreshablePurchaseFragment {
     private static final String ARG_FILTER = "purchase_filter";
     private final String TAG = this.getClass().getSimpleName();
 
     private PurchaseFilter filter;
+    private Consumer<PurchaseFilter> setFilter;
     private DashboardViewModel viewModel;
     private FragmentPieChartBinding binding;
 
-    public static PieChartFragment newInstance(PurchaseFilter filter) {
-        PieChartFragment fragment = new PieChartFragment();
+    public PieChartFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
         Bundle args = new Bundle();
         args.putParcelable(ARG_FILTER, filter);
-        fragment.setArguments(args);
-        return fragment;
+        this.setArguments(args);
+        this.setFilter = setFilter;
     }
 
     @Override
@@ -62,7 +65,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentPieChartBinding.inflate(inflater, container, false);
@@ -72,9 +75,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
     private void initPieGraph() {
         initPieChart(binding.pieChart);
-        new Thread(() -> {
-            setData(filter);
-        }).start();
+        new Thread(() -> setData(filter)).start();
     }
 
     private void setData(PurchaseFilter filter) {
@@ -100,7 +101,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
         PieData newData = new PieData(dataSet);
 
-        getActivity().runOnUiThread(() -> {
+        new Handler(Looper.getMainLooper()).post(() -> {
             binding.pieChart.setData(newData);
             binding.pieChart.notifyDataSetChanged();
             binding.pieChart.animateY(1000);
@@ -109,7 +110,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
     }
 
     private PieEntry parsePieEntries(CategoryAnalyticsEntry entry) {
-        return new PieEntry(entry.getSum().floatValue(), entry.getCategory().getName());
+        return new PieEntry(entry.getSum().floatValue(), entry.getCategory());
     }
 
     private void initPieChart(PieChart chart) {
@@ -159,14 +160,17 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
         if (e == null)
             return;
-        Log.i("VAL SELECTED",
-                "Value: " + e.getY() + ", index: " + h.getX()
-                        + ", DataSet index: " + h.getDataSetIndex());
+        Log.i(TAG, String.format("Selected value: %s, index: %s, DataSet index: %d", e.getY(), h.getX(), h.getDataSetIndex()));
+        CategoryView category = (CategoryView) e.getData();
+        filter.setCategoryId(category.getId());
+        setFilter.accept(filter);
     }
 
     @Override
     public void onNothingSelected() {
-        Log.i("PieChart", "nothing selected");
+        Log.i(TAG, "nothing selected");
+        filter.setCategoryId(null);
+        setFilter.accept(filter);
     }
 
     public void refresh(PurchaseFilter filter) {
@@ -175,7 +179,6 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
             setData(filter);
             getActivity().runOnUiThread(() -> {
                 binding.pieChart.notifyDataSetChanged();
-                binding.pieChart.invalidate();
                 binding.pieChart.animateY(1400, Easing.EaseInOutQuad);
             });
         }).start();

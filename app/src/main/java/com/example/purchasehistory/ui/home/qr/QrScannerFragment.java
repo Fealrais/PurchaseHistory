@@ -89,15 +89,15 @@ public class QrScannerFragment extends Fragment {
 
 
         timePicker.getTimeResult().observe(getViewLifecycleOwner(), (v) -> {
-                PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
-                value.setTime(v);
-                fillQRForm(value);
+            PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
+            value.setTime(v);
+            fillQRForm(value);
 
         });
         datePicker.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
-                PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
-                value.setDate(v);
-                fillQRForm(value);
+            PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
+            value.setDate(v);
+            fillQRForm(value);
         });
         binding.qrPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
@@ -178,11 +178,11 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void resetForm() {
-        qrScannerViewModel.getPurchaseDTO().postValue(new PurchaseDTO());
         binding.qrCategorySpinner.setSelection(0);
         binding.qrPriceInput.getText().clear();
         binding.qrDateInput.setText(R.string.date);
         binding.qrTimeInput.setText(R.string.time);
+        qrScannerViewModel.getPurchaseDTO().postValue(new PurchaseDTO());
     }
 
     private void initQRCodeScanner() {
