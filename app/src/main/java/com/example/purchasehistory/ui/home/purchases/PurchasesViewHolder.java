@@ -39,11 +39,14 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         this.fragmentManager = fragmentManager;
         if (purchaseView.getPrice() != null)
             binding.purchasePriceText.setText(String.format(Locale.ENGLISH, "%.2f", purchaseView.getPrice().doubleValue()));
+        else binding.purchasePriceText.setText("-");
         if (purchaseView.getTimestamp() != null) {
             long epochMilli = purchaseView.getTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             CharSequence timeString = DateUtils.getRelativeTimeSpanString(epochMilli);
             binding.purchaseTimeText.setText(timeString);
         }
+        else binding.purchaseTimeText.setText("-");
+
         if (purchaseView.getCategory() != null) {
             binding.purchaseCategoryText.setVisibility(View.VISIBLE);
             binding.purchaseCategoryText.setText(purchaseView.getCategory().getName().toUpperCase());
@@ -51,7 +54,8 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         } else {
             binding.purchaseCategoryText.setVisibility(View.INVISIBLE);
         }
-        if (purchaseView.getTimestamp() != null)
+        if (purchaseView.getTimestamp() != null) {
+            binding.purchaseEditButton.setEnabled(true);
             binding.purchaseEditButton.setOnClickListener((v) -> {
                 if (purchaseView.getId() != null) {
                     PurchaseDTO purchaseDTO = generatePurchaseDTO(purchaseView);
@@ -64,6 +68,10 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
                 } else PurchaseHistoryApplication.getInstance().alert("Purchase does not have an id");
 
             });
+        }
+        else binding.purchaseEditButton.setEnabled(false);
+
+
     }
 
     private PurchaseDTO generatePurchaseDTO(PurchaseView purchaseView) {

@@ -78,6 +78,10 @@ public class PurchaseListPurchaseFragment extends Fragment implements Refreshabl
     }
 
     public void refresh(PurchaseFilter filter) {
+        if (purchasesAdapter == null) {
+            Log.w(TAG, "refresh: Purchases adapter is missing. Skipping refresh");
+            return;
+        }
         new Thread(() -> {
             purchasesAdapter.getPurchaseViews().clear();
             List<PurchaseView> allPurchases = purchasesViewModel.getPurchaseClient().getAllPurchases(filter);

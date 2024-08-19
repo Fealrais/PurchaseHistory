@@ -87,8 +87,11 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         dataSet.setSliceSpace(3f);
         dataSet.setIconsOffset(new MPPointF(0, 40));
         dataSet.setSelectionShift(5f);
-        dataSet.setColors(report.getContent().stream().map(entry ->
-                Color.parseColor(entry.getCategory().getColor())
+        dataSet.setColors(report.getContent().stream().map(entry -> {
+                    if (entry.getCategory() != null && entry.getCategory().getColor() != null && !entry.getCategory().getColor().isBlank())
+                        return Color.parseColor(entry.getCategory().getColor());
+                    else return Color.GRAY;
+                }
         ).collect(Collectors.toList()));
         dataSet.setValueTextSize(11f);
         dataSet.setValueTextColor(Color.WHITE);
@@ -110,7 +113,8 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
     }
 
     private PieEntry parsePieEntries(CategoryAnalyticsEntry entry) {
-        return new PieEntry(entry.getSum().floatValue(), entry.getCategory());
+        String name = entry.getCategory() != null && !entry.getCategory().getName().isBlank()? entry.getCategory().getName(): "Unknown";
+        return new PieEntry(entry.getSum().floatValue(), name, entry.getCategory());
     }
 
     private void initPieChart(PieChart chart) {
@@ -119,6 +123,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         chart.setExtraOffsets(5, 10, 5, 5);
 
         chart.setDragDecelerationFrictionCoef(0.95f);
+        chart.setDrawEntryLabels(true);
 
         chart.setDrawHoleEnabled(true);
         chart.setHoleColor(Color.WHITE);

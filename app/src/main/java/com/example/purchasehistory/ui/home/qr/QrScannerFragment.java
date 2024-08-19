@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -102,11 +104,18 @@ public class QrScannerFragment extends Fragment {
         binding.qrPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                PurchaseDTO value = new PurchaseDTO();
+                PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
                 String str = binding.qrPriceInput.getText().toString();
-                if (str.trim().isEmpty()) value.setPrice(new BigDecimal(BigInteger.ZERO));
-                else value.setPrice(new BigDecimal(str));
-                qrScannerViewModel.updatePurchaseDTO(value);
+                if (!isValidCurrency(str)) {
+                    binding.qrPriceInput.setError("Invalid price!");
+                    binding.qrSubmitButton.setEnabled(false);
+                } else {
+                    if (str.trim().isEmpty()) value.setPrice(new BigDecimal(BigInteger.ZERO));
+                    else value.setPrice(new BigDecimal(str));
+                    binding.qrSubmitButton.setEnabled(true);
+                    binding.qrSubmitButton.setError(null);
+                    qrScannerViewModel.updatePurchaseDTO(value);
+                }
             }
         });
         binding.qrTimeInput.setOnClickListener((v) -> timePicker.show(getParentFragmentManager(), "timePicker"));
@@ -143,15 +152,28 @@ public class QrScannerFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private boolean isValidCurrency(String str) {
+        if (str == null || !str.matches("^[\\d.]+$")) return false;
+        try {
+            BigDecimal value = new BigDecimal(str);
+            return value.floatValue() >= 0;
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "isValidCurrency:" + e);
+            return false;
+        }
+    }
+
     private void fillQRForm(PurchaseDTO purchaseDTO) {
         new Thread(() -> {
             qrScannerViewModel.updatePurchaseDTO(purchaseDTO);
-            if (purchaseDTO.getPrice() != null)
-                binding.qrPriceInput.setText(String.format(purchaseDTO.getPrice().toString()));
-            if (purchaseDTO.getTimestamp() != null) {
-                binding.qrDateInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_DATE));
-                binding.qrTimeInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_TIME));
-            }
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (purchaseDTO.getPrice() != null)
+                    binding.qrPriceInput.setText(String.format(purchaseDTO.getPrice().toString()));
+                if (purchaseDTO.getTimestamp() != null) {
+                    binding.qrDateInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_DATE));
+                    binding.qrTimeInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_TIME));
+                }
+            });
         }).start();
 
     }
@@ -178,8 +200,8 @@ public class QrScannerFragment extends Fragment {
     }
 
     private void resetForm() {
-        binding.qrCategorySpinner.setSelection(0);
-        binding.qrPriceInput.getText().clear();
+        binding.qrCategorySpinner.setSelection(0, true);
+        binding.qrPriceInput.setText("0");
         binding.qrDateInput.setText(R.string.date);
         binding.qrTimeInput.setText(R.string.time);
         qrScannerViewModel.getPurchaseDTO().postValue(new PurchaseDTO());
@@ -200,15 +222,24 @@ public class QrScannerFragment extends Fragment {
 
 
     private void onSubmit(PurchaseDTO data) {
+        if (isInvalidPurchase(data)) {
+            PurchaseHistoryApplication.getInstance().alert("Invalid purchase, please try with another input or reset the page.");
+            return;
+        }
         new Thread(() -> {
             PurchaseView purchaseView = qrScannerViewModel.createPurchaseView(data);
             if (purchaseView != null) {
                 PurchaseHistoryApplication.getInstance().alert("Created purchase #" + purchaseView.getBillId() + ". Cost:" + purchaseView.getPrice());
                 if (getActivity() != null)
                     getActivity().runOnUiThread(this::resetForm);
-            } else
-                PurchaseHistoryApplication.getInstance().alert("Failed to register purchase #");
+            }
         }).start();
+    }
+
+    private boolean isInvalidPurchase(PurchaseDTO data) {
+        return data.getPrice() == null ||
+                data.getPrice().compareTo(BigDecimal.ZERO) < 0 ||
+                data.getTimestamp() == null;
     }
 
     @Override
