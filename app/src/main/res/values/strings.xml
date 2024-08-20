@@ -76,5 +76,6 @@
     <string name="filterButton">Filter</string>
     <string name="to">To</string>
     <string name="from">From</string>
+    <string name="logo">Logo</string>
 
 </resources>
