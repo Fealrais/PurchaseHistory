@@ -1,6 +1,8 @@
 package com.example.purchasehistory.ui.home.purchases;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,9 +55,9 @@ public class PurchaseFilterDialog extends DialogFragment {
         datePickerFrom = new DatePickerFragment();
         datePickerTo = new DatePickerFragment();
 
+
         getParentFragmentManager().setFragmentResultListener("categoryResult", getViewLifecycleOwner(), (requestKey, result) -> {
-            CategoryView newCategoryView;
-            newCategoryView = result.getParcelable("newCategoryView");
+            CategoryView newCategoryView = result.getParcelable("newCategoryView");
             if (newCategoryView != null) categoryAdapter.add(newCategoryView);
         });
         datePickerFrom.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
@@ -77,8 +79,10 @@ public class PurchaseFilterDialog extends DialogFragment {
             categoryOptions = purchaseClient.getAllCategories();
             categoryOptions.add(0, new CategoryView(null, "None", "#fff"));
             categoryAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, categoryOptions);
-            getActivity().runOnUiThread(() -> binding.purchaseFilterCategorySpinner.setAdapter(categoryAdapter));
-        }).start();
+            new Handler(Looper.getMainLooper()).post(() -> {
+                binding.purchaseFilterCategorySpinner.setAdapter(categoryAdapter);
+            });
+        });
         binding.purchaseFilterCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

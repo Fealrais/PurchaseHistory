@@ -80,6 +80,10 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
     private void setData(PurchaseFilter filter) {
         CategoryAnalyticsReport report = viewModel.getCategoryAnalyticsReport(filter);
+        if (report == null) {
+            binding.pieChart.setCenterText("Failed to load data.\nTry again later.");
+            return;
+        }
         List<PieEntry> entries = report.getContent().stream().map(this::parsePieEntries).collect(Collectors.toList());
         PieDataSet dataSet = new PieDataSet(entries, "Category");
         binding.pieChart.setCenterText(String.format(Locale.ENGLISH, "All Purchases\nSum: %.2f", report.getTotalSum()));
@@ -113,7 +117,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
     }
 
     private PieEntry parsePieEntries(CategoryAnalyticsEntry entry) {
-        String name = entry.getCategory() != null && !entry.getCategory().getName().isBlank()? entry.getCategory().getName(): "Unknown";
+        String name = entry.getCategory() != null && !entry.getCategory().getName().isBlank() ? entry.getCategory().getName() : "Unknown";
         return new PieEntry(entry.getSum().floatValue(), name, entry.getCategory());
     }
 

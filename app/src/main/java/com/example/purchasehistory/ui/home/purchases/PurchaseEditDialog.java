@@ -1,6 +1,8 @@
 package com.example.purchasehistory.ui.home.purchases;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,14 +68,12 @@ public class PurchaseEditDialog extends DialogFragment {
         }
         timePicker = new TimePickerFragment(purchase.getTime());
         datePicker = new DatePickerFragment(purchase.getDate());
-        categoryDialog = new CreateCategoryDialog();
-
-        getParentFragmentManager().setFragmentResultListener("categoryResult", getViewLifecycleOwner(), (requestKey, result) -> {
-            CategoryView newCategoryView;
-            newCategoryView = result.getParcelable("newCategoryView");
-            if (newCategoryView != null) categoryAdapter.add(newCategoryView);
-        });
-
+        categoryDialog = new CreateCategoryDialog((newCategory) -> new Handler(Looper.getMainLooper()).post(() -> {
+            if (newCategory != null) {
+                categoryAdapter.add(newCategory);
+                binding.purchaseEditCategorySpinner.setSelection(categoryAdapter.getPosition(newCategory));
+            }
+        }));
 
         timePicker.getTimeResult().observe(getViewLifecycleOwner(), (v) -> {
             purchase.setTime(v);

@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import com.angelp.purchasehistorybackend.models.views.incoming.CategoryDTO;
+import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.data.model.Category;
 import com.example.purchasehistory.databinding.CategoryDialogBinding;
@@ -17,13 +18,23 @@ import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import java.util.function.Consumer;
 
 @AndroidEntryPoint
 public class CreateCategoryDialog extends DialogFragment {
     private final String TAG = this.getClass().getSimpleName();
+    private Consumer<CategoryView> consumer;
     @Inject
     PurchaseClient purchaseClient;
     private CategoryDialogBinding binding;
+
+
+    public CreateCategoryDialog() {
+    }
+
+    public CreateCategoryDialog(Consumer<CategoryView> categoryViewProvider) {
+        this.consumer = categoryViewProvider;
+    }
 
     @NotNull
     @Override
@@ -39,9 +50,7 @@ public class CreateCategoryDialog extends DialogFragment {
                         binding.categoryErrorText.setError("");
                         new Thread(() -> {
                             Category category = purchaseClient.createCategory(new CategoryDTO(name, color));
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable("newCategoryView", category);
-                            getParentFragmentManager().setFragmentResult("categoryResult", bundle);
+                            consumer.accept(category);
                             dialog.dismiss();
                         }).start();
                     } catch (RuntimeException e) {

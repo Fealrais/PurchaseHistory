@@ -197,7 +197,7 @@ public class PurchaseClient extends HttpClient {
                     return gson.fromJson(json, CategoryAnalyticsReport.class);
                 else {
                     ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
-                    throw new RuntimeException(errorResponse.getDetail());
+                    throw new IOException(errorResponse.getDetail());
                 }
             }
         } catch (IOException | JsonParseException e) {

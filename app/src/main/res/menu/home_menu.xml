@@ -18,4 +18,10 @@
         android:layout_height="wrap_content"
         android:title="@string/menu_export_data_as_csv"
         android:icon="@drawable/baseline_settings_24"/>
+    <item
+        android:id="@+id/menu_item_get_referral_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="@string/menu_get_referral_link"
+        android:icon="@drawable/baseline_settings_24"/>
 </menu>

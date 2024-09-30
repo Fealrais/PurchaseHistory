@@ -5,6 +5,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.example.purchasehistory.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+//    todo: add settings for observability, name and password changes
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

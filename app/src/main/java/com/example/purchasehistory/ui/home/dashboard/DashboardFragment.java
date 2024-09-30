@@ -15,6 +15,7 @@ import com.example.purchasehistory.ui.home.dashboard.pie.PieChartFragment;
 import com.example.purchasehistory.ui.home.purchases.PurchaseFilterDialog;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -23,11 +24,12 @@ import static com.example.purchasehistory.data.Constants.getDefaultFilter;
 
 @NoArgsConstructor
 @AndroidEntryPoint
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements RefreshablePurchaseFragment{
     private final String DASHBOARD_FILTER = "dashboard_filter";
     private final String TAG = this.getClass().getSimpleName();
     private FragmentDashboardBinding binding;
     private PurchaseFilterDialog filterDialog;
+    @Setter
     private PurchaseFilter filter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -78,7 +80,7 @@ public class DashboardFragment extends Fragment {
         outState.putParcelable(DASHBOARD_FILTER, filter);
     }
 
-    private void refresh(PurchaseFilter filter) {
+    public void refresh(PurchaseFilter filter) {
         refreshFragment(filter, binding.pieChartFragmentContainer.getId());
         refreshFragment(filter, binding.listedPurchasesFragmentContainer.getId());
     }

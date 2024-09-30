@@ -26,8 +26,8 @@
     <string name="title_activity_qrscanner">QRScanner</string>
     <string name="title_activity_graph">Statistics</string>
     <string name="title_activity_home">HomeActivity</string>
-    <string name="addPurchaseButton">Add purchase manually</string>
-    <string name="qr_manual_add_title">Add a bill manually</string>
+    <string name="addPurchaseButton">Add purchase</string>
+    <string name="qr_manual_add_title">Add a bill</string>
     <string name="price">Price</string>
     <string name="submit_text">Submit</string>
     <string name="date">Date</string>
@@ -77,5 +77,10 @@
     <string name="to">To</string>
     <string name="from">From</string>
     <string name="logo">Logo</string>
+    <string name="loading">Loading</string>
+    <string name="referral_header">Referral system</string>
+    <string name="menu_get_referral_link">Share a referral link</string>
+    <string name="currently_observing_user">Currently observing user:</string>
+    <string name="empty_label">Nothing to show</string>
 
 </resources>

@@ -84,10 +84,6 @@ public class QrScannerFragment extends Fragment {
         qrScannerViewModel = new ViewModelProvider(this).get(QrScannerViewModel.class);
         binding = FragmentQrBinding.inflate(inflater, container, false);
         initQRForm(inflater);
-        getChildFragmentManager().setFragmentResultListener("categoryResult", getViewLifecycleOwner(), (requestKey, result) -> {
-            CategoryView newCategoryView = result.getParcelable("newCategoryView");
-            if (newCategoryView != null) categoryAdapter.add(newCategoryView);
-        });
 
 
         timePicker.getTimeResult().observe(getViewLifecycleOwner(), (v) -> {
@@ -137,12 +133,6 @@ public class QrScannerFragment extends Fragment {
                 qrScannerViewModel.getPurchaseDTO().postValue(value);
             }
         });
-        qrScannerViewModel.getPurchaseDTO().observe(getViewLifecycleOwner(), (dto) -> {
-            String storeId = dto.getStoreId() == null ? "-" : dto.getStoreId();
-            binding.qrStoreIdValue.setText(storeId);
-            String billId = dto.getBillId() == null ? "-" : dto.getBillId();
-            binding.qrBillIdValue.setText(billId);
-        });
 
         new Thread(() -> {
             allCategories = qrScannerViewModel.getAllCategories();
@@ -167,6 +157,8 @@ public class QrScannerFragment extends Fragment {
         new Thread(() -> {
             qrScannerViewModel.updatePurchaseDTO(purchaseDTO);
             new Handler(Looper.getMainLooper()).post(() -> {
+                if (purchaseDTO.getStoreId() != null) binding.qrStoreIdValue.setText(purchaseDTO.getStoreId());
+                if (purchaseDTO.getBillId() != null) binding.qrBillIdValue.setText(purchaseDTO.getBillId());
                 if (purchaseDTO.getPrice() != null)
                     binding.qrPriceInput.setText(String.format(purchaseDTO.getPrice().toString()));
                 if (purchaseDTO.getTimestamp() != null) {
@@ -189,13 +181,15 @@ public class QrScannerFragment extends Fragment {
     private void initQRForm(LayoutInflater inflater) {
         timePicker = new TimePickerFragment(LocalTime.now());
         datePicker = new DatePickerFragment(LocalDate.now());
-        categoryDialog = new CreateCategoryDialog();
+        categoryDialog = new CreateCategoryDialog((newCategory) -> new Handler(Looper.getMainLooper()).post(() -> {
+            if (newCategory != null) {
+                categoryAdapter.add(newCategory);
+                binding.qrCategorySpinner.setSelection(categoryAdapter.getPosition(newCategory));
+            }
+        }));
         binding.qrFloatingQrButton.setOnClickListener((view) -> openCameraFlow(inflater));
         binding.qrClearButton.setOnClickListener(v -> resetForm());
-        binding.qrSubmitButton.setOnClickListener((view) -> {
-            Log.i(TAG, "Submit is WIP");
-            onSubmit(qrScannerViewModel.getPurchaseDTO().getValue());
-        });
+        binding.qrSubmitButton.setOnClickListener((view) -> onSubmit(qrScannerViewModel.getPurchaseDTO().getValue()));
 
     }
 
@@ -204,6 +198,8 @@ public class QrScannerFragment extends Fragment {
         binding.qrPriceInput.setText("0");
         binding.qrDateInput.setText(R.string.date);
         binding.qrTimeInput.setText(R.string.time);
+        binding.qrBillIdValue.setText("-");
+        binding.qrStoreIdValue.setText("-");
         qrScannerViewModel.getPurchaseDTO().postValue(new PurchaseDTO());
     }
 
@@ -226,6 +222,7 @@ public class QrScannerFragment extends Fragment {
             PurchaseHistoryApplication.getInstance().alert("Invalid purchase, please try with another input or reset the page.");
             return;
         }
+        setSubmitLoading(true);
         new Thread(() -> {
             PurchaseView purchaseView = qrScannerViewModel.createPurchaseView(data);
             if (purchaseView != null) {
@@ -233,7 +230,15 @@ public class QrScannerFragment extends Fragment {
                 if (getActivity() != null)
                     getActivity().runOnUiThread(this::resetForm);
             }
+            setSubmitLoading(false);
         }).start();
+    }
+
+    private void setSubmitLoading(boolean loading) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            binding.qrSubmitButton.setEnabled(!loading);
+            binding.qrSubmitButton.setText(loading ? R.string.loading : R.string.submit_text);
+        });
     }
 
     private boolean isInvalidPurchase(PurchaseDTO data) {

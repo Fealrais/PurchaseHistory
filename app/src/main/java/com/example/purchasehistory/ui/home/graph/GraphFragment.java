@@ -52,7 +52,7 @@ public class GraphFragment extends Fragment {
         return binding.getRoot();
     }
 
-
+//todo: check graph error
     private void initLineGraph() {
         binding.graphLineChart.getApi().applyOptions(this.chartOptions);
         HistogramSeriesOptions options = new HistogramSeriesOptions();
