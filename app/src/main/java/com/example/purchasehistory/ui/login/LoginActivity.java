@@ -98,7 +98,6 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUiWithUser(String username) {
         String welcome = String.format(getString(R.string.welcome), username);
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-        finish();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {

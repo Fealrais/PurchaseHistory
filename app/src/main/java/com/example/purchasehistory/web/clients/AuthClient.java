@@ -64,8 +64,6 @@ public class AuthClient extends HttpClient {
 
     public void logout() {
         try (Response res = postFormData(BACKEND_URL + "/logout", new UsernamePassword("","").getRequestBody())) {
-            PurchaseHistoryApplication.getInstance().userToken.postValue(null);
-            PurchaseHistoryApplication.getInstance().loggedUser.postValue(null);
             SharedPreferences player = PurchaseHistoryApplication.getContext().getSharedPreferences("player", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = player.edit();
             editor.clear(); //clear all stored data
@@ -88,16 +86,5 @@ public class AuthClient extends HttpClient {
         return Optional.empty();
     }
 
-    public Optional<String> getReferralToken() {
-        String OBSERVER_ADD_USER_ENDPOINT = BACKEND_URL+"observer/users/add?token=";
-        try (Response res = get(BACKEND_URL + "/users/self/referral-link")) {
-            if (res.isSuccessful() && res.body() != null) {
-                String token = res.body().string();
-                return Optional.of(OBSERVER_ADD_USER_ENDPOINT + token);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return Optional.empty();
-    }
+
 }

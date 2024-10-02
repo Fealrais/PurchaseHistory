@@ -71,6 +71,7 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder<PurchaseView> holder, int position) {
+        if (purchaseViews.size() <= position) return;
         PurchaseView purchaseView = purchaseViews.get(position);
         holder.bind(purchaseView, fragmentActivity.getSupportFragmentManager());
     }

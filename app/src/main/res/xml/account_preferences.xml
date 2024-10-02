@@ -1,23 +1,34 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="@string/messages_header">
-
+    <PreferenceCategory app:title="@string/user_settings">
         <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
+            app:key="username"
+            android:inputType="text"
+            app:title="@string/prompt_username" />
+        <EditTextPreference
+            app:key="email"
+            android:inputType="textEmailAddress"
+            app:title="@string/prompt_email" />
+        <EditTextPreference
+            app:key="password"
+            android:inputType="textWebPassword"
+            app:title="@string/prompt_password"
+            app:summary="@string/reset_text"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/referral_header">
+        <!--
+        Referral link button
+        https://stackoverflow.com/questions/5298370/how-to-add-a-button-to-a-preferencescreen
+-->
+        <Preference
+            app:title="Share Referral link"
+            app:key="referral_link"
+            android:icon="@drawable/baseline_share_24"
+            app:summary="Share your monthly expenses with someone"
+            />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.databinding.ActivitySettingsBinding;
 import com.example.purchasehistory.ui.home.HomeActivity;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class SettingsActivity extends AppCompatActivity {
     ActivitySettingsBinding binding;
     @Override

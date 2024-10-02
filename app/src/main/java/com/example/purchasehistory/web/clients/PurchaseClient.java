@@ -92,10 +92,10 @@ public class PurchaseClient extends HttpClient {
                     return Arrays.stream(gson.fromJson(json, PurchaseResponse[].class)).map(PurchaseResponse::toPurchaseView).collect(Collectors.toList());
                 else {
                     ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
-                    throw new RuntimeException(errorResponse.getDetail());
+                    throw new RuntimeException(String.valueOf(errorResponse));
                 }
             }
-        } catch (IOException | JsonParseException e) {
+        } catch (IOException | JsonParseException | NullPointerException e) {
             Log.e(TAG, "getAllPurchases ERROR: " + e.getMessage());
         }
         return null;
@@ -197,12 +197,30 @@ public class PurchaseClient extends HttpClient {
                     return gson.fromJson(json, CategoryAnalyticsReport.class);
                 else {
                     ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
-                    throw new IOException(errorResponse.getDetail());
+                    throw new IOException(String.valueOf(errorResponse));
                 }
             }
-        } catch (IOException | JsonParseException e) {
+        } catch (IOException | JsonParseException | NullPointerException e) {
             Log.e(TAG, "analytics ERROR: " + e.getMessage());
         }
         return null;
+    }
+
+    public boolean deletePurchase(Long purchaseId) {
+        try (Response res = delete(BACKEND_URL + "/purchase?id=" + purchaseId)) {
+            ResponseBody body = res.body();
+            if (body != null) {
+                String json = body.string();
+                Log.i("httpResponse", "delete purchase : " + json);
+                if (!res.isSuccessful()) {
+                    ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
+                    throw new IOException(errorResponse.getDetail());
+                }
+                return true;
+            }
+        } catch (IOException | JsonParseException e) {
+            Log.e(TAG, "ERROR: " + e.getMessage());
+        }
+        return false;
     }
 }

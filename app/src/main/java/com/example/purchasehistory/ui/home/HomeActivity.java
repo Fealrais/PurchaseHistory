@@ -19,13 +19,12 @@ import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.databinding.ActivityHomeBinding;
 import com.example.purchasehistory.ui.home.settings.SettingsActivity;
-import com.example.purchasehistory.ui.login.LoginActivity;
+import com.example.purchasehistory.util.AndroidUtils;
 import com.example.purchasehistory.web.clients.AuthClient;
 import com.example.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
-import java.util.Optional;
 
 @AndroidEntryPoint
 public class HomeActivity extends AppCompatActivity {
@@ -78,37 +77,17 @@ public class HomeActivity extends AppCompatActivity {
         } else if (itemId == R.id.menu_item_logout) {
             new Thread(() -> {
                 authClient.logout();
-                Intent intent = new Intent(this, LoginActivity.class);
-                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
-                startActivity(intent);
+                AndroidUtils.logout(this);
             }).start();
         } else if (itemId == R.id.menu_item_export_csv) {
             new Thread(() -> {
                 Uri exportedCsv = purchaseClient.getExportedCsv();
-                Log.i("DOWNLOAD", "Downloaded CSV to "+exportedCsv.getPath());
-                PurchaseHistoryApplication.getInstance().alert("Downloaded CSV to "+exportedCsv.getPath());
+                Log.i("DOWNLOAD", "Downloaded CSV to " + exportedCsv.getPath());
+                PurchaseHistoryApplication.getInstance().alert("Downloaded CSV to " + exportedCsv.getPath());
                 openCsvFile(PurchaseHistoryApplication.getContext(), exportedCsv);
-            }).start();
-        } else if (itemId == R.id.menu_item_get_referral_link) {
-            new Thread(() -> {
-                Optional<String> token = authClient.getReferralToken();
-                token.ifPresent((t)->shareString(t,"Sharing referral link for your purchase history"));
             }).start();
         }
         return false;
-    }
-
-    private void shareString(String token, String title) {
-        Log.i("Sharing", "Attempting to share a string.");
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, token);
-        sendIntent.putExtra(Intent.EXTRA_TITLE, title);
-
-        sendIntent.setType("text/plain");
-
-        Intent shareIntent = Intent.createChooser(sendIntent, null);
-        startActivity(shareIntent);
     }
 
     private void openCsvFile(Context context, Uri uri) {

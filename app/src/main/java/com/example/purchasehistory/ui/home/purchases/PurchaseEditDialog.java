@@ -91,6 +91,9 @@ public class PurchaseEditDialog extends DialogFragment {
             Log.i(getTag(), "Edit button clicked");
             onSubmit(purchase, purchaseId);
         });
+        binding.purchaseEditDeleteButton.setOnClickListener((view) -> {
+            sendDelete(purchaseId);
+        });
         binding.purchaseEditTimeInput.setOnClickListener((v) -> timePicker.show(getParentFragmentManager(), "timePicker"));
         binding.purchaseEditDateInput.setOnClickListener((v) -> datePicker.show(getParentFragmentManager(), "datePicker"));
         binding.purchaseEditCategoryAddButton.setOnClickListener((v) -> categoryDialog.show(getParentFragmentManager(), "createCategoryDialog"));
@@ -118,6 +121,11 @@ public class PurchaseEditDialog extends DialogFragment {
         });
         fillEditForm(purchase);
         return binding.getRoot();
+    }
+
+    private void sendDelete(Long purchaseId) {
+        boolean isSuccess = purchaseClient.deletePurchase(purchaseId);
+        if (isSuccess) dismiss();
     }
 
     private void fillEditForm(PurchaseDTO view) {

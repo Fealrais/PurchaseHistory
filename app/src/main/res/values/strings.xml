@@ -82,5 +82,7 @@
     <string name="menu_get_referral_link">Share a referral link</string>
     <string name="currently_observing_user">Currently observing user:</string>
     <string name="empty_label">Nothing to show</string>
+    <string name="user_settings">User settings</string>
+    <string name="change_text">Change</string>
 
 </resources>

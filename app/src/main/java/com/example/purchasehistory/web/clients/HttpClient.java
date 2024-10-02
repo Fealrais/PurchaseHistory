@@ -80,6 +80,17 @@ public class HttpClient {
         handleError(response);
         return response;
     }
+    public Response delete(String url) throws IOException {
+        Log.i(TAG, String.format("Sending PUT: '%s'", url));
+        Request request = new Request.Builder()
+                .url(url)
+                .delete()
+                .build();
+        Response response = client.newCall(request).execute();
+        Log.i(TAG, String.format("Received response DELETE: '%s' ", url));
+        handleError(response);
+        return response;
+    }
 
     public Response postFormData(String url, RequestBody body) throws IOException {
         Log.i(TAG, String.format("Sending POST : %s", url));

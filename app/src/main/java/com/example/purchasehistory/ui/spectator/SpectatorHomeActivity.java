@@ -1,16 +1,24 @@
 package com.example.purchasehistory.ui.spectator;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import androidx.appcompat.app.AppCompatActivity;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
-import com.example.purchasehistory.ui.EmptyFragment;
+import com.example.purchasehistory.R;
 import com.example.purchasehistory.data.filters.PurchaseFilter;
 import com.example.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.example.purchasehistory.databinding.ActivitySpectatorBinding;
+import com.example.purchasehistory.ui.EmptyFragment;
 import com.example.purchasehistory.ui.home.dashboard.DashboardFragment;
+import com.example.purchasehistory.ui.home.settings.SettingsActivity;
+import com.example.purchasehistory.util.AndroidUtils;
+import com.example.purchasehistory.web.clients.AuthClient;
 import com.example.purchasehistory.web.clients.ObserverClient;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -22,6 +30,8 @@ import java.util.UUID;
 public class SpectatorHomeActivity extends AppCompatActivity {
     @Inject
     ObserverClient observerClient;
+    @Inject
+    AuthClient authClient;
     private ActivitySpectatorBinding binding;
 
     @Override
@@ -30,6 +40,28 @@ public class SpectatorHomeActivity extends AppCompatActivity {
         binding = ActivitySpectatorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         init();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.home_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_item_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        } else if (itemId == R.id.menu_item_logout) {
+            new Thread(() -> {
+                authClient.logout();
+                AndroidUtils.logout(this);
+            }).start();
+        }
+        return false;
     }
 
     private void init() {
