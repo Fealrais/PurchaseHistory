@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -22,6 +21,7 @@ import com.example.purchasehistory.components.form.CreateCategoryDialog;
 import com.example.purchasehistory.components.form.DatePickerFragment;
 import com.example.purchasehistory.components.form.TimePickerFragment;
 import com.example.purchasehistory.databinding.FragmentPurchaseEditDialogBinding;
+import com.example.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
 import com.example.purchasehistory.util.CommonUtils;
 import com.example.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -51,7 +51,7 @@ public class PurchaseEditDialog extends DialogFragment {
     private TimePickerFragment timePicker;
     private DatePickerFragment datePicker;
     private CreateCategoryDialog categoryDialog;
-    private ArrayAdapter<CategoryView> categoryAdapter;
+    private CategorySpinnerAdapter categoryAdapter;
     private List<CategoryView> allCategories = new ArrayList<>();
     private Consumer<PurchaseView> onSuccess;
     private Long purchaseId;
@@ -99,7 +99,7 @@ public class PurchaseEditDialog extends DialogFragment {
         binding.purchaseEditCategoryAddButton.setOnClickListener((v) -> categoryDialog.show(getParentFragmentManager(), "createCategoryDialog"));
         new Thread(() -> {
             allCategories = purchaseClient.getAllCategories();
-            categoryAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, allCategories);
+            categoryAdapter = new CategorySpinnerAdapter(getContext(), allCategories);
             getActivity().runOnUiThread(() -> {
                 binding.purchaseEditCategorySpinner.setAdapter(categoryAdapter);
                 int index = CommonUtils.findIndex(allCategories, (category) -> category.getId().equals(purchase.getCategoryId()));

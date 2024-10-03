@@ -129,13 +129,13 @@
         android:id="@+id/qrFloatingQrButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
         android:clickable="true"
+        android:contentDescription="@string/qr_open_camera_button_hint"
         android:src="@drawable/qr_code_outline_icon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/qr_open_camera_button_hint" />
+        app:layout_constraintBottom_toTopOf="@+id/adView"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/qr_categoryAddButton"
@@ -146,5 +146,16 @@
         app:layout_constraintEnd_toEndOf="@+id/qr_timeInput"
         app:layout_constraintStart_toEndOf="@+id/qr_categorySpinner"
         app:layout_constraintTop_toTopOf="@+id/qr_categorySpinner" />
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-9339704833965519/5033206617"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

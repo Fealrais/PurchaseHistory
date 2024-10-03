@@ -24,6 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PurchaseHistory"
         tools:targetApi="34">
+
         <activity
             android:name=".ui.spectator.SpectatorHomeActivity"
             android:exported="false" />
@@ -67,6 +68,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9339704833965519~6807019954"/>
     </application>
 
 </manifest>

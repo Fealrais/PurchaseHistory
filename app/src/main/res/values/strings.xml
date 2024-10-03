@@ -84,5 +84,6 @@
     <string name="empty_label">Nothing to show</string>
     <string name="user_settings">User settings</string>
     <string name="change_text">Change</string>
+    <string name="default_text">Default text</string>
 
 </resources>

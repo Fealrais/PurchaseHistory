@@ -79,6 +79,7 @@ dependencies {
     implementation("com.tradingview:lightweightcharts:3.8.0")
     implementation("androidx.preference:preference:1.2.1")
     implementation("androidx.paging:paging-guava:3.3.2")
+    implementation("com.google.android.gms:play-services-ads:23.4.0")
 
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")

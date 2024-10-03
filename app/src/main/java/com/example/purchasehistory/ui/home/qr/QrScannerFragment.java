@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -31,6 +30,8 @@ import com.example.purchasehistory.components.form.DatePickerFragment;
 import com.example.purchasehistory.components.form.TimePickerFragment;
 import com.example.purchasehistory.databinding.FragmentQrBinding;
 import com.example.purchasehistory.util.AfterTextChangedWatcher;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -41,6 +42,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.android.gms.ads.AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize;
 
 @AndroidEntryPoint
 public class QrScannerFragment extends Fragment {
@@ -74,7 +77,8 @@ public class QrScannerFragment extends Fragment {
     private TimePickerFragment timePicker;
     private DatePickerFragment datePicker;
     private CreateCategoryDialog categoryDialog;
-    private ArrayAdapter<CategoryView> categoryAdapter;
+    private CategorySpinnerAdapter categoryAdapter;
+    private AdView mAdView;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -133,11 +137,19 @@ public class QrScannerFragment extends Fragment {
                 qrScannerViewModel.getPurchaseDTO().postValue(value);
             }
         });
+        mAdView = new AdView(getContext());
+        mAdView.setAdSize(getCurrentOrientationAnchoredAdaptiveBannerAdSize(getContext(), R.id.adView));
+        mAdView.setAdUnitId("myAdUnitId");
+        AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
+
+        // Start loading the ad.
+        mAdView.loadAd(adRequestBuilder.build());
+        binding.adView.addView(mAdView);
 
         new Thread(() -> {
             allCategories = qrScannerViewModel.getAllCategories();
-            categoryAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, allCategories);
-            getActivity().runOnUiThread(() -> binding.qrCategorySpinner.setAdapter(categoryAdapter));
+            categoryAdapter = new CategorySpinnerAdapter(this.getContext(), allCategories);
+            new Handler(Looper.getMainLooper()).post(() -> binding.qrCategorySpinner.setAdapter(categoryAdapter));
         }).start();
         return binding.getRoot();
     }
@@ -227,8 +239,7 @@ public class QrScannerFragment extends Fragment {
             PurchaseView purchaseView = qrScannerViewModel.createPurchaseView(data);
             if (purchaseView != null) {
                 PurchaseHistoryApplication.getInstance().alert("Created purchase #" + purchaseView.getBillId() + ". Cost:" + purchaseView.getPrice());
-                if (getActivity() != null)
-                    getActivity().runOnUiThread(this::resetForm);
+                new Handler(Looper.getMainLooper()).post(this::resetForm);
             }
             setSubmitLoading(false);
         }).start();
@@ -249,7 +260,23 @@ public class QrScannerFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        // Destroy the AdView.
+        mAdView.destroy();
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onPause() {
+        // Pause the AdView.
+        mAdView.pause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Resume the AdView.
+        mAdView.resume();
     }
 }
