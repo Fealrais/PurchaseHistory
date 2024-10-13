@@ -37,6 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -49,6 +50,8 @@ import static com.google.android.gms.ads.AdSize.getCurrentOrientationAnchoredAda
 public class QrScannerFragment extends Fragment {
     private static final String TAG = "QRCodeFragment";
     private static final String ScanResultExtra = "SCAN_RESULT";
+    final DecimalFormat formatter = new DecimalFormat("#,###,###.00");
+
     private QrScannerViewModel qrScannerViewModel;
     private FragmentQrBinding binding;
     private final ActivityResultLauncher<Intent> getQRResult = registerForActivityResult(
@@ -102,6 +105,17 @@ public class QrScannerFragment extends Fragment {
             fillQRForm(value);
         });
         binding.qrPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
+//            private String current = "";
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (!s.toString().equals(current)) {
+//                    current = formatter
+//                            .format(s);
+//                    binding.qrPriceInput.setText(current);
+//                }
+//            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 PurchaseDTO value = qrScannerViewModel.getCurrentPurchaseDTO();
@@ -140,10 +154,10 @@ public class QrScannerFragment extends Fragment {
         mAdView = new AdView(getContext());
         mAdView.setAdSize(getCurrentOrientationAnchoredAdaptiveBannerAdSize(getContext(), R.id.adView));
         mAdView.setAdUnitId("myAdUnitId");
-        AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
+        AdRequest adRequest = new AdRequest.Builder().setRequestAgent("android_studio:ad_template").build();
 
         // Start loading the ad.
-        mAdView.loadAd(adRequestBuilder.build());
+        mAdView.loadAd(adRequest);
         binding.adView.addView(mAdView);
 
         new Thread(() -> {

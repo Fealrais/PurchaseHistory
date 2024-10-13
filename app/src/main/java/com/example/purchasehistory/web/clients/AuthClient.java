@@ -6,6 +6,7 @@ import android.util.Log;
 import com.angelp.purchasehistorybackend.models.views.incoming.UserDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.example.purchasehistory.PurchaseHistoryApplication;
+import com.example.purchasehistory.R;
 import com.example.purchasehistory.data.model.UsernamePassword;
 import okhttp3.Response;
 
@@ -32,7 +33,7 @@ public class AuthClient extends HttpClient {
 
         try (Response res = postFormData(BACKEND_URL + "/login", new UsernamePassword(username, password).getRequestBody())) {
             String authorization = res.header("Authorization");
-            Log.i("loginResult", "Response code: "+ res.code());
+            Log.i("loginResult", "Response code: " + res.code());
             if (res.isSuccessful() && res.body() != null && authorization != null && !authorization.isEmpty()) {
                 String body = res.body().string();
                 Log.i("loginResult", "login successful: " + body);
@@ -40,8 +41,23 @@ public class AuthClient extends HttpClient {
                 saveLoggedUser(authorization);
                 PurchaseHistoryApplication.getInstance().getLoggedUser().postValue(result);
                 PurchaseHistoryApplication.getInstance().getUserToken().postValue(authorization);
+            } else {
+                switch (res.code()) {
+                    case 500:
+                    case 501:
+                    case 502:
+                    case 503:
+                        throw new WebException(R.string.server_connection_failed_500);
+                    case 401:
+                        throw new WebException(R.string.login_failed_401);
+                    default:
+                        throw new WebException(R.string.failed);
+                }
+
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            Log.e("loginResult", "login:" + e.getMessage());
+            throw new WebException(R.string.server_connection_failed_500);
         }
         return Optional.ofNullable(result);
     }
@@ -51,25 +67,26 @@ public class AuthClient extends HttpClient {
         try (Response res = get(BACKEND_URL + "/users/self/get")) {
             if (res.isSuccessful() && res.body() != null) {
                 String json = res.body().string();
-                Log.i("httpResponse", "register: " + json);
+                Log.i("httpResponse", "getLoggedUser: " + json);
                 result = gson.fromJson(json, UserView.class);
                 PurchaseHistoryApplication.getInstance().getLoggedUser().postValue(result);
                 Log.d("jwt_valid", "JWT Valid, user is logged in");
             }
         } catch (IOException ignored) {
             Log.d("no_user", "JWT is invalid or missing. Redirected to login");
+//            throw new RuntimeException("Session ended. Please log in again");
         }
         return Optional.ofNullable(result);
     }
 
     public void logout() {
-        try (Response res = postFormData(BACKEND_URL + "/logout", new UsernamePassword("","").getRequestBody())) {
+        try (Response res = postFormData(BACKEND_URL + "/logout", new UsernamePassword("", "").getRequestBody())) {
             SharedPreferences player = PurchaseHistoryApplication.getContext().getSharedPreferences("player", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = player.edit();
             editor.clear(); //clear all stored data
             editor.apply();
         } catch (IOException ignored) {
-            Log.i("logout", "logout: "+ignored.getMessage());
+            Log.i("logout", "logout: " + ignored.getMessage());
         }
     }
 
@@ -81,7 +98,8 @@ public class AuthClient extends HttpClient {
                 return Optional.of(gson.fromJson(json, UserView.class));
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.e("registerResult", "failed:" + e.getMessage());
+            throw new WebException(R.string.server_connection_failed_500);
         }
         return Optional.empty();
     }

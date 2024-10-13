@@ -9,6 +9,7 @@ import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.data.model.LoginResult;
 import com.example.purchasehistory.web.clients.AuthClient;
+import com.example.purchasehistory.web.clients.WebException;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 import javax.inject.Inject;
@@ -36,14 +37,18 @@ public class LoginViewModel extends ViewModel {
 
     public Runnable login(String username, String password) {
         return () -> {
-            Optional<UserView> loggedUser = authClient.login(username, password);
+            try {
+                Optional<UserView> loggedUser = authClient.login(username, password);
 
-            if (loggedUser.isPresent()) {
-                UserView userView = loggedUser.get();
-                PurchaseHistoryApplication.getInstance().loggedUser.postValue(userView);
-                loginResult.postValue(new LoginResult(userView));
-            } else {
-                loginResult.postValue(new LoginResult(R.string.login_failed));
+                if (loggedUser.isPresent()) {
+                    UserView userView = loggedUser.get();
+                    PurchaseHistoryApplication.getInstance().loggedUser.postValue(userView);
+                    loginResult.postValue(new LoginResult(userView));
+                } else {
+                    loginResult.postValue(new LoginResult(R.string.login_failed));
+                }
+            } catch (WebException e) {
+                loginResult.postValue(new LoginResult(e.getErrorResource()));
             }
         };
     }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PurchaseHistory</string>
+    <string name="app_name" translatable="false">PurchaseHistory</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -14,6 +14,9 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="invalid_email">Must be a valid email</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="server_connection_failed_500">"Could not reach server. Try again later"</string>
+    <string name="login_failed_401">"Invalid username or password"</string>
+    <string name="failed">"Something went wrong"</string>
     <string name="invalid_credentials">Combination of username and password does not exist</string>
     <string name="back">Back</string>
     <string name="alert_session_ended">Session ended, please log in again</string>
@@ -72,7 +75,7 @@
     <string name="menu_export_data_as_csv">Export data as CSV</string>
     <string name="title_purchases_list">List purchases</string>
     <string name="retry_btn">Retry</string>
-    <string name="dashboard_wip">Dashboard is empty, Work in progress. plz ignore ☺</string>
+    <string name="dashboard_wip">Work in progress. plz ignore ☺</string>
     <string name="filterButton">Filter</string>
     <string name="to">To</string>
     <string name="from">From</string>
@@ -85,5 +88,13 @@
     <string name="user_settings">User settings</string>
     <string name="change_text">Change</string>
     <string name="default_text">Default text</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <!-- -
+    This is an ad unit ID for a banner test ad. Replace with your own banner ad unit id.
+    For more information, see https://support.google.com/admob/answer/3052638
+<!- -->
+    <string name="banner_ad_unit_id">YOUR_BANNER_AD_UNIT_ID</string>
+    <string name="title_spectated_users">Spectated Users</string>
 
 </resources>

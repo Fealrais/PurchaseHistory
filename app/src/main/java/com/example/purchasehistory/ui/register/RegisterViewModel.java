@@ -8,6 +8,7 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.data.model.LoginResult;
 import com.example.purchasehistory.web.clients.AuthClient;
+import com.example.purchasehistory.web.clients.WebException;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 import javax.inject.Inject;
@@ -34,13 +35,17 @@ public class RegisterViewModel extends ViewModel {
 
     public Runnable register(String username, String password, String email) {
         return () -> {
-            Optional<UserView> loggedUser = authClient.register(username, password, email);
+            try {
+                Optional<UserView> loggedUser = authClient.register(username, password, email);
 
-            if (loggedUser.isPresent()) {
-                UserView userView = loggedUser.get();
-                registerResult.postValue(new LoginResult(userView));
-            } else {
-                registerResult.postValue(new LoginResult(R.string.register_failed));
+                if (loggedUser.isPresent()) {
+                    UserView userView = loggedUser.get();
+                    registerResult.postValue(new LoginResult(userView));
+                } else {
+                    registerResult.postValue(new LoginResult(R.string.register_failed));
+                }
+            } catch (WebException e) {
+                registerResult.postValue(new LoginResult(e.getErrorResource()));
             }
         };
     }

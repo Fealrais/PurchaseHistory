@@ -44,10 +44,10 @@ public class HomeActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_dashboard, R.id.navigation_qrscanner)
+                R.id.navigation_dashboard, R.id.navigation_qrscanner, R.id.navigation_purchases_list, R.id.navigation_graph)
                 .build();
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host_fragment_activity_main);
+                .findFragmentById(R.id.nav_host_fragment_user_activity);
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
             NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);

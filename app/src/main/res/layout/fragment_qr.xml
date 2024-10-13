@@ -56,8 +56,9 @@
 
     <EditText
         android:id="@+id/qr_priceInput"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="70dp"
+        android:layout_width="match_parent"
+        android:textSize="35sp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
@@ -70,7 +71,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qr_storeLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/qr_storeLabel"
+        />
+
+    <Button
+        android:id="@+id/qr_dateInput"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/date"
+        app:layout_constraintEnd_toStartOf="@+id/qr_timeInput"
+        app:layout_constraintStart_toStartOf="@+id/qr_priceInput"
+        app:layout_constraintTop_toBottomOf="@+id/qr_priceInput" />
+
+    <Button
+        android:id="@+id/qr_clearButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/qr_submitButton"
+        app:layout_constraintTop_toTopOf="@+id/qr_submitButton" />
+
+    <Button
+        android:id="@+id/qr_categoryAddButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/add_button_text"
+        app:layout_constraintEnd_toEndOf="@+id/qr_timeInput"
+        app:layout_constraintStart_toEndOf="@+id/qr_categorySpinner"
+        app:layout_constraintTop_toTopOf="@+id/qr_categorySpinner" />
 
     <Button
         android:id="@+id/qr_timeInput"
@@ -83,18 +116,6 @@
         app:layout_constraintEnd_toEndOf="@+id/qr_priceInput"
         app:layout_constraintStart_toEndOf="@+id/qr_dateInput"
         app:layout_constraintTop_toTopOf="@+id/qr_dateInput" />
-
-    <Button
-        android:id="@+id/qr_dateInput"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="12dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/date"
-        app:layout_constraintEnd_toStartOf="@+id/qr_timeInput"
-        app:layout_constraintStart_toStartOf="@+id/qr_priceInput"
-        app:layout_constraintTop_toBottomOf="@+id/qr_priceInput" />
 
     <Spinner
         android:id="@+id/qr_categorySpinner"
@@ -110,20 +131,11 @@
         android:id="@+id/qr_submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:text="@string/submit_text"
         app:layout_constraintEnd_toStartOf="@+id/qr_clearButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qr_categorySpinner" />
-
-    <Button
-        android:id="@+id/qr_clearButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reset_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/qr_submitButton"
-        app:layout_constraintTop_toTopOf="@+id/qr_submitButton" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/qrFloatingQrButton"
@@ -136,16 +148,6 @@
         android:src="@drawable/qr_code_outline_icon"
         app:layout_constraintBottom_toTopOf="@+id/adView"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/qr_categoryAddButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="@string/add_button_text"
-        app:layout_constraintEnd_toEndOf="@+id/qr_timeInput"
-        app:layout_constraintStart_toEndOf="@+id/qr_categorySpinner"
-        app:layout_constraintTop_toTopOf="@+id/qr_categorySpinner" />
 
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"

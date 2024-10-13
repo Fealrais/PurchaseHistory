@@ -55,8 +55,9 @@ public class LoginActivity extends AppCompatActivity {
 
         loginViewModel.getLoginResult().observe(this, loginResult -> {
             loadingProgressBar.setVisibility(View.GONE);
+            loginButton.setEnabled(true);
             if (loginResult.getSuccess() == null) {
-                showLoginFailed(R.string.invalid_credentials);
+                showLoginFailed(loginResult.getError());
             } else {
                 updateUiWithUser(loginResult.getSuccess().getUsername());
                 setResult(Activity.RESULT_OK);
@@ -82,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
+            loginButton.setEnabled(false);
             attemptLogin(usernameEditText, passwordEditText);
         });
     }

@@ -1,6 +1,8 @@
 package com.example.purchasehistory.ui.home.dashboard.list;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +71,7 @@ public class PurchaseListPurchaseFragment extends Fragment implements Refreshabl
             purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
-            getActivity().runOnUiThread(() -> {
+            new Handler(Looper.getMainLooper()).post(() -> {
                 binding.purchaseList.setLayoutManager(llm);
                 binding.purchaseList.setItemAnimator(new DefaultItemAnimator());
                 binding.purchaseList.setAdapter(purchasesAdapter);
