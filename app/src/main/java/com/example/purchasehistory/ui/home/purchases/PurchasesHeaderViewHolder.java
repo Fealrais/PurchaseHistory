@@ -9,6 +9,8 @@ import com.example.purchasehistory.databinding.RecyclerViewPurchaseHeaderBinding
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 @Getter
 public class PurchasesHeaderViewHolder extends ViewHolder<PurchaseView> {
     private final String TAG = this.getClass().getSimpleName();
@@ -22,7 +24,7 @@ public class PurchasesHeaderViewHolder extends ViewHolder<PurchaseView> {
         binding = RecyclerViewPurchaseHeaderBinding.bind(itemView);
     }
 
-    public void bind(PurchaseView purchaseView, FragmentManager fragmentManager) {
+    public void bind(PurchaseView purchaseView, FragmentManager fragmentManager, Consumer<Long> onDelete) {
         this.fragmentManager = fragmentManager;
         PurchaseViewHeader header = (PurchaseViewHeader) purchaseView;
         binding.purchaseHeaderTimeText.setText(header.getTitle());

@@ -73,7 +73,18 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
     public void onBindViewHolder(@NonNull @NotNull ViewHolder<PurchaseView> holder, int position) {
         if (purchaseViews.size() <= position) return;
         PurchaseView purchaseView = purchaseViews.get(position);
-        holder.bind(purchaseView, fragmentActivity.getSupportFragmentManager());
+        holder.bind(purchaseView, fragmentActivity.getSupportFragmentManager(), this::onDelete);
+    }
+
+    private void onDelete(Long aLong) {
+        for (int i = 0; i < this.purchaseViews.size(); i++) {
+            PurchaseView purchaseView = purchaseViews.get(i);
+            if(purchaseView.getId().equals(aLong)){
+                this.purchaseViews.remove(i);
+                notifyItemRemoved(i);
+                break;
+            }
+        }
     }
 
 

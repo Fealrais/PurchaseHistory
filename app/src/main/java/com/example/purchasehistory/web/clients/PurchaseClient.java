@@ -208,15 +208,13 @@ public class PurchaseClient extends HttpClient {
 
     public boolean deletePurchase(Long purchaseId) {
         try (Response res = delete(BACKEND_URL + "/purchase?id=" + purchaseId)) {
-            ResponseBody body = res.body();
-            if (body != null) {
-                String json = body.string();
-                Log.i("httpResponse", "delete purchase : " + json);
-                if (!res.isSuccessful()) {
-                    ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
-                    throw new IOException(errorResponse.getDetail());
-                }
+            if (res.isSuccessful()) {
+                Log.i("httpResponse", "delete purchase : Success");
                 return true;
+            }
+            if (res.body() != null && res.body().contentLength() > 0) {
+                ErrorResponse errorResponse = gson.fromJson(res.body().string(), ErrorResponse.class);
+                throw new IOException(errorResponse.getDetail());
             }
         } catch (IOException | JsonParseException e) {
             Log.e(TAG, "ERROR: " + e.getMessage());

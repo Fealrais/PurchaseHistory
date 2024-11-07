@@ -1,6 +1,5 @@
 package com.example.purchasehistory.ui.home.qr;
 
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
@@ -17,14 +16,9 @@ import java.util.List;
 @HiltViewModel
 public class QrScannerViewModel extends ViewModel {
     @Getter
-    private final MutableLiveData<PurchaseDTO> purchaseDTO = new MutableLiveData<>(new PurchaseDTO());
+    private final PurchaseDTO purchaseDTO = new PurchaseDTO();
 
     PurchaseClient purchaseClient;
-
-    public PurchaseDTO getCurrentPurchaseDTO() {
-        if(purchaseDTO.getValue() == null) return new PurchaseDTO();
-        return purchaseDTO.getValue();
-    }
 
     @Inject
     public QrScannerViewModel(PurchaseClient purchaseClient) {
@@ -46,13 +40,19 @@ public class QrScannerViewModel extends ViewModel {
 
 
     public void updatePurchaseDTO(PurchaseDTO purchaseDTO) {
-        PurchaseDTO prev = getCurrentPurchaseDTO();
-        if(purchaseDTO.getQrContent()!= null) prev.setQrContent(purchaseDTO.getQrContent());
-        if(purchaseDTO.getPrice()!= null) prev.setPrice(purchaseDTO.getPrice());
-        if(purchaseDTO.getTimestamp()!= null) prev.setTimestamp(purchaseDTO.getTimestamp());
-        if(purchaseDTO.getCategoryId()!= null) prev.setCategoryId(purchaseDTO.getCategoryId());
-        if(purchaseDTO.getBillId()!= null) prev.setBillId(purchaseDTO.getBillId());
-        if(purchaseDTO.getStoreId()!= null) prev.setStoreId(purchaseDTO.getStoreId());
-        this.purchaseDTO.postValue(prev);
+        if(purchaseDTO.getQrContent()!= null) purchaseDTO.setQrContent(purchaseDTO.getQrContent());
+        if(purchaseDTO.getPrice()!= null) purchaseDTO.setPrice(purchaseDTO.getPrice());
+        if(purchaseDTO.getTimestamp()!= null) purchaseDTO.setTimestamp(purchaseDTO.getTimestamp());
+        if(purchaseDTO.getCategoryId()!= null) purchaseDTO.setCategoryId(purchaseDTO.getCategoryId());
+        if(purchaseDTO.getBillId()!= null) purchaseDTO.setBillId(purchaseDTO.getBillId());
+        if(purchaseDTO.getStoreId()!= null) purchaseDTO.setStoreId(purchaseDTO.getStoreId());
+    }
+    public void resetPurchaseDto() {
+        purchaseDTO.setQrContent(null);
+        purchaseDTO.setPrice(null);
+        purchaseDTO.setTimestamp(null);
+        purchaseDTO.setCategoryId(null);
+        purchaseDTO.setBillId(null);
+        purchaseDTO.setStoreId(null);
     }
 }

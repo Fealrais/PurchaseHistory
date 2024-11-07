@@ -81,7 +81,7 @@ public class HttpClient {
         return response;
     }
     public Response delete(String url) throws IOException {
-        Log.i(TAG, String.format("Sending PUT: '%s'", url));
+        Log.i(TAG, String.format("Sending DELETE: '%s'", url));
         Request request = new Request.Builder()
                 .url(url)
                 .delete()

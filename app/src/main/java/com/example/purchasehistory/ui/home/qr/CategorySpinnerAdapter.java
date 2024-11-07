@@ -34,7 +34,12 @@ public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
         binding.categoryName.setText(item.getName());
 
         String color = COLOR_REGEX.matcher(item.getColor()).find() ? item.getColor() : "#c4c4c4";
-        binding.categoryName.setBackgroundColor(Color.parseColor(color));
+        int parsedColor = Color.parseColor(color);
+        if (Color.luminance(parsedColor) > 0.5)
+            binding.categoryName.setTextColor(Color.BLACK);
+        else
+            binding.categoryName.setTextColor(Color.WHITE);
+        binding.categoryName.setBackgroundColor(parsedColor);
         return binding.getRoot();
     }
 
