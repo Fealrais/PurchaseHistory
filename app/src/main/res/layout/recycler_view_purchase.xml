@@ -50,6 +50,20 @@
         app:layout_constraintStart_toEndOf="@+id/purchaseTimeText"
         app:layout_constraintTop_toTopOf="@+id/purchaseTimeText" />
 
+    <TextView
+        android:id="@+id/purchaseNoteText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:duplicateParentState="false"
+        android:outlineProvider="paddedBounds"
+        android:padding="3dp"
+        android:text="@string/lorem"
+        app:layout_constraintBottom_toBottomOf="@+id/purchaseTimeText"
+        app:layout_constraintStart_toEndOf="@id/purchaseCategoryText"
+        app:layout_constraintTop_toTopOf="@+id/purchaseTimeText"
+        app:layout_constraintVertical_bias="1.0" />
+
     <!--
         <Button
             android:id="@+id/purchase_edit_button"

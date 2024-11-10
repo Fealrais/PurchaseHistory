@@ -40,6 +40,9 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         this.fragmentManager = fragmentManager;
         if (purchaseView.getPrice() != null)
             binding.purchasePriceText.setText(String.format(Locale.ENGLISH, "%.2f", purchaseView.getPrice().doubleValue()));
+        if (purchaseView.getNote() != null) {
+            binding.purchaseNoteText.setText(purchaseView.getNote());
+        }
         else binding.purchasePriceText.setText("-");
         if (purchaseView.getTimestamp() != null) {
             long epochMilli = purchaseView.getTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();

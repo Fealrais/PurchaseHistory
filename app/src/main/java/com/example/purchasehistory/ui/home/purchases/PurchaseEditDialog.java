@@ -3,6 +3,7 @@ package com.example.purchasehistory.ui.home.purchases;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.example.purchasehistory.components.form.DatePickerFragment;
 import com.example.purchasehistory.components.form.TimePickerFragment;
 import com.example.purchasehistory.databinding.FragmentPurchaseEditDialogBinding;
 import com.example.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
+import com.example.purchasehistory.util.AfterTextChangedWatcher;
 import com.example.purchasehistory.util.CommonUtils;
 import com.example.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -30,6 +32,8 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +112,28 @@ public class PurchaseEditDialog extends DialogFragment {
                     binding.purchaseEditCategorySpinner.setSelection(index);
             });
         }).start();
+        binding.purchaseEditPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = binding.purchaseEditPriceInput.getText().toString();
+                if (!CommonUtils.isValidCurrency(str)) {
+                    binding.purchaseEditPriceInput.setError("Invalid price!");
+                    binding.purchaseEditSaveButton.setEnabled(false);
+                } else {
+                    if (str.trim().isEmpty()) purchase.setPrice(new BigDecimal(BigInteger.ZERO));
+                    else purchase.setPrice(new BigDecimal(str));
+                    binding.purchaseEditSaveButton.setEnabled(true);
+                    binding.purchaseEditPriceInput.setError(null);
+                }
+            }
+        });
+        binding.purchaseEditNoteInput.addTextChangedListener(new AfterTextChangedWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = binding.purchaseEditPriceInput.getText().toString();
+                purchase.setNote(str);
+            }
+        });
         binding.purchaseEditCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -144,6 +170,8 @@ public class PurchaseEditDialog extends DialogFragment {
                 binding.purchaseEditBillIdValue.setText(view.getBillId());
             if (view.getStoreId() != null)
                 binding.purchaseEditStoreIdValue.setText(view.getStoreId());
+            if (view.getNote() != null)
+                binding.purchaseEditNoteInput.setText(view.getNote());
             if (view.getCategoryId() != null) {
                 for (int i = 0; i < allCategories.size(); i++) {
                     if (view.getCategoryId().equals(allCategories.get(i).getId())) {
@@ -181,6 +209,7 @@ public class PurchaseEditDialog extends DialogFragment {
         this.purchaseId = null;
         binding.purchaseEditCategorySpinner.setSelection(0);
         binding.purchaseEditPriceInput.getText().clear();
+        binding.purchaseEditNoteInput.getText().clear();
         binding.purchaseEditDateInput.setText(R.string.date);
         binding.purchaseEditTimeInput.setText(R.string.time);
     }

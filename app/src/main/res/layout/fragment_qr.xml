@@ -135,7 +135,7 @@
         android:text="@string/submit_text"
         app:layout_constraintEnd_toStartOf="@+id/qr_clearButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qr_categorySpinner" />
+        app:layout_constraintTop_toBottomOf="@id/qr_noteInput" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/qrFloatingQrButton"
@@ -159,5 +159,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/qr_noteInput"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="@string/add_note"
+        app:layout_constraintEnd_toEndOf="@+id/qr_priceInput"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/qr_categorySpinner"
+        app:layout_constraintTop_toBottomOf="@+id/qr_categorySpinner"
+        android:autofillHints="" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

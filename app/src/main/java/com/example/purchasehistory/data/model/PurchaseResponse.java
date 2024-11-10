@@ -22,6 +22,7 @@ public class PurchaseResponse {
     private String timestamp;
     private String billId;
     private String storeId;
+    private String note;
 
     private UserView createdBy;
     private String createdDate;
@@ -39,6 +40,7 @@ public class PurchaseResponse {
                 timestamp == null ? null : LocalDateTime.parse(timestamp),
                 billId,
                 storeId,
+                note,
                 category,
                 createdBy,
                 createdDate == null ? null : LocalDateTime.parse(createdDate),

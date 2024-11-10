@@ -30,6 +30,7 @@ import com.example.purchasehistory.components.form.DatePickerFragment;
 import com.example.purchasehistory.components.form.TimePickerFragment;
 import com.example.purchasehistory.databinding.FragmentQrBinding;
 import com.example.purchasehistory.util.AfterTextChangedWatcher;
+import com.example.purchasehistory.util.CommonUtils;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -117,7 +118,7 @@ public class QrScannerFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 PurchaseDTO value = qrScannerViewModel.getPurchaseDTO();
                 String str = binding.qrPriceInput.getText().toString();
-                if (!isValidCurrency(str)) {
+                if (!CommonUtils.isValidCurrency(str)) {
                     binding.qrPriceInput.setError("Invalid price!");
                     binding.qrSubmitButton.setEnabled(false);
                 } else {
@@ -127,6 +128,13 @@ public class QrScannerFragment extends Fragment {
                     binding.qrSubmitButton.setError(null);
                     qrScannerViewModel.updatePurchaseDTO(value);
                 }
+            }
+        });
+        binding.qrNoteInput.addTextChangedListener(new AfterTextChangedWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = binding.qrNoteInput.getText().toString();
+                qrScannerViewModel.getPurchaseDTO().setNote(str);
             }
         });
         binding.qrTimeInput.setOnClickListener((v) -> timePicker.show(getParentFragmentManager(), "timePicker"));
@@ -162,17 +170,6 @@ public class QrScannerFragment extends Fragment {
             new Handler(Looper.getMainLooper()).post(() -> binding.qrCategorySpinner.setAdapter(categoryAdapter));
         }).start();
         return binding.getRoot();
-    }
-
-    private boolean isValidCurrency(String str) {
-        if (str == null || !str.matches("^[\\d.]+$")) return false;
-        try {
-            BigDecimal value = new BigDecimal(str);
-            return value.floatValue() >= 0;
-        } catch (NumberFormatException e) {
-            Log.e(TAG, "isValidCurrency:" + e);
-            return false;
-        }
     }
 
     private void fillQRForm(PurchaseDTO purchaseDTO) {

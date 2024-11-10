@@ -96,5 +96,6 @@
 <!- -->
     <string name="banner_ad_unit_id">YOUR_BANNER_AD_UNIT_ID</string>
     <string name="title_spectated_users">Spectated Users</string>
+    <string name="add_note">Add a note</string>
 
 </resources>

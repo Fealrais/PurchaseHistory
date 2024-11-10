@@ -86,4 +86,5 @@
     <string name="hello_world">Здравей, свят!</string>
     <string name="banner_ad_unit_id">YOUR_BANNER_AD_UNIT_ID</string>
     <string name="title_spectated_users">Наблюдавани потребители</string>
+    <string name="add_note">Добави бележка</string>
 </resources>

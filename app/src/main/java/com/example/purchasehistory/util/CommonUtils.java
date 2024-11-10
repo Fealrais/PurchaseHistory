@@ -1,5 +1,8 @@
 package com.example.purchasehistory.util;
 
+import android.util.Log;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -18,4 +21,15 @@ public final class CommonUtils {
         }
         return index;
     }
+    public static boolean isValidCurrency(String str) {
+        if (str == null || !str.matches("^[\\d.]+$")) return false;
+        try {
+            BigDecimal value = new BigDecimal(str);
+            return value.floatValue() >= 0;
+        } catch (NumberFormatException e) {
+            Log.e("Currency_validation", "isValidCurrency:" + e);
+            return false;
+        }
+    }
+
 }

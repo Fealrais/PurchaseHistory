@@ -13,8 +13,8 @@ android {
         applicationId = "com.example.purchasehistory"
         minSdk = 29
         targetSdk = AndroidVersion.VersionCodes.Q
-        versionCode = 2
-        versionName = "2.0"
+        versionCode = 3
+        versionName = "0.1.2"
 
         testInstrumentationRunner = "com.example.purchasehistory.setup.CustomTestRunner"
         vectorDrawables {

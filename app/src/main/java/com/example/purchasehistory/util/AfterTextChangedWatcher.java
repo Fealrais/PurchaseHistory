@@ -12,4 +12,5 @@ public abstract class AfterTextChangedWatcher implements TextWatcher {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         //ignore
     }
+
 }
