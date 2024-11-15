@@ -66,7 +66,7 @@ public class ListedPurchasesFragment extends Fragment {
         }));
         new Thread(() -> {
             List<PurchaseView> purchases = purchasesViewModel.getPurchaseClient().getAllPurchases(filter);
-            purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
+            purchasesAdapter = new PurchasesAdapter(purchases, getActivity(), this::onSwipeRefresh);
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             getActivity().runOnUiThread(() -> {

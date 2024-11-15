@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import java.util.function.Consumer;
 
 import static com.example.purchasehistory.data.Constants.PURCHASE_EDIT_DIALOG_ID_KEY;
 
@@ -35,7 +34,7 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         binding = RecyclerViewPurchaseBinding.bind(itemView);
     }
 
-    public void bind(PurchaseView purchaseView, FragmentManager fragmentManager, Consumer<Long> onDelete) {
+    public void bind(PurchaseView purchaseView, FragmentManager fragmentManager, Runnable onDelete) {
         editDialog = new PurchaseEditDialog();
         this.fragmentManager = fragmentManager;
         if (purchaseView.getPrice() != null)
@@ -72,7 +71,7 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
                         if(newView!=null)
                             this.bind(newView, fragmentManager, onDelete);
                         else
-                            onDelete.accept(purchaseView.getId());
+                            onDelete.run();
                     });
                 } else PurchaseHistoryApplication.getInstance().alert("Purchase does not have an id");
 

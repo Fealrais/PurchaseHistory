@@ -72,6 +72,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qr_storeLabel"
+        android:nextFocusDown="@id/qr_dateInput"
         />
 
     <Button
@@ -84,7 +85,8 @@
         android:hint="@string/date"
         app:layout_constraintEnd_toStartOf="@+id/qr_timeInput"
         app:layout_constraintStart_toStartOf="@+id/qr_priceInput"
-        app:layout_constraintTop_toBottomOf="@+id/qr_priceInput" />
+        app:layout_constraintTop_toBottomOf="@+id/qr_priceInput"
+        android:nextFocusDown="@id/qr_timeInput"/>
 
     <Button
         android:id="@+id/qr_clearButton"
@@ -115,7 +117,9 @@
         android:hint="@string/time"
         app:layout_constraintEnd_toEndOf="@+id/qr_priceInput"
         app:layout_constraintStart_toEndOf="@+id/qr_dateInput"
-        app:layout_constraintTop_toTopOf="@+id/qr_dateInput" />
+        app:layout_constraintTop_toTopOf="@+id/qr_dateInput"
+        android:nextFocusDown="@id/qr_categorySpinner"
+         />
 
     <Spinner
         android:id="@+id/qr_categorySpinner"
@@ -125,7 +129,8 @@
         android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toStartOf="@+id/qr_categoryAddButton"
         app:layout_constraintStart_toStartOf="@+id/qr_dateInput"
-        app:layout_constraintTop_toBottomOf="@+id/qr_dateInput" />
+        app:layout_constraintTop_toBottomOf="@+id/qr_dateInput"
+        android:nextFocusDown="@id/qr_noteInput"/>
 
     <Button
         android:id="@+id/qr_submitButton"
@@ -172,6 +177,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/qr_categorySpinner"
         app:layout_constraintTop_toBottomOf="@+id/qr_categorySpinner"
-        android:autofillHints="" />
+        android:autofillHints=""
+        android:nextFocusDown="@id/qr_submitButton"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

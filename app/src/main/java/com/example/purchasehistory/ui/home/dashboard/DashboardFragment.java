@@ -44,7 +44,7 @@ public class DashboardFragment extends Fragment implements RefreshablePurchaseFr
                             applyFilter(newFilter);
                             refreshFragment(newFilter, binding.listedPurchasesFragmentContainer.getId());
                         }))
-                .replace(binding.listedPurchasesFragmentContainer.getId(), new PurchaseListPurchaseFragment(filter))
+                .replace(binding.listedPurchasesFragmentContainer.getId(), new PurchaseListPurchaseFragment(filter, ()->refresh(filter)))
                 .commit();
         binding.dashboardFilterButton.setOnClickListener(v -> openFilter(this::updateFilter));
         return binding.getRoot();

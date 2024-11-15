@@ -1,5 +1,7 @@
 package com.example.purchasehistory.ui.home.purchases;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +24,13 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
     @Getter
     private final List<PurchaseView> purchaseViews = new ArrayList<>();
     private final FragmentActivity fragmentActivity;
+    private final Runnable refreshDashboard;
 
 
-    public PurchasesAdapter(List<PurchaseView> purchaseViews, FragmentActivity fragmentActivity) {
+    public PurchasesAdapter(List<PurchaseView> purchaseViews, FragmentActivity fragmentActivity, Runnable refreshDashboard) {
         setPurchaseViews(purchaseViews);
         this.fragmentActivity = fragmentActivity;
+        this.refreshDashboard = refreshDashboard;
     }
 
     public void setPurchaseViews(List<PurchaseView> purchaseViews) {
@@ -73,20 +77,12 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
     public void onBindViewHolder(@NonNull @NotNull ViewHolder<PurchaseView> holder, int position) {
         if (purchaseViews.size() <= position) return;
         PurchaseView purchaseView = purchaseViews.get(position);
-        holder.bind(purchaseView, fragmentActivity.getSupportFragmentManager(), this::onDelete);
+        holder.bind(purchaseView, fragmentActivity.getSupportFragmentManager(), refreshDashboard);
     }
-
-    private void onDelete(Long aLong) {
-        for (int i = 0; i < this.purchaseViews.size(); i++) {
-            PurchaseView purchaseView = purchaseViews.get(i);
-            if(purchaseView.getId().equals(aLong)){
-                this.purchaseViews.remove(i);
-                notifyItemRemoved(i);
-                break;
-            }
-        }
+    private void removePurchase(int index) {
+        this.purchaseViews.remove(index);
+        new Handler(Looper.getMainLooper()).post(() -> notifyItemRemoved(index));
     }
-
 
     @Override
     public int getItemCount() {

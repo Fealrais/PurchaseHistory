@@ -36,12 +36,14 @@ public class PurchaseListPurchaseFragment extends Fragment implements Refreshabl
     private PurchasesAdapter purchasesAdapter;
     @Setter
     private PurchaseFilter filter;
+    private Runnable refreshDashboard;
 
-    public PurchaseListPurchaseFragment(PurchaseFilter filter) {
+    public PurchaseListPurchaseFragment(PurchaseFilter filter, Runnable refresh) {
         this.filter = filter;
         Bundle args = new Bundle();
         args.putParcelable(ARG_FILTER, filter);
         this.setArguments(args);
+        this.refreshDashboard = refresh;
     }
 
     @Override
@@ -68,7 +70,7 @@ public class PurchaseListPurchaseFragment extends Fragment implements Refreshabl
     private void initializePurchasesRecyclerView() {
         new Thread(() -> {
             List<PurchaseView> purchases = purchasesViewModel.getPurchaseClient().getAllPurchases(filter);
-            purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
+            purchasesAdapter = new PurchasesAdapter(purchases, getActivity(), refreshDashboard);
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             new Handler(Looper.getMainLooper()).post(() -> {

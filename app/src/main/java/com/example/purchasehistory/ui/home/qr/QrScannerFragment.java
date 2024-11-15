@@ -94,67 +94,6 @@ public class QrScannerFragment extends Fragment {
         initQRForm(inflater);
 
 
-        timePicker.getTimeResult().observe(getViewLifecycleOwner(), (v) -> {
-            qrScannerViewModel.getPurchaseDTO().setTime(v);
-            fillQRForm(qrScannerViewModel.getPurchaseDTO());
-        });
-        datePicker.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
-            qrScannerViewModel.getPurchaseDTO().setDate(v);
-            fillQRForm(qrScannerViewModel.getPurchaseDTO());
-        });
-        binding.qrPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
-//            private String current = "";
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (!s.toString().equals(current)) {
-//                    current = formatter
-//                            .format(s);
-//                    binding.qrPriceInput.setText(current);
-//                }
-//            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                PurchaseDTO value = qrScannerViewModel.getPurchaseDTO();
-                String str = binding.qrPriceInput.getText().toString();
-                if (!CommonUtils.isValidCurrency(str)) {
-                    binding.qrPriceInput.setError("Invalid price!");
-                    binding.qrSubmitButton.setEnabled(false);
-                } else {
-                    if (str.trim().isEmpty()) value.setPrice(new BigDecimal(BigInteger.ZERO));
-                    else value.setPrice(new BigDecimal(str));
-                    binding.qrSubmitButton.setEnabled(true);
-                    binding.qrSubmitButton.setError(null);
-                    qrScannerViewModel.updatePurchaseDTO(value);
-                }
-            }
-        });
-        binding.qrNoteInput.addTextChangedListener(new AfterTextChangedWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                String str = binding.qrNoteInput.getText().toString();
-                qrScannerViewModel.getPurchaseDTO().setNote(str);
-            }
-        });
-        binding.qrTimeInput.setOnClickListener((v) -> timePicker.show(getParentFragmentManager(), "timePicker"));
-        binding.qrDateInput.setOnClickListener((v) -> datePicker.show(getParentFragmentManager(), "datePicker"));
-        binding.qrCategoryAddButton.setOnClickListener((v) -> categoryDialog.show(getParentFragmentManager(), "createCategoryDialog"));
-        binding.qrCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                CategoryView categoryView = allCategories.get(position);
-                PurchaseDTO value = qrScannerViewModel.getPurchaseDTO();
-                value.setCategoryId(categoryView.getId());
-                qrScannerViewModel.updatePurchaseDTO(value);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                PurchaseDTO value = qrScannerViewModel.getPurchaseDTO();
-                value.setCategoryId(null);
-            }
-        });
         mAdView = new AdView(getContext());
         mAdView.setAdSize(getCurrentOrientationAnchoredAdaptiveBannerAdSize(getContext(), R.id.adView));
         mAdView.setAdUnitId("myAdUnitId");
@@ -175,6 +114,8 @@ public class QrScannerFragment extends Fragment {
     private void fillQRForm(PurchaseDTO purchaseDTO) {
         new Thread(() -> {
             qrScannerViewModel.updatePurchaseDTO(purchaseDTO);
+            datePicker.setValue(purchaseDTO.getDate());
+            timePicker.setValue(purchaseDTO.getTime());
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (purchaseDTO.getStoreId() != null) binding.qrStoreIdValue.setText(purchaseDTO.getStoreId());
                 if (purchaseDTO.getBillId() != null) binding.qrBillIdValue.setText(purchaseDTO.getBillId());
@@ -210,6 +151,58 @@ public class QrScannerFragment extends Fragment {
         binding.qrClearButton.setOnClickListener(v -> resetForm());
         binding.qrSubmitButton.setOnClickListener((view) -> onSubmit(qrScannerViewModel.getPurchaseDTO()));
 
+        timePicker.getTimeResult().observe(getViewLifecycleOwner(), (v) -> {
+            qrScannerViewModel.getPurchaseDTO().setTime(v);
+            binding.qrTimeInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_TIME));
+        });
+        datePicker.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
+            qrScannerViewModel.getPurchaseDTO().setDate(v);
+            binding.qrDateInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        });
+        binding.qrPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (binding.qrPriceInput.hasFocus()) {
+                    String str = binding.qrPriceInput.getText().toString();
+                    if (!CommonUtils.isValidCurrency(str)) {
+                        binding.qrPriceInput.setError("Invalid price!");
+                        binding.qrSubmitButton.setEnabled(false);
+                    } else {
+                        if (str.trim().isEmpty())
+                            qrScannerViewModel.getPurchaseDTO().setPrice(new BigDecimal(BigInteger.ZERO));
+                        else qrScannerViewModel.getPurchaseDTO().setPrice(new BigDecimal(str));
+                        binding.qrSubmitButton.setEnabled(true);
+                        binding.qrSubmitButton.setError(null);
+                    }
+                }
+            }
+        });
+        binding.qrNoteInput.addTextChangedListener(new AfterTextChangedWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (binding.qrNoteInput.hasFocus()) {
+                    String str = binding.qrNoteInput.getText().toString();
+                    qrScannerViewModel.getPurchaseDTO().setNote(str);
+                }
+            }
+        });
+        binding.qrTimeInput.setOnClickListener((v) -> timePicker.show(getParentFragmentManager(), "timePicker"));
+        binding.qrDateInput.setOnClickListener((v) -> datePicker.show(getParentFragmentManager(), "datePicker"));
+        binding.qrCategoryAddButton.setOnClickListener((v) -> categoryDialog.show(getParentFragmentManager(), "createCategoryDialog"));
+        binding.qrCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                CategoryView categoryView = allCategories.get(position);
+                qrScannerViewModel.getPurchaseDTO().setCategoryId(categoryView.getId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                if (!allCategories.isEmpty())
+                    qrScannerViewModel.getPurchaseDTO().setCategoryId(allCategories.get(0).getId());
+                else qrScannerViewModel.getPurchaseDTO().setCategoryId(null);
+            }
+        });
     }
 
     private void resetForm() {
@@ -220,6 +213,7 @@ public class QrScannerFragment extends Fragment {
         binding.qrTimeInput.setText(R.string.time);
         binding.qrBillIdValue.setText("-");
         binding.qrStoreIdValue.setText("-");
+        binding.qrNoteInput.setText("");
     }
 
     private void initQRCodeScanner() {
@@ -245,7 +239,7 @@ public class QrScannerFragment extends Fragment {
         new Thread(() -> {
             PurchaseView purchaseView = qrScannerViewModel.createPurchaseView(data);
             if (purchaseView != null) {
-                PurchaseHistoryApplication.getInstance().alert("Created purchase #" + purchaseView.getBillId() + ". Cost:" + purchaseView.getPrice());
+                PurchaseHistoryApplication.getInstance().alert("Created purchase" + (purchaseView.getBillId() == null ? "" : " #" + purchaseView.getBillId()) + ". Cost:" + purchaseView.getPrice());
                 new Handler(Looper.getMainLooper()).post(this::resetForm);
             }
             setSubmitLoading(false);

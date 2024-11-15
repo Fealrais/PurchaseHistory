@@ -10,6 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import lombok.Getter;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,20 +41,22 @@ public class QrScannerViewModel extends ViewModel {
     }
 
 
-    public void updatePurchaseDTO(PurchaseDTO purchaseDTO) {
-        if(purchaseDTO.getQrContent()!= null) purchaseDTO.setQrContent(purchaseDTO.getQrContent());
-        if(purchaseDTO.getPrice()!= null) purchaseDTO.setPrice(purchaseDTO.getPrice());
-        if(purchaseDTO.getTimestamp()!= null) purchaseDTO.setTimestamp(purchaseDTO.getTimestamp());
-        if(purchaseDTO.getCategoryId()!= null) purchaseDTO.setCategoryId(purchaseDTO.getCategoryId());
-        if(purchaseDTO.getBillId()!= null) purchaseDTO.setBillId(purchaseDTO.getBillId());
-        if(purchaseDTO.getStoreId()!= null) purchaseDTO.setStoreId(purchaseDTO.getStoreId());
+    public void updatePurchaseDTO(PurchaseDTO newData) {
+        if(newData.getQrContent()!= null) purchaseDTO.setQrContent(newData.getQrContent());
+        if(newData.getPrice()!= null) purchaseDTO.setPrice(newData.getPrice());
+        if(newData.getTimestamp()!= null) purchaseDTO.setTimestamp(newData.getTimestamp());
+        if(newData.getCategoryId()!= null) purchaseDTO.setCategoryId(newData.getCategoryId());
+        if(newData.getBillId()!= null) purchaseDTO.setBillId(newData.getBillId());
+        if(newData.getNote()!= null) purchaseDTO.setNote(newData.getNote());
+        if(newData.getStoreId()!= null) purchaseDTO.setStoreId(newData.getStoreId());
     }
     public void resetPurchaseDto() {
         purchaseDTO.setQrContent(null);
-        purchaseDTO.setPrice(null);
-        purchaseDTO.setTimestamp(null);
+        purchaseDTO.setPrice(BigDecimal.ZERO);
+        purchaseDTO.setTimestamp(LocalDateTime.now());
         purchaseDTO.setCategoryId(null);
         purchaseDTO.setBillId(null);
         purchaseDTO.setStoreId(null);
+        purchaseDTO.setNote("");
     }
 }
