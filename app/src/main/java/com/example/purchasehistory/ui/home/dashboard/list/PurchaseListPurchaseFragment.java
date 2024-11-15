@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -22,7 +21,6 @@ import com.example.purchasehistory.ui.home.purchases.PurchasesViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -46,18 +44,14 @@ public class PurchaseListPurchaseFragment extends Fragment implements Refreshabl
         this.refreshDashboard = refresh;
     }
 
-    @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        purchasesViewModel = new ViewModelProvider(this).get(PurchasesViewModel.class);
-        initializePurchasesRecyclerView();
-    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPurchasesListCardBinding.inflate(inflater, container, false);
         if (getArguments() != null) {
             filter = getArguments().getParcelable(ARG_FILTER);
         }
+        purchasesViewModel = new ViewModelProvider(this).get(PurchasesViewModel.class);
+        initializePurchasesRecyclerView();
         return binding.getRoot();
     }
 
@@ -74,9 +68,11 @@ public class PurchaseListPurchaseFragment extends Fragment implements Refreshabl
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             new Handler(Looper.getMainLooper()).post(() -> {
-                binding.purchaseList.setLayoutManager(llm);
-                binding.purchaseList.setItemAnimator(new DefaultItemAnimator());
-                binding.purchaseList.setAdapter(purchasesAdapter);
+                if (binding != null) {
+                    binding.purchaseList.setLayoutManager(llm);
+                    binding.purchaseList.setItemAnimator(new DefaultItemAnimator());
+                    binding.purchaseList.setAdapter(purchasesAdapter);
+                }
             });
         }).start();
     }
