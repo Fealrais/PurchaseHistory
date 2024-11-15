@@ -34,15 +34,16 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         binding = RecyclerViewPurchaseBinding.bind(itemView);
     }
 
-    public void bind(PurchaseView purchaseView, FragmentManager fragmentManager, Runnable onDelete) {
+    public void bind(PurchaseView purchaseView, FragmentManager fragmentManager, Runnable refresh) {
         editDialog = new PurchaseEditDialog();
         this.fragmentManager = fragmentManager;
         if (purchaseView.getPrice() != null)
             binding.purchasePriceText.setText(String.format(Locale.ENGLISH, "%.2f", purchaseView.getPrice().doubleValue()));
+        else binding.purchasePriceText.setText("-");
         if (purchaseView.getNote() != null) {
             binding.purchaseNoteText.setText(purchaseView.getNote());
         }
-        else binding.purchasePriceText.setText("-");
+        else binding.purchaseNoteText.setText("");
         if (purchaseView.getTimestamp() != null) {
             long epochMilli = purchaseView.getTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             CharSequence timeString = DateUtils.getRelativeTimeSpanString(epochMilli);
@@ -68,10 +69,10 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
                     editDialog.setArguments(bundle);
                     editDialog.show(fragmentManager, "editDialog" + purchaseView.getBillId());
                     editDialog.setOnSuccess((newView) -> {
-                        if(newView!=null)
-                            this.bind(newView, fragmentManager, onDelete);
+                        if(newView!=null && purchaseDTO.getPrice().equals(newView.getPrice()))
+                            this.bind(newView, fragmentManager, refresh);
                         else
-                            onDelete.run();
+                            refresh.run();
                     });
                 } else PurchaseHistoryApplication.getInstance().alert("Purchase does not have an id");
 
@@ -89,6 +90,7 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         purchaseDTO.setTimestamp(purchaseView.getTimestamp());
         purchaseDTO.setBillId(purchaseView.getBillId());
         purchaseDTO.setStoreId(purchaseView.getStoreId());
+        purchaseDTO.setNote(purchaseView.getNote());
         if (purchaseView.getCategory() != null) purchaseDTO.setCategoryId(purchaseView.getCategory().getId());
         return purchaseDTO;
     }

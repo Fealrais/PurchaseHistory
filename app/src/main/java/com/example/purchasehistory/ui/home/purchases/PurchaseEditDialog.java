@@ -95,10 +95,7 @@ public class PurchaseEditDialog extends DialogFragment {
             Log.i(getTag(), "Edit button clicked");
             onSubmit(purchase, purchaseId);
         });
-        binding.purchaseEditDeleteButton.setOnClickListener((view) -> {
-            new Thread(() -> sendDelete(purchaseId)).start();
-
-        });
+        binding.purchaseEditDeleteButton.setOnClickListener((view) -> new Thread(() -> sendDelete(purchaseId)).start());
         binding.purchaseEditTimeInput.setOnClickListener((v) -> timePicker.show(getParentFragmentManager(), "timePicker"));
         binding.purchaseEditDateInput.setOnClickListener((v) -> datePicker.show(getParentFragmentManager(), "datePicker"));
         binding.purchaseEditCategoryAddButton.setOnClickListener((v) -> categoryDialog.show(getParentFragmentManager(), "createCategoryDialog"));
@@ -130,8 +127,10 @@ public class PurchaseEditDialog extends DialogFragment {
         binding.purchaseEditNoteInput.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                String str = binding.purchaseEditPriceInput.getText().toString();
-                purchase.setNote(str);
+                if (binding.purchaseEditNoteInput.hasFocus()) {
+                    String str = binding.purchaseEditNoteInput.getText().toString();
+                    purchase.setNote(str);
+                }
             }
         });
         binding.purchaseEditCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
