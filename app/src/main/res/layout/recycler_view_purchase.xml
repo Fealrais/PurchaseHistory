@@ -20,16 +20,18 @@
         android:id="@+id/tableRow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/purchase_edit_button"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="8dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/purchasePriceText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="45dp"
             android:text="@string/currency_zero" />
 
         <TextView
@@ -37,25 +39,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            android:minWidth="45dp"
             android:text="@string/lorem" />
 
         <TextView
             android:id="@+id/purchaseCategoryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:duplicateParentState="false"
             android:outlineProvider="paddedBounds"
-            android:layout_marginStart="12dp"
             android:paddingHorizontal="2dp"
+            android:minWidth="45dp"
             android:text="@string/lorem" />
 
         <TextView
             android:id="@+id/purchaseNoteText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:duplicateParentState="false"
             android:outlineProvider="paddedBounds"
-            android:layout_marginStart="12dp"
+            android:minWidth="45dp"
             android:text="@string/lorem" />
 
     </TableRow>
