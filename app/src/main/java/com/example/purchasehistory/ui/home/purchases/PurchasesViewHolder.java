@@ -11,6 +11,7 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.data.interfaces.ViewHolder;
 import com.example.purchasehistory.databinding.RecyclerViewPurchaseBinding;
+import com.example.purchasehistory.util.AndroidUtils;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +55,10 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         if (purchaseView.getCategory() != null) {
             binding.purchaseCategoryText.setVisibility(View.VISIBLE);
             binding.purchaseCategoryText.setText(purchaseView.getCategory().getName().toUpperCase());
-            binding.purchaseCategoryText.setBackgroundColor(Color.parseColor(purchaseView.getCategory().getColor().toUpperCase()));
+            int color = Color.parseColor(purchaseView.getCategory().getColor().toUpperCase());
+            int textColor = AndroidUtils.getTextColor(color);
+            binding.purchaseCategoryText.setBackgroundColor(color);
+            binding.purchaseCategoryText.setTextColor(textColor);
         } else {
             binding.purchaseCategoryText.setVisibility(View.INVISIBLE);
         }

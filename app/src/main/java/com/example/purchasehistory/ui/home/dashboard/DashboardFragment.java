@@ -35,7 +35,7 @@ public class DashboardFragment extends Fragment implements RefreshablePurchaseFr
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
-        filterDialog = new PurchaseFilterDialog();
+        filterDialog = new PurchaseFilterDialog(false);
         this.applyFilter(filter);
         getParentFragmentManager()
                 .beginTransaction()

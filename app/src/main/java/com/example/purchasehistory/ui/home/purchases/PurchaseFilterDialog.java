@@ -37,6 +37,7 @@ import static com.example.purchasehistory.data.Constants.getDefaultFilter;
 @AndroidEntryPoint
 public class PurchaseFilterDialog extends DialogFragment {
     private final String TAG = this.getClass().getSimpleName();
+    private final boolean containCategory;
 
     @Inject
     PurchaseClient purchaseClient;
@@ -48,18 +49,16 @@ public class PurchaseFilterDialog extends DialogFragment {
     private List<CategoryView> categoryOptions = new ArrayList<>();
     private Consumer<PurchaseFilter> onSuccess;
 
+    public PurchaseFilterDialog(boolean containCategory) {
+        this.containCategory = containCategory;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i(getTag(), "onCreateView: View created");
         binding = FragmentPurchaseFilterDialogBinding.inflate(inflater, container, false);
         datePickerFrom = new DatePickerFragment();
         datePickerTo = new DatePickerFragment();
-
-
-        getParentFragmentManager().setFragmentResultListener("categoryResult", getViewLifecycleOwner(), (requestKey, result) -> {
-            CategoryView newCategoryView = result.getParcelable("newCategoryView");
-            if (newCategoryView != null) categoryAdapter.add(newCategoryView);
-        });
         datePickerFrom.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
             filter.setFrom(v);
             binding.purchaseFilterFromDate.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
@@ -75,6 +74,16 @@ public class PurchaseFilterDialog extends DialogFragment {
         binding.purchaseFilterFilterButton.setOnClickListener((view) -> onSuccess.accept(filter));
         binding.purchaseFilterFromDate.setOnClickListener((v) -> datePickerFrom.show(getParentFragmentManager(), "datePickerFrom"));
         binding.purchaseFilterToDate.setOnClickListener((v) -> datePickerTo.show(getParentFragmentManager(), "datePickerTo"));
+        setupCategorySpinner(containCategory);
+        fillEditForm(filter);
+        return binding.getRoot();
+    }
+
+    private void setupCategorySpinner(boolean containCategory) {
+        if(!containCategory){
+            binding.purchaseFilterCategorySpinner.setVisibility(View.GONE);
+            return;
+        }
         new Thread(() -> {
             categoryOptions = purchaseClient.getAllCategories();
             categoryOptions.add(0, new CategoryView(null, "None", "#fff"));
@@ -82,7 +91,7 @@ public class PurchaseFilterDialog extends DialogFragment {
             new Handler(Looper.getMainLooper()).post(() -> {
                 binding.purchaseFilterCategorySpinner.setAdapter(categoryAdapter);
             });
-        });
+        }).start();
         binding.purchaseFilterCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -95,8 +104,6 @@ public class PurchaseFilterDialog extends DialogFragment {
                 filter.setCategoryId(null);
             }
         });
-        fillEditForm(filter);
-        return binding.getRoot();
     }
 
     private void fillEditForm(PurchaseFilter view) {
@@ -110,7 +117,7 @@ public class PurchaseFilterDialog extends DialogFragment {
             if (view.getCategoryId() != null) {
                 for (int i = 0; i < categoryOptions.size(); i++) {
                     if (view.getCategoryId().equals(categoryOptions.get(i).getId())) {
-                        binding.purchaseFilterCategorySpinner.setSelection(i);
+                        binding.purchaseFilterCategorySpinner.setSelection(i, true);
                         break;
                     }
                 }

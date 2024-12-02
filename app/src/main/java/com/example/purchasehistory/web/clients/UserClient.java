@@ -13,11 +13,10 @@ public class UserClient extends HttpClient {
     public UserClient() {
     }
     public Optional<String> getReferralToken() {
-        String OBSERVER_ADD_USER_ENDPOINT = BACKEND_URL+"observer/users/add?token=";
         try (Response res = get(BACKEND_URL + "/users/self/referral-link")) {
             if (res.isSuccessful() && res.body() != null) {
                 String token = res.body().string();
-                return Optional.of(OBSERVER_ADD_USER_ENDPOINT + token);
+                return Optional.of(token);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

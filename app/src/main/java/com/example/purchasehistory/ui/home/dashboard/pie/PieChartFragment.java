@@ -13,10 +13,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsEntry;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
+import com.example.purchasehistory.R;
 import com.example.purchasehistory.data.filters.PurchaseFilter;
 import com.example.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.example.purchasehistory.databinding.FragmentPieChartBinding;
 import com.example.purchasehistory.ui.home.dashboard.DashboardViewModel;
+import com.example.purchasehistory.util.AndroidUtils;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -86,19 +88,26 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         }
         List<PieEntry> entries = report.getContent().stream().map(this::parsePieEntries).collect(Collectors.toList());
         PieDataSet dataSet = new PieDataSet(entries, "Category");
-        binding.pieChart.setCenterText(String.format(Locale.ENGLISH, "All Purchases\nSum: %.2f", report.getTotalSum()));
-        dataSet.setDrawIcons(false);
-        dataSet.setSliceSpace(3f);
-        dataSet.setIconsOffset(new MPPointF(0, 40));
-        dataSet.setSelectionShift(5f);
-        dataSet.setColors(report.getContent().stream().map(entry -> {
+
+        List<Integer> categoryColors = report.getContent().stream().map(entry -> {
                     if (entry.getCategory() != null && entry.getCategory().getColor() != null && !entry.getCategory().getColor().isBlank())
                         return Color.parseColor(entry.getCategory().getColor());
                     else return Color.GRAY;
                 }
-        ).collect(Collectors.toList()));
+        ).collect(Collectors.toList());
+
+        String centerText = report.getTotalSum() == null ? getString(R.string.no_data) :  getString(R.string.pie_chart_sum, report.getTotalSum());
+        binding.pieChart.setCenterText(centerText);
+        dataSet.setDrawIcons(false);
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+        dataSet.setColors(categoryColors);
+        dataSet.setValueTextColors(categoryColors.stream().map(AndroidUtils::getTextColor).collect(Collectors.toList()));
+
         dataSet.setValueTextSize(11f);
-        dataSet.setValueTextColor(Color.WHITE);
+
+
         dataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {

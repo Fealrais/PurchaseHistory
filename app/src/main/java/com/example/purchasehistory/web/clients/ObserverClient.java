@@ -1,6 +1,7 @@
 package com.example.purchasehistory.web.clients;
 
 import android.util.Log;
+import com.angelp.purchasehistorybackend.models.views.incoming.AddObservedUserDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
@@ -40,4 +41,22 @@ public class ObserverClient extends HttpClient {
         return null;
     }
 
+    public UserView addUser(String token) {
+        try (Response res = post(OBSERVER_ENPOINT + "/users/add", new AddObservedUserDTO(token))) {
+            ResponseBody body = res.body();
+            if (body != null) {
+                String json = body.string();
+                Log.i("httpResponse", "Observed user: " + json);
+                if (res.isSuccessful())
+                    return gson.fromJson(json, UserView.class);
+                else {
+                    ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
+                    throw new RuntimeException(errorResponse.getDetail());
+                }
+            }
+        } catch (IOException | JsonParseException e) {
+            Log.e("httpResponseError", "getObservedUser ERROR: " + e.getMessage());
+        }
+        return null;
+    }
 }

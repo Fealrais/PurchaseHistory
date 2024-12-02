@@ -1,7 +1,6 @@
 package com.example.purchasehistory.web.clients;
 
 import android.util.Log;
-import android.widget.Toast;
 import com.example.purchasehistory.PurchaseHistoryApplication;
 import com.example.purchasehistory.data.filters.PageRequest;
 import com.example.purchasehistory.web.LocalDateGsonAdapter;
@@ -107,14 +106,6 @@ public class HttpClient {
     private void handleError(Response response) {
         if (response.code() == 401) {
             PurchaseHistoryApplication.getInstance().getUserToken().postValue(null);
-        } else if (response.code() == 400 && response.body() != null) {
-            try {
-                String json = response.body().string();
-                ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
-                Log.i("ErrorHandled", "handleError: " + errorResponse);
-                PurchaseHistoryApplication.getContext().getMainExecutor().execute(() -> Toast.makeText(PurchaseHistoryApplication.getContext(), errorResponse.getDetail(), Toast.LENGTH_SHORT).show());
-            } catch (IOException ignored) {
-            }
         }
     }
 }

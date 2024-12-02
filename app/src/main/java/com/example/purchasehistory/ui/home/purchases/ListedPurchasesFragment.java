@@ -55,7 +55,7 @@ public class ListedPurchasesFragment extends Fragment {
 
 
     private void initializePurchasesRecyclerView() {
-        filterDialog = new PurchaseFilterDialog();
+        filterDialog = new PurchaseFilterDialog(true);
         binding.swiperefresh.setOnRefreshListener(this::onSwipeRefresh);
         binding.filterButton.setOnClickListener(v -> openFilter((newFilter) -> {
             setFilter(newFilter);

@@ -50,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
                 .findFragmentById(R.id.nav_host_fragment_user_activity);
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
-            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+//            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
             NavigationUI.setupWithNavController(binding.navView, navController);
         }
         ActionBar actionBar = getSupportActionBar();

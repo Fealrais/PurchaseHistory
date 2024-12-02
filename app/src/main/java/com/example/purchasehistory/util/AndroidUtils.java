@@ -2,6 +2,7 @@ package com.example.purchasehistory.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import com.example.purchasehistory.MainActivity;
 import com.example.purchasehistory.PurchaseHistoryApplication;
@@ -26,5 +27,12 @@ public final class AndroidUtils {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
+    }
+
+    public static int getTextColor(int bgColor) {
+        if (Color.luminance(bgColor) > 0.5)
+            return Color.BLACK;
+        else
+            return Color.WHITE;
     }
 }

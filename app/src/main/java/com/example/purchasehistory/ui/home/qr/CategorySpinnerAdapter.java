@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.databinding.CategorySpinnerItemBinding;
+import com.example.purchasehistory.util.AndroidUtils;
 
 import java.util.List;
 
@@ -28,20 +29,21 @@ public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = initView(convertView,parent);
+        View view = initView(convertView, parent);
         binding = CategorySpinnerItemBinding.bind(view);
         CategoryView item = getItem(position);
         binding.categoryName.setText(item.getName());
 
         String color = COLOR_REGEX.matcher(item.getColor()).find() ? item.getColor() : "#c4c4c4";
         int parsedColor = Color.parseColor(color);
-        if (Color.luminance(parsedColor) > 0.5)
-            binding.categoryName.setTextColor(Color.BLACK);
-        else
-            binding.categoryName.setTextColor(Color.WHITE);
+        int textColor = AndroidUtils.getTextColor(parsedColor);
         binding.categoryName.setBackgroundColor(parsedColor);
+        binding.categoryName.setTextColor(textColor);
+
         return binding.getRoot();
     }
+
+
 
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -49,8 +51,7 @@ public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
     }
 
     private View initView(View convertView,
-                          ViewGroup parent)
-    {
+                          ViewGroup parent) {
         // It is used to set our custom view.
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.category_spinner_item, parent, false);
@@ -58,9 +59,11 @@ public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
 
         return convertView;
     }
+
     @Nullable
     @Override
     public CategoryView getItem(int position) {
+        if(items.size() <= position) return null;
         return items.get(position);
     }
 
@@ -71,6 +74,8 @@ public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).getId();
+        CategoryView item = getItem(position);
+        if(item==null) return Long.MIN_VALUE;
+        return item.getId();
     }
 }

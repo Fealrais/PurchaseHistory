@@ -23,8 +23,8 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.PurchaseHistory"
+        android:windowSoftInputMode="adjustPan"
         tools:targetApi="34">
-
         <activity
             android:name=".ui.spectator.SpectatorHomeActivity"
             android:exported="false" />
@@ -73,7 +73,7 @@
             android:value="true" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-9339704833965519~6807019954"/>
+            android:value="ca-app-pub-9339704833965519~6807019954" />
     </application>
 
 </manifest>
