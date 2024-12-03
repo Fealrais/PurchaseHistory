@@ -1,12 +1,12 @@
 package com.example.purchasehistory.ui.register;
 
-import android.util.Patterns;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.example.purchasehistory.R;
 import com.example.purchasehistory.data.model.LoginResult;
+import com.example.purchasehistory.util.AndroidUtils;
 import com.example.purchasehistory.web.clients.AuthClient;
 import com.example.purchasehistory.web.clients.WebException;
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -61,37 +61,17 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public void registerDataChanged(String username, String password, String email) {
-        if (!isUserNameValid(username)) {
+        if (!AndroidUtils.isUserNameValid(username)) {
             registerFormState.setValue(new RegisterFormState(R.string.invalid_username, null, null));
-        } else if (!isPasswordValid(password)) {
+        } else if (!AndroidUtils.isPasswordValid(password)) {
             registerFormState.setValue(new RegisterFormState(null, R.string.invalid_password, null));
-        } else if (!isEmailValid(email)) {
+        } else if (!AndroidUtils.isEmailValid(email)) {
             registerFormState.setValue(new RegisterFormState(null, null, R.string.invalid_email));
         } else {
             registerFormState.setValue(new RegisterFormState(true));
         }
     }
 
-    // A placeholder username validation check
-    private boolean isUserNameValid(String username) {
-        if (username == null) {
-            return false;
-        } else {
-            return !username.trim().isEmpty();
-        }
-    }
 
-    // A placeholder email validation check
-    private boolean isEmailValid(String email) {
-        if (email == null) {
-            return false;
-        } else return Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-
-    // A placeholder password validation check
-    private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
-    }
 
 }

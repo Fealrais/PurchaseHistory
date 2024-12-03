@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.Patterns;
 import com.example.purchasehistory.MainActivity;
 import com.example.purchasehistory.PurchaseHistoryApplication;
 
@@ -34,5 +35,27 @@ public final class AndroidUtils {
             return Color.BLACK;
         else
             return Color.WHITE;
+    }
+
+    // A placeholder username validation check
+    public static boolean isUserNameValid(String username) {
+        if (username == null || username.trim().length() <= 5) {
+            return false;
+        } else {
+            return !username.trim().isEmpty();
+        }
+    }
+
+    // A placeholder email validation check
+    public static boolean isEmailValid(String email) {
+        if (email == null) {
+            return false;
+        } else return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+
+    // A placeholder password validation check
+    public static boolean isPasswordValid(String password) {
+        return password != null && password.trim().length() > 5;
     }
 }
