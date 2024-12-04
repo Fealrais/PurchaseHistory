@@ -95,7 +95,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
                     else return Color.GRAY;
                 }
         ).collect(Collectors.toList());
-
+        dataSet.setAutomaticallyDisableSliceSpacing(true);
         String centerText = report.getTotalSum() == null ? getString(R.string.no_data) :  getString(R.string.pie_chart_sum, report.getTotalSum());
         binding.pieChart.setCenterText(centerText);
         dataSet.setDrawIcons(false);
@@ -104,9 +104,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         dataSet.setSelectionShift(5f);
         dataSet.setColors(categoryColors);
         dataSet.setValueTextColors(categoryColors.stream().map(AndroidUtils::getTextColor).collect(Collectors.toList()));
-
         dataSet.setValueTextSize(11f);
-
 
         dataSet.setValueFormatter(new ValueFormatter() {
             @Override
@@ -116,7 +114,6 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         });
 
         PieData newData = new PieData(dataSet);
-
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.pieChart.setData(newData);
             binding.pieChart.notifyDataSetChanged();
@@ -142,11 +139,10 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         chart.setHoleColor(Color.WHITE);
 
         chart.setTransparentCircleColor(Color.WHITE);
-        chart.setTransparentCircleAlpha(110);
+//        chart.setTransparentCircleAlpha(50);
 
-        chart.setHoleRadius(58f);
-        chart.setTransparentCircleRadius(61f);
-
+//        chart.setHoleRadius(58f);
+//        chart.setTransparentCircleRadius(61f);
         chart.setDrawCenterText(true);
         chart.setCenterTextSize(15f);
         chart.setRotationAngle(0);
@@ -154,6 +150,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         // enable rotation of the chart by touch
         chart.setRotationEnabled(true);
         chart.setHighlightPerTapEnabled(true);
+        chart.setRenderer(new ColoredLabelXAxisRenderer(chart, chart.getAnimator(), chart.getViewPortHandler()));
 
         // add a selection listener
         chart.setOnChartValueSelectedListener(this);
@@ -169,7 +166,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
         // entry label styling
         chart.setEntryLabelColor(Color.WHITE);
-        chart.setEntryLabelTextSize(12f);
+//        chart.setEntryLabelTextSize(12f);
     }
 
 

@@ -23,7 +23,6 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.PurchaseHistory"
-        android:windowSoftInputMode="adjustPan"
         tools:targetApi="34">
         <activity
             android:name=".ui.spectator.SpectatorHomeActivity"
@@ -40,6 +39,7 @@
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_home" />
         <activity
             android:name=".MainActivity"

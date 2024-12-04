@@ -103,7 +103,8 @@
     <string name="token">Enter user token</string>
     <string name="error_spectating_list_add_user">Failed to add user to spectating list</string>
     <string name="no_data">No data available</string>
-    <string name="pie_chart_sum">All Purchases\\nSum: %.2f</string>
+    <string name="pie_chart_sum">All Purchases
+        Sum: %.2f</string>
     <string name="add_user_button">Adds a new user</string>
     <string name="error_spectating_list_add_user_expired">Expired token! Try again with a new one.</string>
 
