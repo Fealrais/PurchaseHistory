@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId = "com.angelp.purchasehistory"
         minSdk = 29
-        targetSdk = AndroidVersion.VersionCodes.Q
+        targetSdk = AndroidVersion.VersionCodes.TIRAMISU
         versionCode = 3
         versionName = "0.1.2"
 
