@@ -6,17 +6,17 @@ plugins {
 }
 
 android {
-    namespace = "com.example.purchasehistory"
+    namespace = "com.angelp.purchasehistory"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.purchasehistory"
+        applicationId = "com.angelp.purchasehistory"
         minSdk = 29
         targetSdk = AndroidVersion.VersionCodes.Q
         versionCode = 3
         versionName = "0.1.2"
 
-        testInstrumentationRunner = "com.example.purchasehistory.setup.CustomTestRunner"
+        testInstrumentationRunner = "com.angelp.purchasehistory.setup.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -29,8 +29,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         viewBinding = true

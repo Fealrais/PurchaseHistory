@@ -7,23 +7,23 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.purchasehistory.ui.home.dashboard.DashboardFragment"
+        android:name="com.angelp.purchasehistory.ui.home.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
     <fragment
         android:id="@+id/navigation_purchases_list"
 
-        android:name="com.example.purchasehistory.ui.home.purchases.ListedPurchasesFragment"
+        android:name="com.angelp.purchasehistory.ui.home.purchases.ListedPurchasesFragment"
         android:label="@string/title_purchases_list"
         tools:layout="@layout/fragment_listed_purchases" />
     <fragment
         android:id="@+id/navigation_qrscanner"
-        android:name="com.example.purchasehistory.ui.home.qr.QrScannerFragment"
+        android:name="com.angelp.purchasehistory.ui.home.qr.QrScannerFragment"
         android:label="@string/title_activity_qrscanner"
         tools:layout="@layout/fragment_qr" />
     <fragment
         android:id="@+id/navigation_graph"
-        android:name="com.example.purchasehistory.ui.home.graph.GraphFragment"
+        android:name="com.angelp.purchasehistory.ui.home.graph.GraphFragment"
         android:label="@string/title_activity_graph"
         tools:layout="@layout/fragment_graph" />
 
