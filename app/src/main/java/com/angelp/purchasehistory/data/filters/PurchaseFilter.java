@@ -39,6 +39,9 @@ public class PurchaseFilter implements Parcelable {
     //    private PageRequest pageRequest;
     private UUID userId;
 
+    public PurchaseFilter(LocalDate from){
+        this.from = from;
+    }
     protected PurchaseFilter(Parcel in) {
         setFrom(getDateFromParcel(in));
         setTo(getDateFromParcel(in));

@@ -5,16 +5,18 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import com.angelp.purchasehistory.PurchaseHistoryApplication;
+import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.data.filters.PurchaseFilter;
+import com.angelp.purchasehistory.data.model.Category;
+import com.angelp.purchasehistory.data.model.PurchaseResponse;
 import com.angelp.purchasehistorybackend.models.views.incoming.CategoryDTO;
 import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PageView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
+import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReport;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
-import com.angelp.purchasehistory.PurchaseHistoryApplication;
-import com.angelp.purchasehistory.data.filters.PurchaseFilter;
-import com.angelp.purchasehistory.data.model.Category;
-import com.angelp.purchasehistory.data.model.PurchaseResponse;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.Response;
@@ -121,6 +123,26 @@ public class PurchaseClient extends HttpClient {
         return null;
     }
 
+    public CalendarReport getCalendarReport(PurchaseFilter filter) {
+        try (Response res = get(BACKEND_URL + "/purchase/analytics/calendar?" + filter)) {
+            ResponseBody body = res.body();
+            if (body != null) {
+                String json = body.string();
+                Log.i("httpResponse", "Get all purchases: " + json);
+                if (res.isSuccessful()) {
+                    return gson.fromJson(json, CalendarReport.class);
+                } else {
+                    ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
+                    throw new RuntimeException(errorResponse.getDetail());
+                }
+            }
+        } catch (IOException | JsonParseException e) {
+            Log.e(TAG, "getAllPurchases ERROR: " + e.getMessage());
+        }
+        return null;
+    }
+
+
     public List<CategoryView> getAllCategories() {
         try (Response res = get(BACKEND_URL + "/category")) {
             ResponseBody body = res.body();
@@ -153,18 +175,22 @@ public class PurchaseClient extends HttpClient {
         return null;
     }
 
-    public Uri getExportedCsv() {
+    public Uri getExportedCsv() throws IOException {
         try (Response res = get(BACKEND_URL + "/purchase/export")) {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
                 String header = res.header("Content-Disposition");
                 String filename = header == null ? "unknown" : header.substring(header.indexOf("=") + 1);
                 return createFile(filename, body.bytes());
-            } else throw new IOException("Could not download file");
-        } catch (IOException e) {
-            Log.e(TAG, "getExportedCsv: " + e.getMessage());
+            } else {
+                if (body != null) {
+                    ErrorResponse errorResponse = gson.fromJson(body.string(), ErrorResponse.class);
+                    if ("NO_PURCHASES_TO_SHOW".equals(errorResponse.getDetail()))
+                        throw new WebException(R.string.no_purchases_to_show);
+                }
+                throw new WebException(R.string.could_not_download_file);
+            }
         }
-        return null;
     }
 
     private Uri createFile(String name, byte[] bytes) {

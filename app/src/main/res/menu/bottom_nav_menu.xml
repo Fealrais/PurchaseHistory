@@ -16,7 +16,6 @@
     <item
         android:id="@+id/navigation_graph"
         android:icon="@drawable/baseline_insert_chart_outlined_24"
-        android:title="@string/title_activity_graph"
-        android:enabled="false" />
+        android:title="@string/title_activity_graph" />
 
 </menu>

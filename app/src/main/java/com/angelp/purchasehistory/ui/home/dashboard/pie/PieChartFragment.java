@@ -89,11 +89,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         List<PieEntry> entries = report.getContent().stream().map(this::parsePieEntries).collect(Collectors.toList());
         PieDataSet dataSet = new PieDataSet(entries, "Category");
 
-        List<Integer> categoryColors = report.getContent().stream().map(entry -> {
-                    if (entry.getCategory() != null && entry.getCategory().getColor() != null && !entry.getCategory().getColor().isBlank())
-                        return Color.parseColor(entry.getCategory().getColor());
-                    else return Color.GRAY;
-                }
+        List<Integer> categoryColors = report.getContent().stream().map(entry -> AndroidUtils.getColor(entry.getCategory())
         ).collect(Collectors.toList());
         dataSet.setAutomaticallyDisableSliceSpacing(true);
         String centerText = report.getTotalSum() == null ? getString(R.string.no_data) :  getString(R.string.pie_chart_sum, report.getTotalSum());

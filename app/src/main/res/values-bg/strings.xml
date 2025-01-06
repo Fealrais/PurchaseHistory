@@ -114,5 +114,6 @@
     <string name="i_already_have_a_code">Вече имам код</string>
     <string name="tooManyRequest_429">Превишихте позволеният брой заявки. Моля опитайте отново след малко.</string>
     <string name="email_not_found_400">Не е намерен акаунт с този email.</string>
+    <string name="no_purchases_to_show">Няма бележки за показване</string>
 
 </resources>

@@ -15,6 +15,14 @@
             android:inputType="textWebPassword"
             app:title="@string/prompt_password"
             app:summary="@string/reset_text"/>
+        <Preference
+            android:id="@+id/download_svg_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/baseline_download_24"
+            app:key="download_svg"
+            app:summary="Download all purchases in SVG format"
+            app:title="Download your data" />
 
     </PreferenceCategory>
 

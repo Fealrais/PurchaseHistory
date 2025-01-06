@@ -127,5 +127,7 @@
     <string name="i_already_have_a_code">I already have a code</string>
     <string name="tooManyRequest_429">Too many requests. Try again after a while.</string>
     <string name="email_not_found_400">No account was found with this email address.</string>
+    <string name="no_purchases_to_show">There are no purchases to display</string>
+    <string name="could_not_download_file">Could not download file</string>
 
 </resources>
