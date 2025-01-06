@@ -115,5 +115,12 @@
     <string name="tooManyRequest_429">Превишихте позволеният брой заявки. Моля опитайте отново след малко.</string>
     <string name="email_not_found_400">Не е намерен акаунт с този email.</string>
     <string name="no_purchases_to_show">Няма бележки за показване</string>
+    <string name="could_not_download_file">Грешка при тегленето на файла</string>
+    <string name="this_week">Последните 7 дни</string>
+    <string name="this_month">Този месец</string>
+    <string name="three_months">Последните 3 месеца</string>
+    <string name="six_months">Последните 6 месеца</string>
+    <string name="this_year">Тази година</string>
+    <string name="last_year">Миналата година</string>
 
 </resources>

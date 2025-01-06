@@ -129,5 +129,11 @@
     <string name="email_not_found_400">No account was found with this email address.</string>
     <string name="no_purchases_to_show">There are no purchases to display</string>
     <string name="could_not_download_file">Could not download file</string>
+    <string name="this_week">Last 7 Days</string>
+    <string name="this_month">This month</string>
+    <string name="three_months">Three months</string>
+    <string name="six_months">Six Months</string>
+    <string name="this_year">This year</string>
+    <string name="last_year">Last year</string>
 
 </resources>

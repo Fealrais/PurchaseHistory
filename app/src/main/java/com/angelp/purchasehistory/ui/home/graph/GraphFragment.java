@@ -1,5 +1,7 @@
 package com.angelp.purchasehistory.ui.home.graph;
 
+import android.graphics.Color;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentGraphBinding;
-import com.angelp.purchasehistory.ui.home.dashboard.pie.ColoredLabelXAxisRenderer;
 import com.angelp.purchasehistory.ui.home.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
@@ -21,22 +22,23 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.Calenda
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.MPPointF;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.NoArgsConstructor;
-import org.assertj.core.data.MapEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -49,16 +51,17 @@ import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
 @NoArgsConstructor
 @AndroidEntryPoint
-public class GraphFragment extends Fragment implements RefreshablePurchaseFragment {
+public class GraphFragment extends Fragment implements RefreshablePurchaseFragment, OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter_graph";
     private final String TAG = this.getClass().getSimpleName();
     @Inject
     PurchaseClient purchaseClient;
-    private PurchaseFilter filter = new PurchaseFilter();
+    private PurchaseFilter filter;
     private PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     private Consumer<PurchaseFilter> setFilter;
 
     private FragmentGraphBinding binding;
+
 
     public GraphFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
         Bundle args = new Bundle();
@@ -72,6 +75,10 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             filter = getArguments().getParcelable(ARG_FILTER);
+        } else {
+            filter = new PurchaseFilter();
+            filter.setFrom(LocalDate.now().withDayOfMonth(1));
+            filter.setTo(LocalDate.now());
         }
     }
     @Override
@@ -86,6 +93,7 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
         Log.i(TAG, "onCreateView: View created");
 
         binding = FragmentGraphBinding.inflate(inflater, container, false);
+        applyFilter(filter);
         binding.graphFilterButton.setOnClickListener((v)-> openFilter(this::updateFilter));
         initGraph(binding.barChartView);
         setData(filter);
@@ -93,14 +101,36 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
     }
 
     private void initGraph(BarChart chart) {
+
         chart.setHighlightFullBarEnabled(true);
         chart.setFitBars(true);
-        chart.setEnabled(true);
-        chart.setElevation(5);
-        chart.setHighlightPerTapEnabled(true);
-        chart.getDescription().setEnabled(false);
+        chart.setDrawValueAboveBar(true);
         chart.setExtraOffsets(5, 10, 5, 5);
         chart.setDragDecelerationFrictionCoef(0.95f);
+        chart.setBackgroundColor(Color.WHITE);
+        chart.setHighlightPerTapEnabled(true);
+        chart.setOnChartValueSelectedListener(this);
+
+        Description description = chart.getDescription();
+        description.setEnabled(true);
+        description.setTextSize(18);
+        description.setText("Nothing selected");
+        DayAxisValueFormatter xAxisFormatter= new DayAxisValueFormatter(chart);
+
+        XAxis xLabels = chart.getXAxis();
+        xLabels.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xLabels.setValueFormatter(xAxisFormatter);
+        xLabels.setGranularity(1f);
+
+        Legend l = chart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(true);
+        l.setFormSize(8f);
+        l.setFormToTextSpace(4f);
+        l.setXEntrySpace(6f);
+
     }
 
 
@@ -122,7 +152,7 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
                 int i = 0;
                 CategoryView categoryView = new CategoryView();
                 for (CalendarReportEntry dateEntry : entry.getValue().values()) {
-                    entries.add(parseBarEntries(dateEntry, i));
+                    entries.add(parseBarEntries(dateEntry));
                     categoryView = dateEntry.getCategory();
                     i++;
                 }
@@ -131,14 +161,8 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
                 barDataSet.setColor(categoryColor);
                 barDataSet.setValueTextColor(categoryColor);
                 barDataSet.setLabel(categoryView.getName());
-
+                data.setBarWidth(1);
                 data.addDataSet(barDataSet);
-                binding.barChartView.getXAxis().setValueFormatter(new ValueFormatter() {
-                    @Override
-                    public String getFormattedValue(float value) {
-                        return entries.get(((Float)value).intValue()).getData().toString();
-                    }
-                });
             }
             new Handler(Looper.getMainLooper()).post(() -> {
                 binding.barChartView.setData(data);
@@ -151,8 +175,9 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
 
     }
 
-    private BarEntry parseBarEntries(CalendarReportEntry entry, int index) {
-        return new BarEntry(index, entry.getSum().floatValue(), entry.getDate());
+
+    private BarEntry parseBarEntries(CalendarReportEntry entry) {
+        return new BarEntry(entry.getLocalDate().toEpochDay(), entry.getSum().floatValue(), entry);
     }
 
     private void openFilter(Consumer<PurchaseFilter> setFilter) {
@@ -182,5 +207,37 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
             });
         }).start();
     }
+    private final RectF onValueSelectedRectF = new RectF();
 
+    /**
+     * @param e The selected Entry
+     * @param h The corresponding highlight object that contains information
+     *          about the highlighted position such as dataSetIndex, ...
+     */
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        CalendarReportEntry data = (CalendarReportEntry) e.getData();
+        Description description = binding.barChartView.getDescription();
+        description.setText(getDescription(data));
+        if (e == null)
+            return;
+
+        RectF bounds = onValueSelectedRectF;
+        binding.barChartView.getBarBounds((BarEntry) e, bounds);
+        MPPointF position = binding.barChartView.getPosition(e, YAxis.AxisDependency.LEFT);
+        MPPointF.recycleInstance(position);
+    }
+    public String getDescription(CalendarReportEntry entry){
+        return "Selected: " + entry.getCategory().getName() + "\n" +
+                "Total sum: " + entry.getSum() + "\n" +
+                "Count: " + entry.getCount() + "\n" +
+                "Date: "+ entry.getDate();
+    }
+    @Override
+    public void onNothingSelected() {
+
+        Description description = binding.barChartView.getDescription();
+        description.setText("Nothing selected");
+
+    }
 }

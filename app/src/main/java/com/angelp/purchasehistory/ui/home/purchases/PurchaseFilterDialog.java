@@ -7,24 +7,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.databinding.FragmentPurchaseFilterDialogBinding;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
+import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,9 +77,50 @@ public class PurchaseFilterDialog extends DialogFragment {
         binding.purchaseFilterFilterButton.setOnClickListener((view) -> onSuccess.accept(filter));
         binding.purchaseFilterFromDate.setOnClickListener((v) -> datePickerFrom.show(getParentFragmentManager(), "datePickerFrom"));
         binding.purchaseFilterToDate.setOnClickListener((v) -> datePickerTo.show(getParentFragmentManager(), "datePickerTo"));
+        binding.filterWeek.setOnClickListener((v)->{
+            LocalDate from = LocalDate.now().minusDays(7);
+            quickUpdateFilter(from);
+        });
+        binding.filterMonth.setOnClickListener((v)->{
+            LocalDate from = LocalDate.now().withDayOfMonth(1);
+            quickUpdateFilter(from);
+        });
+        binding.filter3month.setOnClickListener((v)->{
+            LocalDate from = LocalDate.now().minusMonths(3).withDayOfMonth(1);
+            quickUpdateFilter(from);
+        });
+        binding.filter6month.setOnClickListener((v)->{
+            LocalDate from = LocalDate.now().minusMonths(6).withDayOfMonth(1);
+            quickUpdateFilter(from);
+        });
+        binding.filterYear.setOnClickListener((v)->{
+            LocalDate from = LocalDate.now().withMonth(1).withDayOfMonth(1);
+            quickUpdateFilter(from);
+        });
+        binding.filterLastYear.setOnClickListener((v)->{
+            LocalDate from = LocalDate.now().minusYears(1).withMonth(1).withDayOfMonth(1);
+            LocalDate to = LocalDate.now().minusYears(1).withMonth(12).withDayOfMonth(31);
+            quickUpdateFilter(from,to);
+        });
         setupCategorySpinner(containCategory);
         fillEditForm(filter);
         return binding.getRoot();
+    }
+
+    private void quickUpdateFilter(LocalDate from) {
+        quickUpdateFilter(from, LocalDate.now());
+    }
+    private void quickUpdateFilter(LocalDate from, LocalDate to) {
+        boolean toHasChanged = !filter.getTo().equals(to);
+        boolean fromHasChanged = !filter.getFrom().equals(from);
+        datePickerFrom.setValue(from);
+        filter.setFrom(from);
+        datePickerTo.setValue(to);
+        filter.setTo(to);
+        Animation shake = AnimationUtils.loadAnimation(this.getContext(), R.anim.shake);
+
+        if (fromHasChanged) binding.purchaseFilterFromDate.startAnimation(shake);
+        if (toHasChanged) binding.purchaseFilterToDate.startAnimation(shake);
     }
 
     private void setupCategorySpinner(boolean containCategory) {
