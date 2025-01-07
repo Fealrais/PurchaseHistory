@@ -136,6 +136,7 @@
     <string name="this_year">This year</string>
     <string name="last_year">Last year</string>
     <string name="edit_categories">Edit categories</string>
-    <string name="application_settings">Application settings\n</string>
+    <string name="application_settings">Application settings</string>
+    <string name="number_of_purchases">Number of purchases</string>
 
 </resources>

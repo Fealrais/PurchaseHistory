@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentGraphBinding;
@@ -52,6 +53,7 @@ import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 @AndroidEntryPoint
 public class GraphFragment extends Fragment implements RefreshablePurchaseFragment, OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter_graph";
+    public static final Long EPOCHDAY_CONST = 20000L;
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
@@ -119,6 +121,7 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
         binding = FragmentGraphBinding.inflate(inflater, container, false);
         applyFilter(filter);
         binding.graphFilterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
+        binding.textView.setTextColor(Color.BLACK);
         initGraph(binding.barChartView);
         setData(filter);
         return binding.getRoot();
@@ -171,14 +174,16 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
                 int color = AndroidUtils.getColor(allCategory);
                 colors.add(color);
             }
-            for (Map.Entry<LocalDate, List<CalendarReportEntry>> entry : content.entrySet()) {
-                entries.add(parseBarEntries(entry.getKey(), entry.getValue()));
+            LocalDate dateIterator = filter.getFrom();
+            for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
+                entries.add(parseBarEntries(dateIterator, content.get(dateIterator)));
             }
             BarDataSet barDataSet = new BarDataSet(entries, "Purchases");
             barDataSet.setDrawIcons(false);
             barDataSet.setColors(colors);
             barDataSet.setStackLabels(labels.toArray(new String[0]));
             BarData data = new BarData(barDataSet);
+            data.setBarWidth(0.95f);
             notifyDataChanged(data);
         }).start();
     }
@@ -240,16 +245,15 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
         if (e == null)
             return;
         List<CalendarReportEntry> data = (List<CalendarReportEntry>) e.getData();
-        setTooltipText(data.get(0).getDate(), data.stream()
+        setTooltipText(data.get(0).getLocalDate().format(DateTimeFormatter.ofPattern("dd MMM yyyy")), data.stream()
                 .filter(entry -> entry.getCount() > 0)
                 .map(this::getDescription)
-                .collect(Collectors.joining("\n==============\n")));
+                .collect(Collectors.joining("\n\n")));
     }
 
     public String getDescription(CalendarReportEntry entry) {
-        return entry.getCategory().getName() + ":\n" +
-                " -  Total sum: " + entry.getSum() + "\n" +
-                " -  Count: " + entry.getCount();
+        return entry.getCategory().getName() + ": " + entry.getSum() + "\n" +
+                " - "+getString(R.string.number_of_purchases)+": " + entry.getCount();
     }
 
     @Override

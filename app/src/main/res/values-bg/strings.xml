@@ -122,5 +122,7 @@
     <string name="six_months">Последните 6 месеца</string>
     <string name="this_year">Тази година</string>
     <string name="last_year">Миналата година</string>
-
+    <string name="edit_categories">Редактирай своите категории</string>
+    <string name="application_settings">Настройки на Приложението</string>
+    <string name="number_of_purchases">Брой покупки</string>
 </resources>
