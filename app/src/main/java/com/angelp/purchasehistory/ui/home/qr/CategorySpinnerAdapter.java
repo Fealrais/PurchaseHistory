@@ -8,22 +8,22 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.databinding.CategorySpinnerItemBinding;
 import com.angelp.purchasehistory.util.AndroidUtils;
+import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 
 import java.util.List;
 
 import static com.angelp.purchasehistory.util.CommonUtils.COLOR_REGEX;
 
 public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
-    private final List<CategoryView> items;
+    //    private final List<CategoryView> items;
     CategorySpinnerItemBinding binding;
 
     public CategorySpinnerAdapter(@NonNull Context context, List<CategoryView> items) {
-        super(context, R.layout.category_spinner_item);
-        this.items = items;
+        super(context, R.layout.category_spinner_item, items);
+//        this.items = items;
     }
 
     @NonNull
@@ -44,7 +44,6 @@ public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
     }
 
 
-
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         return getView(position, convertView, parent);
@@ -60,22 +59,22 @@ public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
         return convertView;
     }
 
-    @Nullable
-    @Override
-    public CategoryView getItem(int position) {
-        if(items.size() <= position) return null;
-        return items.get(position);
-    }
-
-    @Override
-    public int getCount() {
-        return items.size();
-    }
+//    @Nullable
+//    @Override
+//    public CategoryView getItem(int position) {
+//        if(items.size() <= position) return null;
+//        return items.get(position);
+//    }
+//
+//    @Override
+//    public int getCount() {
+//        return items.size();
+//    }
 
     @Override
     public long getItemId(int position) {
         CategoryView item = getItem(position);
-        if(item==null) return Long.MIN_VALUE;
+        if (item == null) return Long.MIN_VALUE;
         return item.getId();
     }
 }

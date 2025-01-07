@@ -135,5 +135,7 @@
     <string name="six_months">Six Months</string>
     <string name="this_year">This year</string>
     <string name="last_year">Last year</string>
+    <string name="edit_categories">Edit categories</string>
+    <string name="application_settings">Application settings\n</string>
 
 </resources>

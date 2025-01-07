@@ -46,7 +46,7 @@ public class PurchaseClient extends HttpClient {
                 String json = body.string();
                 Log.i("httpResponse", "Create Purchase: " + json);
                 return gson.fromJson(json, PurchaseResponse.class).toPurchaseView();
-            } else throw new IOException("Failed to initialize game");
+            } else throw new IOException("Failed to create purchase");
         } catch (IOException ignored) {
         }
         return null;
@@ -57,9 +57,9 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
                 String json = body.string();
-                Log.i("httpResponse", "Create Purchase: " + json);
+                Log.i("httpResponse", "Edit Purchase: " + json);
                 return gson.fromJson(json, PurchaseResponse.class).toPurchaseView();
-            } else throw new IOException("Failed to initialize game");
+            } else throw new IOException("Failed to edit purchase");
         } catch (IOException ignored) {
         }
         return null;
@@ -137,7 +137,7 @@ public class PurchaseClient extends HttpClient {
                 }
             }
         } catch (IOException | JsonParseException e) {
-            Log.e(TAG, "getAllPurchases ERROR: " + e.getMessage());
+            Log.e(TAG, "getCalendarReport ERROR: " + e.getMessage());
         }
         return null;
     }
@@ -157,7 +157,7 @@ public class PurchaseClient extends HttpClient {
                 }
             }
         } catch (IOException | JsonParseException e) {
-            Log.e(TAG, "getAllPurchases ERROR: " + e.getMessage());
+            Log.e(TAG, "getAllCategories ERROR: " + e.getMessage());
         }
         return new ArrayList<>();
     }
@@ -167,9 +167,22 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
                 String json = body.string();
-                Log.i("httpResponse", "Create Purchase: " + json);
+                Log.i("httpResponse", "Created Category: " + json);
                 return gson.fromJson(json, Category.class);
-            } else throw new IOException("Failed to initialize game");
+            } else throw new IOException("Failed to create category");
+        } catch (IOException ignored) {
+        }
+        return null;
+    }
+
+    public Category editCategory(int id, CategoryDTO categoryDTO) {
+        try (Response res = put(BACKEND_URL + "/category/" + id, categoryDTO)) {
+            ResponseBody body = res.body();
+            if (res.isSuccessful() && body != null) {
+                String json = body.string();
+                Log.i("httpResponse", "Edited Category: " + json);
+                return gson.fromJson(json, Category.class);
+            } else throw new IOException("Failed to edit category");
         } catch (IOException ignored) {
         }
         return null;
@@ -247,4 +260,5 @@ public class PurchaseClient extends HttpClient {
         }
         return false;
     }
+
 }

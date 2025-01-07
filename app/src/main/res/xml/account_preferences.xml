@@ -1,20 +1,20 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/user_settings">
         <EditTextPreference
-            app:key="username"
             android:inputType="text"
+            app:key="username"
             app:title="@string/prompt_username" />
         <EditTextPreference
-            app:key="email"
             android:inputType="textEmailAddress"
+            app:key="email"
             app:title="@string/prompt_email" />
         <EditTextPreference
-            app:key="password"
             android:inputType="textWebPassword"
-            app:title="@string/prompt_password"
-            app:summary="@string/reset_text"/>
+            app:key="password"
+            app:summary="@string/reset_text"
+            app:title="@string/prompt_password" />
         <Preference
             android:id="@+id/download_svg_button"
             android:layout_width="wrap_content"
@@ -32,11 +32,13 @@
         https://stackoverflow.com/questions/5298370/how-to-add-a-button-to-a-preferencescreen
 -->
         <Preference
-            app:title="Share Referral link"
-            app:key="referral_link"
             android:icon="@drawable/baseline_share_24"
+            app:key="referral_link"
             app:summary="Share your monthly expenses with someone"
-            />
+            app:title="Share Referral link" />
     </PreferenceCategory>
+    <Preference
+        android:key="edit_category_preference"
+        android:title="Edit Categories" />
 
 </PreferenceScreen>

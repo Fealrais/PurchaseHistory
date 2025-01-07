@@ -9,7 +9,7 @@
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart_view"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +20,6 @@
         android:id="@+id/graph_filterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:background="@color/design_default_color_secondary"
         android:contentDescription="@string/filterButton"
@@ -34,7 +33,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/barChart_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

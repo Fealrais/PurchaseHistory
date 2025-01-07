@@ -73,6 +73,8 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 //  UI
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+    implementation("com.github.Mohammad3125:KavehColorPicker:v1.0.0")
+
 
     // Chart and graph library
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")

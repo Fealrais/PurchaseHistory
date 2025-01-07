@@ -35,6 +35,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.account_preferences, rootKey);
         loadAccountSettings();
         loadReferralSettings();
+        loadAppSettings();
+    }
+
+    private void loadAppSettings() {
+        Preference editCategoryPreference = findPreference("edit_category_preference");
+        editCategoryPreference.setOnPreferenceClickListener((p) -> {
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.settings_container, ApplicationSettingsFragment.class, null)
+                    .addToBackStack("application_settings")
+                    .commit();
+            return true;
+        });
+
     }
 
     private void loadAccountSettings() {
@@ -82,12 +96,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         PurchaseHistoryApplication.getInstance().alert("Downloaded CSV to " + exportedCsv.getPath());
                         AndroidUtils.openCsvFile(PurchaseHistoryApplication.getContext(), exportedCsv);
                     } catch (WebException e) {
-                        Log.e(TAG, "loadAccountSettings:"+e.getMessage() );
+                        Log.e(TAG, "loadAccountSettings:" + e.getMessage());
                         e.printStackTrace();
                         PurchaseHistoryApplication.getInstance().getApplicationContext().getMainExecutor().execute(
                                 () -> Toast.makeText(PurchaseHistoryApplication.getContext(), e.getErrorResource(), Toast.LENGTH_SHORT).show());
                     } catch (IOException e) {
-                        Log.e(TAG, "loadAccountSettings:"+e.getMessage() );
+                        Log.e(TAG, "loadAccountSettings:" + e.getMessage());
                     }
                 }).start();
                 return true;

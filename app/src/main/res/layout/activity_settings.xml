@@ -13,5 +13,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:name="com.angelp.purchasehistory.ui.home.settings.SettingsFragment" />
+        app:navGraph="@navigation/settings_navigation"  />
 </androidx.constraintlayout.widget.ConstraintLayout>

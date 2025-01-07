@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settings_navigation_controller"
+    app:startDestination="@id/navigation_settings">
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.angelp.purchasehistory.ui.home.settings.SettingsFragment"
+        android:label="@string/user_settings">
+        <action
+            android:id="@+id/action_navigation_settings_to_navigation_application_settings"
+            app:destination="@id/navigation_application_settings" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_application_settings"
+        android:name="com.angelp.purchasehistory.ui.home.settings.ApplicationSettingsFragment"
+        android:label="@string/application_settings" />
+
+</navigation>

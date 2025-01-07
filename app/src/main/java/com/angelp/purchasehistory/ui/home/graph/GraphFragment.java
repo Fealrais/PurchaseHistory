@@ -1,7 +1,7 @@
 package com.angelp.purchasehistory.ui.home.graph;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,7 +22,6 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.Calenda
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -32,7 +31,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.MPPointF;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
@@ -54,12 +53,12 @@ import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 public class GraphFragment extends Fragment implements RefreshablePurchaseFragment, OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter_graph";
     private final String TAG = this.getClass().getSimpleName();
+    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
     PurchaseClient purchaseClient;
+    AlertDialog.Builder alertBuilder;
     private PurchaseFilter filter;
-    private PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     private Consumer<PurchaseFilter> setFilter;
-
     private FragmentGraphBinding binding;
 
 
@@ -68,6 +67,30 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
         args.putParcelable(ARG_FILTER, filter);
         this.setArguments(args);
         this.setFilter = setFilter;
+    }
+
+    private static Map<LocalDate, List<CalendarReportEntry>> prepareContent(PurchaseFilter filter, CalendarReport calendarReport, List<CategoryView> categories) {
+        Map<LocalDate, List<CalendarReportEntry>> content = new HashMap<>();
+        LocalDate dateIterator = filter.getFrom();
+        for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
+            List<CalendarReportEntry> list = content.computeIfAbsent(dateIterator, (key) -> new ArrayList<>());
+
+            for (CategoryView category : categories) {
+                boolean added = false;
+                for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
+                    if (calendarReportEntry.getLocalDate().equals(dateIterator) && calendarReportEntry.getCategory().getId().equals(category.getId())) {
+                        list.add(calendarReportEntry);
+                        added = true;
+                        break;
+                    }
+                }
+                if (!added) {
+                    list.add(new CalendarReportEntry(dateIterator.format(DateTimeFormatter.ISO_LOCAL_DATE), BigDecimal.ZERO, 0L, new CategoryView()));
+                }
+            }
+            content.put(dateIterator, list);
+        }
+        return content;
     }
 
     @Override
@@ -80,13 +103,14 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
             filter.setFrom(LocalDate.now().withDayOfMonth(1));
             filter.setTo(LocalDate.now());
         }
+        alertBuilder = new AlertDialog.Builder(getActivity());
     }
+
     @Override
     public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(ARG_FILTER, filter);
     }
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -94,90 +118,90 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
 
         binding = FragmentGraphBinding.inflate(inflater, container, false);
         applyFilter(filter);
-        binding.graphFilterButton.setOnClickListener((v)-> openFilter(this::updateFilter));
+        binding.graphFilterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
         initGraph(binding.barChartView);
         setData(filter);
         return binding.getRoot();
     }
 
     private void initGraph(BarChart chart) {
-
-        chart.setHighlightFullBarEnabled(true);
-        chart.setFitBars(true);
         chart.setDrawValueAboveBar(true);
         chart.setExtraOffsets(5, 10, 5, 5);
         chart.setDragDecelerationFrictionCoef(0.95f);
         chart.setBackgroundColor(Color.WHITE);
         chart.setHighlightPerTapEnabled(true);
+        chart.getDescription().setEnabled(false);
         chart.setOnChartValueSelectedListener(this);
+        chart.getAxisRight().setEnabled(false);
 
-        Description description = chart.getDescription();
-        description.setEnabled(true);
-        description.setTextSize(18);
-        description.setText("Nothing selected");
-        DayAxisValueFormatter xAxisFormatter= new DayAxisValueFormatter(chart);
+        DayAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter();
 
         XAxis xLabels = chart.getXAxis();
         xLabels.setPosition(XAxis.XAxisPosition.BOTTOM);
         xLabels.setValueFormatter(xAxisFormatter);
         xLabels.setGranularity(1f);
 
+        // change the position of the y-labels
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
         Legend l = chart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
         l.setDrawInside(true);
-        l.setFormSize(8f);
-        l.setFormToTextSpace(4f);
-        l.setXEntrySpace(6f);
+//        l.setFormSize(8f);
+//        l.setFormToTextSpace(4f);
+//        l.setXEntrySpace(6f);
 
     }
-
 
     private void setData(PurchaseFilter filter) {
         new Thread(() -> {
             CalendarReport calendarReport = purchaseClient.getCalendarReport(filter);
-            Map<Long, Map<LocalDate, CalendarReportEntry>> content = new HashMap<>();
-            for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
-                LocalDate dateIterator = filter.getFrom();
-                Map<LocalDate, CalendarReportEntry> dayEntry = content.computeIfAbsent(calendarReportEntry.getCategory().getId(), (key) -> new HashMap<>());
-                for (; dateIterator.isBefore(filter.getTo()); dateIterator = dateIterator.plusDays(1L))
-                    dayEntry.put(dateIterator, new CalendarReportEntry(dateIterator.format(DateTimeFormatter.ISO_LOCAL_DATE), BigDecimal.ZERO, 0L, calendarReportEntry.getCategory()));
-                dayEntry.put(calendarReportEntry.getLocalDate(), calendarReportEntry);
-                content.put(calendarReportEntry.getCategory().getId(), dayEntry);
+            List<CategoryView> allCategories = purchaseClient.getAllCategories();
+
+            Map<LocalDate, List<CalendarReportEntry>> content = prepareContent(filter, calendarReport, allCategories);
+            List<String> labels = new ArrayList<>();
+            List<Integer> colors = new ArrayList<>();
+            List<BarEntry> entries = new ArrayList<>();
+
+            for (CategoryView allCategory : allCategories) {
+                labels.add(allCategory.getName());
+                int color = AndroidUtils.getColor(allCategory);
+                colors.add(color);
             }
-            BarData data = new BarData();
-            for(Map.Entry<Long, Map<LocalDate,CalendarReportEntry>> entry :content.entrySet()){
-                List<BarEntry> entries = new ArrayList<>();
-                int i = 0;
-                CategoryView categoryView = new CategoryView();
-                for (CalendarReportEntry dateEntry : entry.getValue().values()) {
-                    entries.add(parseBarEntries(dateEntry));
-                    categoryView = dateEntry.getCategory();
-                    i++;
-                }
-                BarDataSet barDataSet = new BarDataSet(entries, categoryView.getName());
-                int categoryColor = AndroidUtils.getColor(categoryView);
-                barDataSet.setColor(categoryColor);
-                barDataSet.setValueTextColor(categoryColor);
-                barDataSet.setLabel(categoryView.getName());
-                data.setBarWidth(1);
-                data.addDataSet(barDataSet);
+            for (Map.Entry<LocalDate, List<CalendarReportEntry>> entry : content.entrySet()) {
+                entries.add(parseBarEntries(entry.getKey(), entry.getValue()));
             }
-            new Handler(Looper.getMainLooper()).post(() -> {
-                binding.barChartView.setData(data);
-                binding.barChartView.notifyDataSetChanged();
-                binding.barChartView.animateY(1000);
-                binding.barChartView.invalidate();
-            });
+            BarDataSet barDataSet = new BarDataSet(entries, "Purchases");
+            barDataSet.setDrawIcons(false);
+            barDataSet.setColors(colors);
+            barDataSet.setStackLabels(labels.toArray(new String[0]));
+            BarData data = new BarData(barDataSet);
+            notifyDataChanged(data);
         }).start();
-
-
     }
 
+    private void notifyDataChanged(BarData data) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            binding.barChartView.setData(data);
+            binding.barChartView.getData().notifyDataChanged();
+            binding.barChartView.notifyDataSetChanged();
+            binding.barChartView.animateY(1000);
+            binding.barChartView.invalidate();
+        });
+    }
 
-    private BarEntry parseBarEntries(CalendarReportEntry entry) {
-        return new BarEntry(entry.getLocalDate().toEpochDay(), entry.getSum().floatValue(), entry);
+    private BarEntry parseBarEntries(LocalDate date, List<CalendarReportEntry> entries) {
+        float[] list = new float[entries.size()];
+        float x = ((Long) date.toEpochDay()).floatValue();
+        for (int i = 0; i < entries.size(); i++) {
+            CalendarReportEntry e = entries.get(i);
+            float floatValue = e.getSum().floatValue();
+            list[i] = floatValue;
+        }
+        return new BarEntry(x, list, entries);
     }
 
     private void openFilter(Consumer<PurchaseFilter> setFilter) {
@@ -186,6 +210,7 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
         filterDialog.show(getParentFragmentManager(), "purchasesFilterDialog");
         filterDialog.setOnSuccess(setFilter);
     }
+
     private void updateFilter(PurchaseFilter newFilter) {
         this.filter = newFilter;
         this.applyFilter(newFilter);
@@ -193,10 +218,12 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
             filterDialog.dismiss();
         refresh(newFilter);
     }
+
     private void applyFilter(PurchaseFilter newFilter) {
         binding.graphFilterButton.setText(newFilter.isEmpty() ? "Filter" : "Filtered");
         binding.textView.setText(filter.getReadableString());
     }
+
     public void refresh(PurchaseFilter filter) {
         this.filter = filter;
         new Thread(() -> {
@@ -207,37 +234,32 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
             });
         }).start();
     }
-    private final RectF onValueSelectedRectF = new RectF();
 
-    /**
-     * @param e The selected Entry
-     * @param h The corresponding highlight object that contains information
-     *          about the highlighted position such as dataSetIndex, ...
-     */
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        CalendarReportEntry data = (CalendarReportEntry) e.getData();
-        Description description = binding.barChartView.getDescription();
-        description.setText(getDescription(data));
         if (e == null)
             return;
+        List<CalendarReportEntry> data = (List<CalendarReportEntry>) e.getData();
+        setTooltipText(data.get(0).getDate(), data.stream()
+                .filter(entry -> entry.getCount() > 0)
+                .map(this::getDescription)
+                .collect(Collectors.joining("\n==============\n")));
+    }
 
-        RectF bounds = onValueSelectedRectF;
-        binding.barChartView.getBarBounds((BarEntry) e, bounds);
-        MPPointF position = binding.barChartView.getPosition(e, YAxis.AxisDependency.LEFT);
-        MPPointF.recycleInstance(position);
+    public String getDescription(CalendarReportEntry entry) {
+        return entry.getCategory().getName() + ":\n" +
+                " -  Total sum: " + entry.getSum() + "\n" +
+                " -  Count: " + entry.getCount();
     }
-    public String getDescription(CalendarReportEntry entry){
-        return "Selected: " + entry.getCategory().getName() + "\n" +
-                "Total sum: " + entry.getSum() + "\n" +
-                "Count: " + entry.getCount() + "\n" +
-                "Date: "+ entry.getDate();
-    }
+
     @Override
     public void onNothingSelected() {
 
-        Description description = binding.barChartView.getDescription();
-        description.setText("Nothing selected");
+    }
 
+    private void setTooltipText(String title, String text) {
+        alertBuilder.setMessage(text).setTitle(title);
+        AlertDialog dialog = alertBuilder.create();
+        dialog.show();
     }
 }

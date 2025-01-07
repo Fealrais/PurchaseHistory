@@ -30,19 +30,24 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @AndroidEntryPoint
-public class CreateCategoryDialog extends DialogFragment {
+public class EditCategoryDialog extends DialogFragment {
     private final String TAG = this.getClass().getSimpleName();
     @Inject
     PurchaseClient purchaseClient;
     List<String> defaultCategories = List.of("Groceries", "Medicine", "Travel", "Gifts", "Fast food", "Hobbies", "Bills", "Investments", "Essentials");
     List<String> defaultColors = List.of("#FADADD", "#AECBFA", "#D4EED1", "#FFF9C4", "#E6E6FA", "#FFDAB9", "#F5FFFA", "#F08080");
+    private CategoryView defaultValue;
+    private Long purchaseId;
     private Consumer<CategoryView> consumer;
+
     private CategoryDialogBinding binding;
 
-    public CreateCategoryDialog() {
+    public EditCategoryDialog() {
     }
 
-    public CreateCategoryDialog(Consumer<CategoryView> categoryViewProvider) {
+    public EditCategoryDialog(Long id, CategoryView defaultValue, Consumer<CategoryView> categoryViewProvider) {
+        this.purchaseId = id;
+        this.defaultValue = defaultValue;
         this.consumer = categoryViewProvider;
     }
 
@@ -53,7 +58,9 @@ public class CreateCategoryDialog extends DialogFragment {
         fillNameAutocomplete();
         binding.colorPickerView.setHueSliderView(binding.hueSlider);
         binding.colorPickerView.setOnColorChangedListener((color) -> {
-            binding.categoryColorInput.setText(String.format("#%06X", (0xFFFFFF & color)));
+            if (binding.colorPickerView.hasWindowFocus()) {
+                binding.categoryColorInput.setText(String.format("#%06X", (0xFFFFFF & color)));
+            }
         });
         binding.categoryColorInput.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
@@ -70,26 +77,35 @@ public class CreateCategoryDialog extends DialogFragment {
             }
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Creating a new category");
-        builder.setView(binding.getRoot())
-                .setPositiveButton(R.string.create_category, (dialog, id) -> {
-                    String name = binding.categoryNameInput.getText().toString();
-                    String color = binding.categoryColorInput.getText().toString();
-                    try {
-                        validateValues(name, color);
-                        binding.categoryErrorText.setError("");
-                        new Thread(() -> {
-                            Category category = purchaseClient.createCategory(new CategoryDTO(name, color));
-                            consumer.accept(category);
-                            dialog.dismiss();
-                        }).start();
-                    } catch (RuntimeException e) {
-                        binding.categoryErrorText.setText(e.getMessage());
-                        Log.i(TAG, "onCreateDialog: Validation failed: " + e.getMessage());
-                    }
-                })
-                .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+        builder.setTitle("Editing category#" + purchaseId);
+        builder.setView(binding.getRoot()).setPositiveButton(R.string.edit_text, (dialog, id) -> {
+            String name = binding.categoryNameInput.getText().toString();
+            String color = binding.categoryColorInput.getText().toString();
+            try {
+                validateValues(name, color);
+                binding.categoryErrorText.setError("");
+                new Thread(() -> {
+                    Category category = purchaseClient.editCategory(purchaseId.intValue(), new CategoryDTO(name, color));
+                    defaultValue.setColor(category.getColor());
+                    defaultValue.setName(category.getName());
+                    consumer.accept(category);
+                    dialog.dismiss();
+                }).start();
+            } catch (RuntimeException e) {
+                binding.categoryErrorText.setText(e.getMessage());
+                Log.i(TAG, "onCreateDialog: Validation failed: " + e.getMessage());
+            }
+        }).setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+
+        updateUI(defaultValue);
         return builder.create();
+    }
+
+    private void updateUI(CategoryView defaultValue) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            binding.categoryColorInput.setText(defaultValue.getColor());
+            binding.categoryNameInput.setText(defaultValue.getName());
+        });
     }
 
     private void fillNameAutocomplete() {
@@ -117,12 +133,9 @@ public class CreateCategoryDialog extends DialogFragment {
 
 
     private void validateValues(String name, String color) {
-        if (name.trim().isEmpty())
-            throw new RuntimeException("Name cannot be empty");
-        if (color.trim().isEmpty())
-            throw new RuntimeException("Color cannot be empty");
-        if (!color.startsWith("#"))
-            throw new RuntimeException("Color should be a hex value");
+        if (name.trim().isEmpty()) throw new RuntimeException("Name cannot be empty");
+        if (color.trim().isEmpty()) throw new RuntimeException("Color cannot be empty");
+        if (!color.startsWith("#")) throw new RuntimeException("Color should be a hex value");
     }
 
     @Override

@@ -91,6 +91,7 @@
         app:layout_constraintTop_toBottomOf="@+id/backButton" />
 
     <com.google.android.gms.common.SignInButton
+        android:visibility="gone"
         android:id="@+id/google_sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
