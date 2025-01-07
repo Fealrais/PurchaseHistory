@@ -31,15 +31,17 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(binding.settingsContainer.getId(), SettingsFragment.class, null)
-                .addToBackStack("settings")
                 .commit();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        startActivity(intent);
-        return true;
+        if (item.getItemId() == android.R.id.home) {
+            //Title bar back press triggers onBackPressed()
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -49,8 +51,9 @@ public class SettingsActivity extends AppCompatActivity {
             Log.i(TAG, "popping backstack");
             fm.popBackStack();
         } else {
-            Log.i(TAG, "nothing on backstack, calling super");
-            super.onBackPressed();
+            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
     }
 }
