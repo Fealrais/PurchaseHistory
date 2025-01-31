@@ -23,8 +23,8 @@
         tools:layout="@layout/fragment_qr" />
     <fragment
         android:id="@+id/navigation_graph"
-        android:name="com.angelp.purchasehistory.ui.home.graph.GraphFragment"
+        android:name="com.angelp.purchasehistory.ui.home.graph.BarChartFragment"
         android:label="@string/title_activity_graph"
-        tools:layout="@layout/fragment_graph" />
+        tools:layout="@layout/fragment_bar_chart" />
 
 </navigation>

@@ -123,7 +123,7 @@ public class PurchaseClient extends HttpClient {
         return null;
     }
 
-    public CalendarReport getCalendarReport(PurchaseFilter filter) {
+    public CalendarReport getCategorizedCalendarReport(PurchaseFilter filter) {
         try (Response res = get(BACKEND_URL + "/purchase/analytics/calendar?" + filter)) {
             ResponseBody body = res.body();
             if (body != null) {
@@ -141,6 +141,26 @@ public class PurchaseClient extends HttpClient {
         }
         return null;
     }
+
+    public CalendarReport getCalendarReport(PurchaseFilter filter) {
+        try (Response res = get(BACKEND_URL + "/purchase/analytics/monthly?" + filter)) {
+            ResponseBody body = res.body();
+            if (body != null) {
+                String json = body.string();
+                Log.i("httpResponse", "Get all purchases: " + json);
+                if (res.isSuccessful()) {
+                    return gson.fromJson(json, CalendarReport.class);
+                } else {
+                    ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
+                    throw new RuntimeException(errorResponse.getDetail());
+                }
+            }
+        } catch (IOException | JsonParseException e) {
+            Log.e(TAG, "getCalendarReport ERROR: " + e.getMessage());
+        }
+        return null;
+    }
+
 
 
     public List<CategoryView> getAllCategories() {

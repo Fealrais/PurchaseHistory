@@ -14,22 +14,18 @@ import androidx.fragment.app.Fragment;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
-import com.angelp.purchasehistory.databinding.FragmentGraphBinding;
+import com.angelp.purchasehistory.databinding.FragmentLineChartBinding;
 import com.angelp.purchasehistory.ui.home.purchases.PurchaseFilterDialog;
-import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReport;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.*;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -40,7 +36,6 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +46,7 @@ import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
 @NoArgsConstructor
 @AndroidEntryPoint
-public class GraphFragment extends Fragment implements RefreshablePurchaseFragment, OnChartValueSelectedListener {
+public class LineChartFragment extends Fragment implements RefreshablePurchaseFragment, OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter_graph";
     public static final Long EPOCHDAY_CONST = 20000L;
     private final String TAG = this.getClass().getSimpleName();
@@ -61,36 +56,25 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
     AlertDialog.Builder alertBuilder;
     private PurchaseFilter filter;
     private Consumer<PurchaseFilter> setFilter;
-    private FragmentGraphBinding binding;
+    private FragmentLineChartBinding binding;
 
 
-    public GraphFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
+    public LineChartFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
         Bundle args = new Bundle();
         args.putParcelable(ARG_FILTER, filter);
         this.setArguments(args);
         this.setFilter = setFilter;
     }
 
-    private static Map<LocalDate, List<CalendarReportEntry>> prepareContent(PurchaseFilter filter, CalendarReport calendarReport, List<CategoryView> categories) {
-        Map<LocalDate, List<CalendarReportEntry>> content = new HashMap<>();
+    private static Map<LocalDate, CalendarReportEntry> prepareContent(PurchaseFilter filter, CalendarReport calendarReport, List<CategoryView> categories) {
+        Map<LocalDate, CalendarReportEntry> content = new HashMap<>();
+
+        for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
+            content.put(calendarReportEntry.getLocalDate(), calendarReportEntry);
+        }
         LocalDate dateIterator = filter.getFrom();
         for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
-            List<CalendarReportEntry> list = content.computeIfAbsent(dateIterator, (key) -> new ArrayList<>());
-
-            for (CategoryView category : categories) {
-                boolean added = false;
-                for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
-                    if (calendarReportEntry.getLocalDate().equals(dateIterator) && calendarReportEntry.getCategory().getId().equals(category.getId())) {
-                        list.add(calendarReportEntry);
-                        added = true;
-                        break;
-                    }
-                }
-                if (!added) {
-                    list.add(new CalendarReportEntry(dateIterator.format(DateTimeFormatter.ISO_LOCAL_DATE), BigDecimal.ZERO, 0L, new CategoryView()));
-                }
-            }
-            content.put(dateIterator, list);
+            content.putIfAbsent(dateIterator, new CalendarReportEntry(dateIterator.format(DateTimeFormatter.ISO_LOCAL_DATE), BigDecimal.ZERO, 0L, null));
         }
         return content;
     }
@@ -118,17 +102,16 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: View created");
 
-        binding = FragmentGraphBinding.inflate(inflater, container, false);
+        binding = FragmentLineChartBinding.inflate(inflater, container, false);
         applyFilter(filter);
         binding.graphFilterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
         binding.textView.setTextColor(Color.BLACK);
-        initGraph(binding.barChartView);
+        initGraph(binding.lineChartView);
         setData(filter);
         return binding.getRoot();
     }
 
-    private void initGraph(BarChart chart) {
-        chart.setDrawValueAboveBar(true);
+    private void initGraph(LineChart chart) {
         chart.setExtraOffsets(5, 10, 5, 5);
         chart.setDragDecelerationFrictionCoef(0.95f);
         chart.setBackgroundColor(Color.WHITE);
@@ -162,51 +145,38 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
     private void setData(PurchaseFilter filter) {
         new Thread(() -> {
             CalendarReport calendarReport = purchaseClient.getCalendarReport(filter);
-            List<CategoryView> allCategories = purchaseClient.getAllCategories();
+//            List<CategoryView> allCategories = purchaseClient.getAllCategories();
 
-            Map<LocalDate, List<CalendarReportEntry>> content = prepareContent(filter, calendarReport, allCategories);
-            List<String> labels = new ArrayList<>();
-            List<Integer> colors = new ArrayList<>();
-            List<BarEntry> entries = new ArrayList<>();
-
-            for (CategoryView allCategory : allCategories) {
-                labels.add(allCategory.getName());
-                int color = AndroidUtils.getColor(allCategory);
-                colors.add(color);
-            }
-            LocalDate dateIterator = filter.getFrom();
-            for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
-                entries.add(parseBarEntries(dateIterator, content.get(dateIterator)));
-            }
-            BarDataSet barDataSet = new BarDataSet(entries, "Purchases");
+//            List<Integer> colors = new ArrayList<>();
+//            List<Entry> entries = new ArrayList<>();
+//            Map<LocalDate, CalendarReportEntry> content = prepareContent(filter, calendarReport, allCategories);
+//            LocalDate dateIterator = filter.getFrom();
+//            for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
+//                entries.add(parseEntries(dateIterator, content.get(dateIterator)));
+//            }
+            List<Entry> entries = calendarReport.getContent().stream().map(this::parseEntries).collect(Collectors.toList());
+            LineDataSet barDataSet = new LineDataSet(entries, "Purchases");
             barDataSet.setDrawIcons(false);
-            barDataSet.setColors(colors);
-            barDataSet.setStackLabels(labels.toArray(new String[0]));
-            BarData data = new BarData(barDataSet);
-            data.setBarWidth(0.95f);
+//            barDataSet.setColors(colors);
+            LineData data = new LineData(barDataSet);
             notifyDataChanged(data);
         }).start();
     }
 
-    private void notifyDataChanged(BarData data) {
+    private void notifyDataChanged(LineData data) {
         new Handler(Looper.getMainLooper()).post(() -> {
-            binding.barChartView.setData(data);
-            binding.barChartView.getData().notifyDataChanged();
-            binding.barChartView.notifyDataSetChanged();
-            binding.barChartView.animateY(1000);
-            binding.barChartView.invalidate();
+            binding.lineChartView.setData(data);
+            binding.lineChartView.getData().notifyDataChanged();
+            binding.lineChartView.notifyDataSetChanged();
+            binding.lineChartView.animateY(1000);
+            binding.lineChartView.invalidate();
         });
     }
 
-    private BarEntry parseBarEntries(LocalDate date, List<CalendarReportEntry> entries) {
-        float[] list = new float[entries.size()];
-        float x = ((Long) date.toEpochDay()).floatValue();
-        for (int i = 0; i < entries.size(); i++) {
-            CalendarReportEntry e = entries.get(i);
-            float floatValue = e.getSum().floatValue();
-            list[i] = floatValue;
-        }
-        return new BarEntry(x, list, entries);
+    private Entry parseEntries(CalendarReportEntry entry) {
+        float x = ((Long) entry.getLocalDate().toEpochDay()).floatValue();
+
+        return new Entry(x, entry.getSum().floatValue(), entry);
     }
 
     private void openFilter(Consumer<PurchaseFilter> setFilter) {
@@ -234,8 +204,8 @@ public class GraphFragment extends Fragment implements RefreshablePurchaseFragme
         new Thread(() -> {
             setData(filter);
             getActivity().runOnUiThread(() -> {
-                binding.barChartView.notifyDataSetChanged();
-                binding.barChartView.animateY(1400, Easing.EaseInOutQuad);
+                binding.lineChartView.notifyDataSetChanged();
+                binding.lineChartView.animateY(1400, Easing.EaseInOutQuad);
             });
         }).start();
     }

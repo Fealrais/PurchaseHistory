@@ -125,4 +125,23 @@
     <string name="edit_categories">Редактирай своите категории</string>
     <string name="application_settings">Настройки на Приложението</string>
     <string name="number_of_purchases">Брой покупки</string>
+
+    <string name="tour_navigation_dashboard">Табло</string>
+    <string name="tour_navigation_qrscanner">QR Скенер</string>
+<!--    <string name="tour_qrFloatingQrButton">Сканирайте QR код с вашата камера</string>-->
+<!--    <string name="tour_qrFloatingQrButton_secondary">Можете също да сканирате QR кодове, използвайки плаващия бутон. Подгответе вашата сметка и сканирайте QR кода.</string>-->
+    <string name="tour_navigation_purchases_list">Списък с покупки</string>
+    <string name="tour_navigation_graph">Графика</string>
+    <string name="tour_filter_button">Филтрирай бележки</string>
+    <string name="tour_prompt_title">Добре дошли!</string>
+    <string name="tour_navigation_dashboard_secondary">Това е таблото. Тук можете да видите преглед на последните си покупки и тенденциите в разходите.</string>
+    <string name="tour_navigation_qrscanner_secondary">Използвайте това, за да сканирате QR кодовете на вашите касови бележки и бързо да добавите покупки към историята си.</string>
+    <string name="tour_navigation_purchases_list_secondary">Тук можете да видите подробен списък на всички ваши минали покупки.</string>
+    <string name="tour_navigation_graph_secondary">Този раздел показва графични представяния на вашите данни за разходите във времето.</string>
+    <string name="tour_filter_button_secondary">Винаги можете да промените периода от време или категорията на показаните покупки от тук.</string>
+    <string name="tour_prompt_message">Добре дошли в PurchaseHistory!\nИскате ли бърза обиколка, за да се запознаете с функциите и функционалностите на приложението?</string>
+
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
+    <string name="skip">Пропусни</string>
 </resources>
