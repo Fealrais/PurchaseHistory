@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ForgotPasswordEmailActivity.class);
             startActivity(intent);
         });
-        binding.googleSignInButton.setOnClickListener((v)-> loginWithGoogle());
+//        binding.googleSignInButton.setOnClickListener((v)-> loginWithGoogle());
     }
 
     private void checkIfLoggedIn() {

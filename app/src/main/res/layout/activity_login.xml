@@ -90,7 +90,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backButton" />
 
-    <com.google.android.gms.common.SignInButton
+<!--    <com.google.android.gms.common.SignInButton
         android:visibility="gone"
         android:id="@+id/google_sign_in_button"
         android:layout_width="wrap_content"
@@ -98,5 +98,5 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/forgotPasswordButton" />
+        app:layout_constraintTop_toBottomOf="@+id/forgotPasswordButton" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

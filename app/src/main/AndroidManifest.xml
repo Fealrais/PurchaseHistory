@@ -83,11 +83,14 @@
         </provider>
 
         <meta-data
-            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true" />
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-9339704833965519~6807019954" />
+            android:name="com.google.android.gms.privacy_policy"
+            android:value="file:///android_asset/privacy_policy.html" />
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.ads.AD_MANAGER_APP"-->
+<!--        android:value="true" />-->
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.ads.APPLICATION_ID"-->
+<!--            android:value="ca-app-pub-9339704833965519~6807019954" />-->
     </application>
 
 </manifest>

@@ -31,8 +31,8 @@ import com.angelp.purchasehistory.components.form.TimePickerFragment;
 import com.angelp.purchasehistory.databinding.FragmentQrBinding;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
 import com.angelp.purchasehistory.util.CommonUtils;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+//import com.google.android.gms.ads.AdRequest;
+//import com.google.android.gms.ads.AdView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -45,7 +45,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.android.gms.ads.AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize;
+//import static com.google.android.gms.ads.AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize;
 
 @AndroidEntryPoint
 public class QrScannerFragment extends Fragment {
@@ -82,7 +82,7 @@ public class QrScannerFragment extends Fragment {
     private DatePickerFragment datePicker;
     private CreateCategoryDialog categoryDialog;
     private CategorySpinnerAdapter categoryAdapter;
-    private AdView mAdView;
+//    private AdView mAdView;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -94,14 +94,14 @@ public class QrScannerFragment extends Fragment {
         initQRForm(inflater);
 
 
-        mAdView = new AdView(getContext());
-        mAdView.setAdSize(getCurrentOrientationAnchoredAdaptiveBannerAdSize(getContext(), R.id.adView));
-        mAdView.setAdUnitId("myAdUnitId");
-        AdRequest adRequest = new AdRequest.Builder().setRequestAgent("android_studio:ad_template").build();
-
-        // Start loading the ad.
-        mAdView.loadAd(adRequest);
-        binding.adView.addView(mAdView);
+//        mAdView = new AdView(getContext());
+//        mAdView.setAdSize(getCurrentOrientationAnchoredAdaptiveBannerAdSize(getContext(), R.id.adView));
+//        mAdView.setAdUnitId("myAdUnitId");
+//        AdRequest adRequest = new AdRequest.Builder().setRequestAgent("android_studio:ad_template").build();
+//
+//        // Start loading the ad.
+//        mAdView.loadAd(adRequest);
+//        binding.adView.addView(mAdView);
 
         new Thread(() -> {
             allCategories = qrScannerViewModel.getAllCategories();
@@ -262,7 +262,7 @@ public class QrScannerFragment extends Fragment {
     @Override
     public void onDestroyView() {
         // Destroy the AdView.
-        mAdView.destroy();
+//        mAdView.destroy();
         super.onDestroyView();
         binding = null;
     }
@@ -270,7 +270,7 @@ public class QrScannerFragment extends Fragment {
     @Override
     public void onPause() {
         // Pause the AdView.
-        mAdView.pause();
+//        mAdView.pause();
         super.onPause();
     }
 
@@ -278,6 +278,6 @@ public class QrScannerFragment extends Fragment {
     public void onResume() {
         super.onResume();
         // Resume the AdView.
-        mAdView.resume();
+//        mAdView.resume();
     }
 }

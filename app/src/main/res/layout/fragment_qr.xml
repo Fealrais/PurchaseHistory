@@ -152,10 +152,10 @@
         android:clickable="true"
         android:contentDescription="@string/qr_open_camera_button_hint"
         android:src="@drawable/qr_code_outline_icon"
-        app:layout_constraintBottom_toTopOf="@+id/adView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.google.android.gms.ads.AdView
+<!--    <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
         android:layout_width="match_parent"
@@ -164,7 +164,7 @@
         ads:adUnitId="ca-app-pub-9339704833965519/5033206617"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />-->
 
     <EditText
         android:id="@+id/qr_noteInput"
