@@ -140,8 +140,8 @@
     <string name="number_of_purchases">Number of purchases</string>
     <string name="tour_navigation_dashboard">The Dashboard</string>
     <string name="tour_navigation_qrscanner">QR Scanner</string>
-<!--    <string name="tour_qrFloatingQrButton">Scan QR Code with your camera</string>-->
-<!--    <string name="tour_qrFloatingQrButton_secondary">You can also scan QR codes using the floating button. Prepare your bill and scan the QR code.</string>-->
+    <!--    <string name="tour_qrFloatingQrButton">Scan QR Code with your camera</string>-->
+    <!--    <string name="tour_qrFloatingQrButton_secondary">You can also scan QR codes using the floating button. Prepare your bill and scan the QR code.</string>-->
     <string name="tour_navigation_purchases_list">Purchases List</string>
     <string name="tour_navigation_graph">Graph</string>
     <string name="tour_filter_button">Filter purchases</string>
@@ -151,9 +151,15 @@
     <string name="tour_navigation_purchases_list_secondary">Here you can see a detailed list of all your past purchases.</string>
     <string name="tour_navigation_graph_secondary">This section shows graphical representations of your spending data over time.</string>
     <string name="tour_filter_button_secondary">You can always change the time period or the category of purchases displayed from here.</string>
-    <string name="tour_prompt_message">Welcome to PurchaseHistory!\nWould you like a quick tour to get familiar with the features and functionalities of the application?</string>
+    <string name="tour_prompt_message">Welcome to PurchaseHistory!\nThis is a project made by a solo developer in his free time, inspired by the Bulgarian QR code receipt system and by my will to see my monthly spending. Feel free to reach out for suggestions and issues on my email <a href="@mailto:purchase.history.bg@gmail.com">purchase.history.bg@gmail.com</a></string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="terms_of_service_text">By using this application, you agree to the terms and conditions outlined here.\nThe application is provided as-is, without any guarantees or warranties. The developer is not responsible for any data loss, damages, or any other issues that may arise from using the application.\nYou agree to use the application at your own risk and to comply with all applicable laws and regulations.\nThe developer reserves the right to modify these terms at any time without prior notice.</string>
+    <string name="privacy">Privacy Policy</string>
+    <string name="privacy_text">Your privacy is important to us. This application collects and stores your purchase history data on a secure server. No personal data is shared with third parties without your explicit consent.\nYou have full control over your data and can delete it at any time. For any questions or concerns, please contact the developer at:\n<a href="mailto:purchase.history.bg@gmail.com">purchase.history.bg@gmail.com</a>.\nBy using this application, you consent to the collection and use of your data as described in this policy.</string>
+    <string name="tour_prompt_message2">Would you like a quick tour to get familiar with the features and functionalities of the application?</string>
 
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="skip">Skip</string>
+    <string name="accept_terms">Accept Terms of service</string>
 </resources>

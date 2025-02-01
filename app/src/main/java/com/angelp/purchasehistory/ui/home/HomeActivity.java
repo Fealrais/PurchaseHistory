@@ -1,12 +1,14 @@
 package com.angelp.purchasehistory.ui.home;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.Button;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -48,7 +50,9 @@ public class HomeActivity extends AppCompatActivity {
         tourSteps.add(new TourStep(R.id.navigation_graph, R.string.tour_navigation_graph, R.string.tour_navigation_graph_secondary));
     }
 
-
+    /**
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,19 +82,27 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showTourPrompt() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.tour_prompt_title)
-                .setMessage(R.string.tour_prompt_message)
-                .setPositiveButton(R.string.yes, (dialog, which) -> showNextTourStep())
-                .setNegativeButton(R.string.skip, (dialog, which) -> {
-                    SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean(IS_FIRST_TIME_OPEN, false);
-                    editor.apply();
-                })
-                .show();
-    }
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.tour_guide_bubble);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        Button yesButton = dialog.findViewById(R.id.tour_guide_next);
+        yesButton.setOnClickListener(v -> {
+            binding.navView.setEnabled(false);
+            findViewById(R.id.dashboard_filterButton).setEnabled(false);
+            showNextTourStep();
+            dialog.dismiss();
+        });
 
+        Button skipButton = dialog.findViewById(R.id.tour_guide_skip);
+        skipButton.setOnClickListener(v -> {
+            SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(IS_FIRST_TIME_OPEN, false);
+            editor.apply();
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
     private boolean isFirstTimeOpen() {
         SharedPreferences preferences = getSharedPreferences("app_preferences", MODE_PRIVATE);
         return preferences.getBoolean(IS_FIRST_TIME_OPEN, true);
@@ -111,6 +123,7 @@ public class HomeActivity extends AppCompatActivity {
                     })
                     .show();
         } else {
+            binding.navView.setEnabled(true);
             SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean(IS_FIRST_TIME_OPEN, false);

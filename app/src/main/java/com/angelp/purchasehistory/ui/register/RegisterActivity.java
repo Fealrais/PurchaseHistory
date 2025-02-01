@@ -1,21 +1,21 @@
 package com.angelp.purchasehistory.ui.register;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.LocaleList;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.databinding.ActivityRegisterBinding;
+import com.angelp.purchasehistory.ui.legal.PrivacyPolicyActivity;
+import com.angelp.purchasehistory.ui.legal.TermsAndConditionsActivity;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -27,21 +27,20 @@ public class RegisterActivity extends AppCompatActivity {
 
     private RegisterViewModel registerViewModel;
     private ActivityRegisterBinding binding;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        registerViewModel = new ViewModelProvider(this)
-                .get(RegisterViewModel.class);
+        registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
         final EditText emailEditText = binding.email;
         final Button registerButton = binding.registerRegisterButton;
         final ProgressBar loadingProgressBar = binding.loading;
+        final CheckBox acceptTermsCheckBox = binding.acceptTerms;
 
         binding.registerBackButton.setOnClickListener((view) -> onBackPressed());
 
@@ -49,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
             if (registerFormState == null) {
                 return;
             }
-            registerButton.setEnabled(registerFormState.isDataValid());
+            registerButton.setEnabled(registerFormState.isDataValid() && acceptTermsCheckBox.isChecked());
             if (registerFormState.getUsernameError() != null) {
                 usernameEditText.setError(getString(registerFormState.getUsernameError()));
             }
@@ -70,10 +69,9 @@ public class RegisterActivity extends AppCompatActivity {
                 updateUiWithUser(registerResult.getSuccess());
             }
             setResult(Activity.RESULT_OK);
-
-            //Complete and destroy login activity once successful
             finish();
         });
+
         checkIfLoggedIn();
 
         TextWatcher afterTextChangedListener = new AfterTextChangedWatcher() {
@@ -86,6 +84,12 @@ public class RegisterActivity extends AppCompatActivity {
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
         emailEditText.addTextChangedListener(afterTextChangedListener);
+
+        acceptTermsCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            boolean dataValid = registerViewModel.getRegisterFormState().getValue() != null && registerViewModel.getRegisterFormState().getValue().isDataValid();
+            registerButton.setEnabled(dataValid && isChecked);
+        });
+
         emailEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
@@ -98,8 +102,16 @@ public class RegisterActivity extends AppCompatActivity {
             loadingProgressBar.setVisibility(View.VISIBLE);
             register(usernameEditText, passwordEditText, emailEditText);
         });
-    }
+        binding.termsLink.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TermsAndConditionsActivity.class);
+            startActivity(intent);
+        });
 
+        binding.privacyLink.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PrivacyPolicyActivity.class);
+            startActivity(intent);
+        });
+    }
     private void checkIfLoggedIn() {
         new Thread(registerViewModel.checkIfLoggedIn(), "CheckLogin").start();
     }

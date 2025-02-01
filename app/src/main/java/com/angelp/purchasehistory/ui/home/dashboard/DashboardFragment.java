@@ -24,7 +24,7 @@ import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
 @NoArgsConstructor
 @AndroidEntryPoint
-public class DashboardFragment extends Fragment implements RefreshablePurchaseFragment{
+public class DashboardFragment extends Fragment implements RefreshablePurchaseFragment {
     private final String DASHBOARD_FILTER = "dashboard_filter";
     private final String TAG = this.getClass().getSimpleName();
     private FragmentDashboardBinding binding;
@@ -44,10 +44,16 @@ public class DashboardFragment extends Fragment implements RefreshablePurchaseFr
                             applyFilter(newFilter);
                             refreshFragment(newFilter, binding.listedPurchasesFragmentContainer.getId());
                         }))
-                .replace(binding.listedPurchasesFragmentContainer.getId(), new PurchaseListPurchaseFragment(filter, ()->refresh(filter)))
+                .replace(binding.listedPurchasesFragmentContainer.getId(), new PurchaseListPurchaseFragment(filter, () -> refresh(filter)))
                 .commit();
         binding.dashboardFilterButton.setOnClickListener(v -> openFilter(this::updateFilter));
         return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!binding.dashboardFilterButton.isEnabled()) binding.dashboardFilterButton.setEnabled(true);
     }
 
     private PurchaseFilter loadFilterArg(Bundle bundle) {

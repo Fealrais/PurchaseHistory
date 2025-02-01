@@ -53,7 +53,6 @@ import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 @AndroidEntryPoint
 public class BarChartFragment extends Fragment implements RefreshablePurchaseFragment, OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter_graph";
-    public static final Long EPOCHDAY_CONST = 20000L;
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
@@ -180,7 +179,8 @@ public class BarChartFragment extends Fragment implements RefreshablePurchaseFra
             }
             BarDataSet barDataSet = new BarDataSet(entries, "Purchases");
             barDataSet.setDrawIcons(false);
-            barDataSet.setColors(colors);
+            if(!colors.isEmpty())
+                barDataSet.setColors(colors);
             barDataSet.setStackLabels(labels.toArray(new String[0]));
             BarData data = new BarData(barDataSet);
             data.setBarWidth(0.95f);
@@ -245,6 +245,8 @@ public class BarChartFragment extends Fragment implements RefreshablePurchaseFra
         if (e == null)
             return;
         List<CalendarReportEntry> data = (List<CalendarReportEntry>) e.getData();
+        if(data == null || data.isEmpty())
+            return;
         setTooltipText(data.get(0).getLocalDate().format(DateTimeFormatter.ofPattern("dd MMM yyyy")), data.stream()
                 .filter(entry -> entry.getCount() > 0)
                 .map(this::getDescription)

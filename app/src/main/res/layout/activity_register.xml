@@ -15,12 +15,11 @@
         android:id="@+id/register_backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
         android:text="@string/back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_registerButton" />
+        app:layout_constraintStart_toEndOf="@+id/register_registerButton"
+        app:layout_constraintTop_toTopOf="@+id/register_registerButton" />
 
     <EditText
         android:id="@+id/username"
@@ -71,12 +70,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:enabled="false"
         android:text="@string/action_register"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/register_backButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        app:layout_constraintTop_toBottomOf="@+id/terms_link" />
 
     <ProgressBar
         android:id="@+id/loading"
@@ -92,4 +91,44 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
 
+    <CheckBox
+        android:id="@+id/accept_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/accept_terms"
+        app:layout_constraintStart_toStartOf="@+id/email"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <TextView
+        android:id="@+id/terms_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="15dp"
+
+        android:text="@string/terms_of_service"
+        android:textColor="?attr/colorPrimary"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintStart_toStartOf="@+id/accept_terms"
+        app:layout_constraintTop_toBottomOf="@+id/accept_terms" />
+
+    <TextView
+        android:padding="15dp"
+        android:id="@+id/privacy_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:text="@string/privacy"
+        android:textAlignment="center"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/accept_terms"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.815"
+        app:layout_constraintStart_toEndOf="@+id/accept_terms"
+        app:layout_constraintTop_toTopOf="@+id/accept_terms" />
 </androidx.constraintlayout.widget.ConstraintLayout>
