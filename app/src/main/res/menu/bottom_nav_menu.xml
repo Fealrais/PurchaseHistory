@@ -6,9 +6,9 @@
         android:icon="@drawable/ic_dashboard_24dp"
         android:title="@string/title_dashboard" />
     <item
-        android:id="@+id/navigation_purchases_list"
-        android:icon="@drawable/ic_list_24"
-        android:title="@string/title_purchases_list" />
+        android:id="@+id/navigation_scheduled_expenses"
+        android:icon="@drawable/baseline_repeat_24"
+        android:title="@string/title_scheduled_expenses" />
     <item
         android:id="@+id/navigation_qrscanner"
         android:icon="@drawable/qr_code_outline_icon"

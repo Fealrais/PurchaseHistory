@@ -164,7 +164,7 @@ public class QrScannerFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (binding.qrPriceInput.hasFocus()) {
                     String str = binding.qrPriceInput.getText().toString();
-                    if (CommonUtils.isValidCurrency(str)) {
+                    if (CommonUtils.isInvalidCurrency(str)) {
                         binding.qrPriceInput.setError("Invalid price!");
                         binding.qrSubmitButton.setEnabled(false);
                     } else {

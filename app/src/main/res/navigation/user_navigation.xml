@@ -11,11 +11,10 @@
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
     <fragment
-        android:id="@+id/navigation_purchases_list"
-
-        android:name="com.angelp.purchasehistory.ui.home.purchases.ListedPurchasesFragment"
-        android:label="@string/title_purchases_list"
-        tools:layout="@layout/fragment_listed_purchases" />
+        android:id="@+id/navigation_scheduled_expenses"
+        android:name="com.angelp.purchasehistory.ui.home.scheduled.ScheduledExpensesFragment"
+        android:label="@string/title_spectated_users"
+        tools:layout="@layout/fragment_scheduled_expenses" />
     <fragment
         android:id="@+id/navigation_qrscanner"
         android:name="com.angelp.purchasehistory.ui.home.qr.QrScannerFragment"

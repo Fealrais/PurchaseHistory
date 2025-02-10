@@ -142,14 +142,14 @@
     <string name="tour_navigation_qrscanner">QR Scanner</string>
     <!--    <string name="tour_qrFloatingQrButton">Scan QR Code with your camera</string>-->
     <!--    <string name="tour_qrFloatingQrButton_secondary">You can also scan QR codes using the floating button. Prepare your bill and scan the QR code.</string>-->
-    <string name="tour_navigation_purchases_list">Purchases List</string>
+    <string name="tour_navigation_scheduled_expenses">Schedule your expenses ahead of time!</string>
     <string name="tour_navigation_graph">Graph</string>
     <string name="tour_filter_button">Filter purchases</string>
     <string name="tour_prompt_title">Welcome!</string>
     <string name="tour_navigation_dashboard_secondary">This is the dashboard. You can see an overview of your recent purchases and spending trends here.</string>
     <string name="tour_navigation_qrscanner_secondary">Use this to scan QR codes on your receipts to quickly add purchases to your history.</string>
-    <string name="tour_navigation_purchases_list_secondary">Here you can see a detailed list of all your past purchases.</string>
-    <string name="tour_navigation_graph_secondary">This section shows graphical representations of your spending data over time.</string>
+    <string name="tour_navigation_scheduled_expenses_secondary">Plan your expenses in advance. When the date arrives, you\'ll receive a notification to confirm, and it will be automatically added to your purchase history.</string>
+    <string name="tour_navigation_graph_secondary">View graphical representations of your spending data over time in this section.</string>
     <string name="tour_filter_button_secondary">You can always change the time period or the category of purchases displayed from here.</string>
     <string name="tour_prompt_message">Welcome to PurchaseHistory!\nThis is a project made by a solo developer in his free time, inspired by the Bulgarian QR code receipt system and by my will to see my monthly spending. Feel free to reach out for suggestions and issues on my email <a href="@mailto:purchase.history.bg@gmail.com">purchase.history.bg@gmail.com</a></string>
     <string name="terms_of_service">Terms of Service</string>
@@ -162,4 +162,13 @@
     <string name="no">No</string>
     <string name="skip">Skip</string>
     <string name="accept_terms">Accept Terms of service</string>
+    <string name="next_date">Next date</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="add_scheduled_expense">Add a new scheduled expense</string>
+    <string name="title_scheduled_expenses">Schedules</string>
+    <string name="no_period_selected">No period selected</string>
+    <string name="add_purchase_action">Add as a purchase</string>
+    <string name="scheduled_notification_content">A scheduled payment is due. Price: %.2d \nShould we add it to the purchases?</string>
+    <string name="scheduled_notification_title">A payment is due (%s)</string>
 </resources>

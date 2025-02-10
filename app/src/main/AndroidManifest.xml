@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -82,6 +84,22 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
+        <receiver
+            android:name=".receivers.AppBootReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receivers.scheduled.InitiateNotificationReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".receivers.scheduled.ScheduledNotificationReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".receivers.scheduled.TriggerScheduledExpenseReceiver"
+            android:exported="false" />
         <meta-data
             android:name="com.google.android.gms.privacy_policy"
             android:value="file:///android_asset/privacy_policy.html" />

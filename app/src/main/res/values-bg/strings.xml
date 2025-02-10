@@ -130,13 +130,13 @@
     <string name="tour_navigation_qrscanner">QR Скенер</string>
 <!--    <string name="tour_qrFloatingQrButton">Сканирайте QR код с вашата камера</string>-->
 <!--    <string name="tour_qrFloatingQrButton_secondary">Можете също да сканирате QR кодове, използвайки плаващия бутон. Подгответе вашата сметка и сканирайте QR кода.</string>-->
-    <string name="tour_navigation_purchases_list">Списък с покупки</string>
     <string name="tour_navigation_graph">Графика</string>
     <string name="tour_filter_button">Филтрирай бележки</string>
     <string name="tour_prompt_title">Добре дошли!</string>
+    <string name="tour_navigation_scheduled_expenses">Планирайте разходите си предварително!</string>
+    <string name="tour_navigation_scheduled_expenses_secondary">Планирайте разходите си предварително. Когато настъпи датата, ще получите известие за потвърждение и то автоматично ще бъде добавено към историята на покупките ви.</string>
     <string name="tour_navigation_dashboard_secondary">Това е таблото. Тук можете да видите преглед на последните си покупки и тенденциите в разходите.</string>
     <string name="tour_navigation_qrscanner_secondary">Използвайте това, за да сканирате QR кодовете на вашите касови бележки и бързо да добавите покупки към историята си.</string>
-    <string name="tour_navigation_purchases_list_secondary">Тук можете да видите подробен списък на всички ваши минали покупки.</string>
     <string name="tour_navigation_graph_secondary">Този раздел показва графични представяния на вашите данни за разходите във времето.</string>
     <string name="tour_filter_button_secondary">Винаги можете да промените периода от време или категорията на показаните покупки от тук.</string>
     <string name="tour_prompt_message">Добре дошли в PurchaseHistory!\nТова е проект, създаден от самостоятелен разработчик в свободното му време, вдъхновен от българската система за QR кодове на касови бележки и желанието ми да видя месечните си разходи. Не се колебайте да се свържете за предложения и проблеми на моя имейл <a href="mailto:purchase.history.bg@gmail.com">purchase.history.bg@gmail.com</a></string>
@@ -149,6 +149,16 @@
     <string name="yes">Да</string>
     <string name="no">Не</string>
     <string name="skip">Пропусни</string>
-    <string name="accept_terms">Accept Terms of service</string>
+    <string name="accept_terms">Приемете условията за ползване</string>
+
+    <string name="next_date">Следваща дата</string>
+    <string name="enabled">Активирано</string>
+    <string name="disabled">Деактивирано</string>
+    <string name="add_scheduled_expense">Добавете нов планиран разход</string>
+    <string name="title_scheduled_expenses">Планирани разходи</string>
+    <string name="no_period_selected">Не е избран период</string>
+    <string name="add_purchase_action">Добави като бележка</string>
+    <string name="scheduled_notification_content">Предстоящо плащане. Цена: %.2f \nДа го добавим ли към покупките?</string>
+    <string name="scheduled_notification_title">Дължимо плащане (%s)</string>
 
 </resources>

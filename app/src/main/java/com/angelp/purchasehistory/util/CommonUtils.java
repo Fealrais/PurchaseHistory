@@ -21,7 +21,7 @@ public final class CommonUtils {
         }
         return index;
     }
-    public static boolean isValidCurrency(String str) {
+    public static boolean isInvalidCurrency(String str) {
         if (str == null || !str.matches("^[\\d.]+$")) return true;
         try {
             BigDecimal value = new BigDecimal(str);

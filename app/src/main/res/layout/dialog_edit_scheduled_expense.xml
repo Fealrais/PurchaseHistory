@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?android:attr/windowBackground">
+
+    <EditText
+        android:id="@+id/edit_scheduled_expense_editTextName"
+        style="@style/Widget.AppCompat.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/name"
+        android:inputType="text"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/edit_scheduled_expense_editTextPrice"
+        style="@style/Widget.AppCompat.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/price"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/edit_scheduled_expense_buttonShowDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/date"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+        <Button
+            android:id="@+id/edit_scheduled_expense_buttonShowTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/time"
+            style="@style/Widget.AppCompat.Button.Colored" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Spinner
+            android:id="@+id/edit_scheduled_expense_spinner_period"
+            style="@style/Widget.AppCompat.Spinner"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minWidth="150dp"
+            android:minHeight="48dp"
+            android:layout_width="wrap_content" />
+
+        <TextView
+            android:id="@+id/edit_scheduled_expense_textViewNextDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="@string/next_date"
+            android:layout_marginStart="16dp"
+            style="@style/TextAppearance.AppCompat.Body1" />
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/edit_scheduled_expense_spinnerCategory"
+        style="@style/Widget.AppCompat.Spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:minHeight="48dp" />
+
+    <ToggleButton
+        android:id="@+id/edit_scheduled_expense_toggleButtonEnabled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textOn="@string/enabled"
+        android:textOff="@string/disabled" />
+</LinearLayout>

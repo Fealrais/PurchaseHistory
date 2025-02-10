@@ -18,6 +18,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.tour.TourStep;
 import com.angelp.purchasehistory.databinding.ActivityHomeBinding;
+import com.angelp.purchasehistory.receivers.AppBootReceiver;
 import com.angelp.purchasehistory.ui.home.settings.SettingsActivity;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.AuthClient;
@@ -46,7 +47,7 @@ public class HomeActivity extends AppCompatActivity {
         tourSteps.add(new TourStep(R.id.navigation_dashboard, R.string.tour_navigation_dashboard, R.string.tour_navigation_dashboard_secondary));
         tourSteps.add(new TourStep(R.id.dashboard_filterButton, R.string.tour_filter_button, R.string.tour_filter_button_secondary));
         tourSteps.add(new TourStep(R.id.navigation_qrscanner, R.string.tour_navigation_qrscanner, R.string.tour_navigation_qrscanner_secondary));
-        tourSteps.add(new TourStep(R.id.navigation_purchases_list, R.string.tour_navigation_purchases_list, R.string.tour_navigation_purchases_list_secondary));
+        tourSteps.add(new TourStep(R.id.navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses_secondary));
         tourSteps.add(new TourStep(R.id.navigation_graph, R.string.tour_navigation_graph, R.string.tour_navigation_graph_secondary));
     }
 
@@ -63,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_dashboard, R.id.navigation_qrscanner, R.id.navigation_purchases_list, R.id.navigation_graph)
+                R.id.navigation_dashboard, R.id.navigation_qrscanner, R.id.navigation_scheduled_expenses, R.id.navigation_graph)
                 .build();
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_user_activity);
@@ -79,6 +80,9 @@ public class HomeActivity extends AppCompatActivity {
         if (isFirstTimeOpen()) {
             showTourPrompt();
         }
+        Intent intent = new Intent(this, AppBootReceiver.class);
+        intent.setAction(AppBootReceiver.CUSTOM_ACTION);
+        sendBroadcast(intent);
     }
 
     private void showTourPrompt() {

@@ -113,7 +113,7 @@ public class PurchaseEditDialog extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String str = binding.purchaseEditPriceInput.getText().toString();
-                if (CommonUtils.isValidCurrency(str)) {
+                if (CommonUtils.isInvalidCurrency(str)) {
                     binding.purchaseEditPriceInput.setError("Invalid price!");
                     binding.purchaseEditSaveButton.setEnabled(false);
                 } else {

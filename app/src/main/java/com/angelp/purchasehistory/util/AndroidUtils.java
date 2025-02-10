@@ -4,13 +4,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.widget.TextView;
 import com.angelp.purchasehistory.MainActivity;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
+import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
+import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
+import org.jetbrains.annotations.NotNull;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class AndroidUtils {
+    public static final List<String> SCHEDULED_PERIOD_LIST = Arrays.stream(ScheduledPeriod.values()).map(Enum::toString).collect(Collectors.toList());
+
     public static void shareString(String token, String title, Context context) {
         Log.i("Sharing", "Attempting to share a string.");
         Intent sendIntent = new Intent();
@@ -31,11 +45,19 @@ public final class AndroidUtils {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
     }
+
     public static int getColor(CategoryView category) {
-        if (category != null && category.getColor() != null && !category.getColor().isBlank())
-            return Color.parseColor(category.getColor());
-        else return Color.GRAY;
+        try {
+            if (category != null && category.getColor() != null && !category.getColor().isBlank())
+                return Color.parseColor(category.getColor());
+            else return Color.GRAY;
+        } catch (IllegalArgumentException e) {
+            Log.e("AndroidUtils", "Invalid color: " + category.getColor());
+            return Color.GRAY;
+        }
+
     }
+
     public static int getTextColor(int bgColor) {
         if (Color.luminance(bgColor) > 0.5)
             return Color.BLACK;
@@ -78,5 +100,33 @@ public final class AndroidUtils {
             // Handle the case when there's no activity available to handle the intent
             PurchaseHistoryApplication.getInstance().alert("No application available to open CSV files");
         }
+    }
+
+    @NotNull
+    public static String getNextTimestampString(ScheduledExpenseView scheduledExpense) {
+        if (scheduledExpense == null || scheduledExpense.getPeriod() == null) {
+            return "";
+        }
+
+        LocalDateTime nextTimestamp = scheduledExpense.getPeriod().getNextTimestamp(scheduledExpense.getTimestamp());
+
+        return (String) DateUtils.getRelativeTimeSpanString(nextTimestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+    }
+
+    public static void setNextTimestampString(TextView textView, ScheduledExpenseView scheduledExpense) {
+        if (scheduledExpense == null || scheduledExpense.getPeriod() == null) {
+            textView.setText(R.string.no_period_selected);
+            return;
+        }
+        if (!scheduledExpense.isEnabled()) {
+            textView.setText(R.string.disabled);
+            return;
+        }
+        String nextTimestampString = getNextTimestampString(scheduledExpense);
+        if (nextTimestampString.isBlank()) {
+            textView.setText("");
+            return;
+        }
+        textView.setText(getNextTimestampString(scheduledExpense));
     }
 }
