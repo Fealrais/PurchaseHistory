@@ -1,5 +1,6 @@
 package com.angelp.purchasehistory.receivers.scheduled;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,8 @@ import com.angelp.purchasehistory.web.clients.ScheduledExpenseClient;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 @AndroidEntryPoint
 public class TriggerScheduledExpenseReceiver extends BroadcastReceiver {
@@ -28,8 +31,10 @@ public class TriggerScheduledExpenseReceiver extends BroadcastReceiver {
             return;
         }
         if (intent.getAction().equals("trigger")) {
+            NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
             new Thread(()->{
                 scheduledExpenseClient.triggerScheduledPurchase(notification.getId());
+                manager.cancel(notification.getId().intValue());
             }).start();
         } else {
             Log.i("TriggerScheduledExpenseReceiver", "Dismissed for ID: " + notification.getId());

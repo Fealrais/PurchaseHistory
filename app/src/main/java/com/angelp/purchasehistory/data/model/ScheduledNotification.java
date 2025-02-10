@@ -1,8 +1,10 @@
 package com.angelp.purchasehistory.data.model;
 
 import android.app.AlarmManager;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,7 @@ public class ScheduledNotification implements Parcelable {
     private long period;
     private BigDecimal price;
     private Long categoryId;
+    private int color;
     private Boolean enabled;
     private String note;
 
@@ -33,6 +36,7 @@ public class ScheduledNotification implements Parcelable {
         this.price = expense.getPrice();
         this.period = getInterval(expense.getPeriod());
         this.categoryId = expense.getCategory() == null ? null : expense.getCategory().getId();
+        this.color = expense.getCategory() == null ? Color.GRAY : AndroidUtils.getColor(expense.getCategory());
         this.enabled = expense.isEnabled();
         this.note = expense.getNote();
     }
@@ -45,6 +49,7 @@ public class ScheduledNotification implements Parcelable {
         note = in.readString();
         long l = in.readLong();
         categoryId = l == -1 ? null : l;
+        color = in.readInt();
         note = in.readString();
         timestamp = in.readLong();
         period = in.readLong();
@@ -57,6 +62,7 @@ public class ScheduledNotification implements Parcelable {
         dest.writeString(price.toString());
         dest.writeString(note);
         dest.writeLong(categoryId == null ? -1 : categoryId);
+        dest.writeInt(color);
         dest.writeString(note);
         dest.writeLong(timestamp);
         dest.writeLong(period);

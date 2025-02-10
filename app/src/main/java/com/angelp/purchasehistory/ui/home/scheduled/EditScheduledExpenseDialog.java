@@ -35,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -90,8 +89,8 @@ public class EditScheduledExpenseDialog extends DialogFragment {
     private void setupDatePicker() {
         datePicker = new DatePickerFragment(scheduledExpense.getTimestamp().toLocalDate());
         datePicker.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
-            LocalDate localDate = scheduledExpense.getTimestamp() != null ? scheduledExpense.getTimestamp().toLocalDate() : LocalDate.now();
-            scheduledExpense.setTimestamp(localDate.atTime(scheduledExpense.getTimestamp().toLocalTime()));
+            LocalDateTime localDateTime = scheduledExpense.getTimestamp() != null ? scheduledExpense.getTimestamp() : LocalDateTime.now();
+            scheduledExpense.setTimestamp(localDateTime.with(v));
             binding.editScheduledExpenseButtonShowDate.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
             AndroidUtils.setNextTimestampString(binding.editScheduledExpenseTextViewNextDate, scheduledExpense);
         });
@@ -112,8 +111,11 @@ public class EditScheduledExpenseDialog extends DialogFragment {
             categoryOptions = purchaseClient.getAllCategories();
             categoryOptions.add(0, new CategoryView(null, "None", "#fff"));
             categoryAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, categoryOptions);
-            new Handler(Looper.getMainLooper()).post(() -> binding.editScheduledExpenseSpinnerCategory.setAdapter(categoryAdapter));
-            setupCategorySpinner();
+            new Handler(Looper.getMainLooper()).post(() -> {
+                binding.editScheduledExpenseSpinnerCategory.setAdapter(categoryAdapter);
+                setupCategorySpinner();
+            });
+
         }).start();
     }
 
