@@ -64,8 +64,8 @@ public class InitiateNotificationReceiver extends BroadcastReceiver {
 
         Log.i(TAG, "scheduleNotification: " + scheduledNotification.getNote());
         if (scheduledNotification.isRepeating())
-            alarmManager.setInexactRepeating(AlarmManager.RTC, scheduledNotification.getTimestamp(), scheduledNotification.getPeriod(), pendingIntent);
-        else alarmManager.set(AlarmManager.RTC, scheduledNotification.getTimestamp(), pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, scheduledNotification.getTimestamp(), scheduledNotification.getPeriod(), pendingIntent);
+        else alarmManager.set(AlarmManager.RTC_WAKEUP, scheduledNotification.getTimestamp(), pendingIntent);
     }
 
     private void cancelAllAlarms(AlarmManager alarmManager, Context context) {
