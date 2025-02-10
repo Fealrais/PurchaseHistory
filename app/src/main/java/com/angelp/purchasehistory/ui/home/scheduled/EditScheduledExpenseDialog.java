@@ -155,6 +155,7 @@ public class EditScheduledExpenseDialog extends DialogFragment {
         binding.editScheduledExpenseSpinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                AndroidUtils.setNextTimestampString(binding.editScheduledExpenseTextViewNextDate, scheduledExpense);
                 scheduledExpense.setCategory(categoryOptions.get(position));
             }
 
@@ -179,7 +180,10 @@ public class EditScheduledExpenseDialog extends DialogFragment {
 
     private void setupEnabledToggle() {
         binding.editScheduledExpenseToggleButtonEnabled.setChecked(scheduledExpense.isEnabled());
-        binding.editScheduledExpenseToggleButtonEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> scheduledExpense.setEnabled(isChecked));
+        binding.editScheduledExpenseToggleButtonEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            scheduledExpense.setEnabled(isChecked);
+            AndroidUtils.setNextTimestampString(binding.editScheduledExpenseTextViewNextDate, scheduledExpense);
+        });
     }
 
     private void setupDateButton() {
@@ -207,6 +211,14 @@ public class EditScheduledExpenseDialog extends DialogFragment {
     }
 
     private void onSubmit(DialogInterface dialog, int id) {
+        if(scheduledExpense.getNote().isBlank() || !binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()){
+            binding.editScheduledExpenseEditTextPrice.setError(getText(R.string.error_price_empty));
+            return;
+        }
+        if(scheduledExpense.getPrice() == null || !binding.editScheduledExpenseEditTextName.getText().toString().isBlank()){
+            binding.editScheduledExpenseEditTextName.setError(getText(R.string.error_must_not_be_empty));
+            return;
+        }
         try {
             new Thread(() -> {
                 try {

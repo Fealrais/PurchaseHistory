@@ -68,6 +68,9 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         scheduledExpense = new ScheduledExpenseView();
+        scheduledExpense.setEnabled(true);
+        scheduledExpense.setTimestamp(LocalDateTime.now());
+
         binding = DialogEditScheduledExpenseBinding.inflate(getLayoutInflater());
         datePicker = new DatePickerFragment(LocalDate.now());
         timePicker = new TimePickerFragment(LocalTime.now());
@@ -134,6 +137,7 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 scheduledExpense.setCategory(categoryOptions.get(position));
+                AndroidUtils.setNextTimestampString(binding.editScheduledExpenseTextViewNextDate, scheduledExpense);
             }
 
             @Override
@@ -157,19 +161,30 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
 
     private void setupDateTimePickers() {
         binding.editScheduledExpenseToggleButtonEnabled.setChecked(true);
-        binding.editScheduledExpenseToggleButtonEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> scheduledExpense.setEnabled(isChecked));
+        binding.editScheduledExpenseToggleButtonEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            scheduledExpense.setEnabled(isChecked);
+            AndroidUtils.setNextTimestampString(binding.editScheduledExpenseTextViewNextDate, scheduledExpense);
+        });
         binding.editScheduledExpenseButtonShowDate.setOnClickListener(v -> datePicker.show(getParentFragmentManager(), "datePicker"));
         binding.editScheduledExpenseButtonShowTime.setOnClickListener(v -> timePicker.show(getParentFragmentManager(), "timePicker"));
     }
 
     private Dialog createAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Create new scheduled expense");
+        builder.setTitle(R.string.title_scheduled_expenses);
         builder.setView(binding.getRoot()).setPositiveButton(R.string.save, this::onSubmit).setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
         return builder.create();
     }
 
     private void onSubmit(DialogInterface dialog, int id) {
+        if(scheduledExpense.getNote().isBlank() || !binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()){
+            binding.editScheduledExpenseEditTextPrice.setError(getText(R.string.error_price_empty));
+            return;
+        }
+        if(scheduledExpense.getPrice() == null || !binding.editScheduledExpenseEditTextName.getText().toString().isBlank()){
+            binding.editScheduledExpenseEditTextName.setError(getText(R.string.error_must_not_be_empty));
+            return;
+        }
         new Thread(() -> {
             try {
                 ScheduledExpenseDTO dto = new ScheduledExpenseDTO();
