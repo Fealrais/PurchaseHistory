@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -59,7 +58,6 @@ public class EditScheduledExpenseDialog extends DialogFragment {
     private TimePickerFragment timePicker;
     private ArrayAdapter<CategoryView> categoryAdapter;
     private List<CategoryView> categoryOptions;
-    private Button submitButton;
     public EditScheduledExpenseDialog(ScheduledExpenseView scheduledExpense, Consumer<ScheduledExpenseView> consumer) {
         this.scheduledExpense = scheduledExpense;
         this.consumer = consumer;
@@ -77,6 +75,8 @@ public class EditScheduledExpenseDialog extends DialogFragment {
         setupEnabledToggle();
         setupDateButton();
         setupTimeButton();
+        setupCancelButton();
+        setupSaveButton();
         return createDialog();
     }
     @Nullable
@@ -138,11 +138,11 @@ public class EditScheduledExpenseDialog extends DialogFragment {
                 }
                 if (CommonUtils.isInvalidCurrency(str)) {
                     binding.editScheduledExpenseEditTextPrice.setError("Invalid price!");
-                    if(submitButton!=null) submitButton.setEnabled(false);
+                    binding.editScheduledExpenseSaveButton.setEnabled(false);
                 } else {
                     if (str.trim().isEmpty()) scheduledExpense.setPrice(new BigDecimal(BigInteger.ZERO));
-                    else scheduledExpense.setPrice(new BigDecimal(s.toString()));;
-                    if(submitButton!=null) submitButton.setEnabled(true);
+                    else scheduledExpense.setPrice(new BigDecimal(s.toString()));
+                    binding.editScheduledExpenseSaveButton.setEnabled(true);
                     binding.editScheduledExpenseEditTextPrice.setError(null);
                 }
             }
@@ -193,29 +193,30 @@ public class EditScheduledExpenseDialog extends DialogFragment {
     private void setupTimeButton() {
         binding.editScheduledExpenseButtonShowTime.setOnClickListener(v -> timePicker.show(getParentFragmentManager(), "timePicker"));
     }
+    private void setupSaveButton() {
+        binding.editScheduledExpenseSaveButton.setOnClickListener(v-> onSubmit(getDialog()));
+    }
+    private void setupCancelButton() {
+        binding.editScheduledExpenseDismissButton.setOnClickListener(v -> this.dismiss());
+    }
 
     private Dialog createDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Editing scheduled expense#" + scheduledExpense.getId());
-        builder.setView(binding.getRoot())
-               .setPositiveButton(R.string.edit_text, this::onSubmit)
-               .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
-
-        AlertDialog alertDialog = builder.create();
-        this.submitButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        return alertDialog;
+        builder.setView(binding.getRoot());
+        return builder.create();
     }
 
     private int getCategoryIndex(CategoryView category) {
         return categoryOptions.indexOf(category);
     }
 
-    private void onSubmit(DialogInterface dialog, int id) {
-        if(scheduledExpense.getNote().isBlank() || !binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()){
+    private void onSubmit(DialogInterface dialog) {
+        if(scheduledExpense.getNote().isBlank() || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()){
             binding.editScheduledExpenseEditTextPrice.setError(getText(R.string.error_price_empty));
             return;
         }
-        if(scheduledExpense.getPrice() == null || !binding.editScheduledExpenseEditTextName.getText().toString().isBlank()){
+        if(scheduledExpense.getPrice() == null || binding.editScheduledExpenseEditTextName.getText().toString().isBlank()){
             binding.editScheduledExpenseEditTextName.setError(getText(R.string.error_must_not_be_empty));
             return;
         }
