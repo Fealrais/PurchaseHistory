@@ -61,6 +61,7 @@ public class BarChartFragment extends Fragment implements RefreshablePurchaseFra
     private PurchaseFilter filter;
     private Consumer<PurchaseFilter> setFilter;
     private FragmentBarChartBinding binding;
+    private AlertDialog dialog;
 
 
     public BarChartFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
@@ -260,12 +261,14 @@ public class BarChartFragment extends Fragment implements RefreshablePurchaseFra
 
     @Override
     public void onNothingSelected() {
-
+        if(dialog!=null && dialog.isShowing()) dialog.dismiss();
     }
 
     private void setTooltipText(String title, String text) {
+        if(dialog!=null && dialog.isShowing()) dialog.dismiss();
+
         alertBuilder.setMessage(text).setTitle(title);
-        AlertDialog dialog = alertBuilder.create();
+        dialog = alertBuilder.create();
         dialog.show();
     }
 }
