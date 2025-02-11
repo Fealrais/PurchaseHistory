@@ -16,10 +16,12 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public final class AndroidUtils {
@@ -128,5 +130,9 @@ public final class AndroidUtils {
             return;
         }
         textView.setText(getNextTimestampString(scheduledExpense));
+    }
+    @NotNull
+    public static String formatCurrency(BigDecimal price) {
+        return String.format(Locale.getDefault(), "%.2f", price.floatValue());
     }
 }

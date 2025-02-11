@@ -20,9 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
-import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
-import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.components.form.CreateCategoryDialog;
@@ -30,9 +27,11 @@ import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.components.form.TimePickerFragment;
 import com.angelp.purchasehistory.databinding.FragmentQrBinding;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
+import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.util.CommonUtils;
-//import com.google.android.gms.ads.AdRequest;
-//import com.google.android.gms.ads.AdView;
+import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
+import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
+import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -66,7 +65,7 @@ public class QrScannerFragment extends Fragment {
                         fillQRForm(new PurchaseDTO(data));
                         Toast.makeText(getContext(), "Scanned : " + data, Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(getContext(), "Cancelled", Toast.LENGTH_LONG).show();
+                        Log.i(TAG,"QR scan Cancelled");
                     }
                 }
             });
@@ -120,7 +119,7 @@ public class QrScannerFragment extends Fragment {
                 if (purchaseDTO.getStoreId() != null) binding.qrStoreIdValue.setText(purchaseDTO.getStoreId());
                 if (purchaseDTO.getBillId() != null) binding.qrBillIdValue.setText(purchaseDTO.getBillId());
                 if (purchaseDTO.getPrice() != null)
-                    binding.qrPriceInput.setText(String.format(purchaseDTO.getPrice().toString()));
+                    binding.qrPriceInput.setText(AndroidUtils.formatCurrency(purchaseDTO.getPrice()));
                 if (purchaseDTO.getTimestamp() != null) {
                     binding.qrDateInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_DATE));
                     binding.qrTimeInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_TIME));
@@ -208,7 +207,7 @@ public class QrScannerFragment extends Fragment {
     private void resetForm() {
         qrScannerViewModel.resetPurchaseDto();
         binding.qrCategorySpinner.setSelection(0, true);
-        binding.qrPriceInput.setText("0");
+        binding.qrPriceInput.setText(AndroidUtils.formatCurrency(BigDecimal.ZERO));
         binding.qrDateInput.setText(R.string.date);
         binding.qrTimeInput.setText(R.string.time);
         binding.qrBillIdValue.setText("-");

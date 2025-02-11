@@ -21,14 +21,14 @@
     <string name="back">Back</string>
     <string name="alert_session_ended">Session ended, please log in again</string>
     <string name="alert_connection_timeout">Cannot connect to server. Please try again later.</string>
-    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_register">Register</string>
     <string name="register_failed">Register failed</string>
     <string name="account_created">Account created successfully</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_qr">QRScannerActivity</string>
-    <string name="title_activity_qrscanner">QRScanner</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_qr">QR Scanner</string>
+    <string name="title_activity_qrscanner">QR Scanner</string>
     <string name="title_activity_graph">Statistics</string>
-    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_home">Home</string>
     <string name="addPurchaseButton">Add purchase</string>
     <string name="qr_manual_add_title">Add a bill</string>
     <string name="price">Price</string>
@@ -173,4 +173,6 @@
     <string name="scheduled_notification_title">A payment is due (%s)</string>
     <string name="error_must_not_be_empty">Field should not be empty</string>
     <string name="error_price_empty">Enter a valid price</string>
+    <string name="turn_on_flashlight">ON</string>
+    <string name="turn_off_flashlight">OFF</string>
 </resources>
