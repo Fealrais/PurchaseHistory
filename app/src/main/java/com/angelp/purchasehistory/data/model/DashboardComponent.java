@@ -1,39 +1,90 @@
 package com.angelp.purchasehistory.data.model;
 
-import com.angelp.purchasehistory.data.factories.DashboardComponentsFactory;
-import com.angelp.purchasehistory.data.filters.PurchaseFilter;
+import android.os.Parcel;
+import android.os.Parcelable;
+import androidx.annotation.NonNull;
+import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
-import java.util.function.Consumer;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class DashboardComponent implements Serializable {
-    private int title;
-    private int cardIconId;
-    private int description;
+public class DashboardComponent implements Parcelable {
     private boolean visible;
     private String fragmentName;
+
+    private transient int title;
+    private transient int cardIconId;
+    private transient int description;
+    private transient int infoDescription;
     private transient RefreshableFragment fragment;
 
-    public DashboardComponent(int title, int cardIconId, int description, String fragment) {
-        this.title = title;
-        this.cardIconId = cardIconId;
-        this.description = description;
+    public DashboardComponent(String fragment) {
         this.fragmentName = fragment;
         this.visible = true;
+        setupResources(fragment);
+    }
+    public DashboardComponent(Parcel in) {
+        this.fragmentName = in.readString();
+        this.visible = in.readBoolean();
+        setupResources(fragmentName);
+    }
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(this.fragmentName);
+        dest.writeBoolean(this.visible);
     }
 
-    public RefreshableFragment getFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
-        if (fragment == null)
-            this.fragment = DashboardComponentsFactory.createFragment(fragmentName, filter, setFilter);
-        return fragment;
+    private void setupResources(String fragmentName) {
+        switch (fragmentName){
+                case "PieChartFragment" -> {
+                    title = R.string.title_pie_chart;
+                    cardIconId =  R.drawable.piechart;
+                    infoDescription = R.string.help_info_pie_chart;
+                    description = R.string.description_pie_chart;
+                }
+                case "LineChartFragment" -> {
+                    title = R.string.title_line_chart;
+                    cardIconId =  R.drawable.linechart;
+                    infoDescription = R.string.help_info_line_chart;
+                    description = R.string.description_line_chart;
+                }
+                case "BarChartFragment" -> {
+                    title = R.string.title_stacked_bar_chart;
+                    cardIconId =  R.drawable.barchart;
+                    infoDescription = R.string.help_info_stacked_bar_chart;
+                    description = R.string.description_bar_chart;
+                }
+                case "PurchaseListPurchaseFragment" -> {
+                    title = R.string.title_purchases_list;
+                    cardIconId =  R.drawable.list;
+                    infoDescription = R.string.help_info_purchases_list;
+                    description = R.string.description_purchases_list;
+                }
+                default -> throw new IllegalStateException("Unexpected dashboard fragment name: " + fragmentName);
+        }
+    }
+    @Override
+    public int describeContents() {
+        return this.fragmentName.hashCode();
+    }
+    public static final Parcelable.Creator<DashboardComponent> CREATOR = new Parcelable.Creator<>() {
+        @Override
+        public DashboardComponent createFromParcel(Parcel in) {
+            return new DashboardComponent(in);
+        }
+
+        @Override
+        public DashboardComponent[] newArray(int size) {
+            return new DashboardComponent[size];
+        }
+    };
+
+    public DashboardComponent fillFromName() {
+        setupResources(this.fragmentName);
+        return this;
     }
 }

@@ -23,6 +23,7 @@ public class DashboardCardFragment extends Fragment implements RefreshablePurcha
     private final Consumer<PurchaseFilter> setFilter;
     private final int generatedId;
     private FragmentDashboardCardBinding binding;
+    private RefreshableFragment fragment;
 
     public DashboardCardFragment(DashboardComponent dashboardComponent, PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
         this.component = dashboardComponent;
@@ -47,7 +48,7 @@ public class DashboardCardFragment extends Fragment implements RefreshablePurcha
             intent.putExtra("component", component);
             startActivity(intent);
         });
-        RefreshableFragment fragment = DashboardComponentsFactory.createFragment(component.getFragmentName(), filter, setFilter);
+        fragment = DashboardComponentsFactory.createFragment(component.getFragmentName(), filter, setFilter);
         if (fragment.getArguments() != null) {
             fragment.getArguments().putInt(Constants.ARG_MAX_SIZE, 10);
             fragment.getArguments().putBoolean(Constants.SHOW_FILTER, false);
@@ -60,10 +61,7 @@ public class DashboardCardFragment extends Fragment implements RefreshablePurcha
 
     @Override
     public void refresh(PurchaseFilter filter) {
-        Fragment f = component.getFragment();
-        if (f instanceof RefreshablePurchaseFragment refreshablePurchaseFragment) {
-            refreshablePurchaseFragment.refresh(filter);
-        }
+        fragment.refresh(filter);
     }
 
     /**

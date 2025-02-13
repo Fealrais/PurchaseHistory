@@ -83,7 +83,7 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
             purchasesAdapter.setLimit(maxSize);
             binding.seeAllButton.setOnClickListener((v) -> {
                 Intent intent = new Intent(getActivity(), FullscreenGraphActivity.class);
-                DashboardComponent dashboardComponent = new DashboardComponent(R.string.title_purchases_list, R.drawable.list, R.string.description_purchases_list, "PurchaseListPurchaseFragment");
+                DashboardComponent dashboardComponent = new DashboardComponent("PurchaseListPurchaseFragment");
                 intent.putExtra("component", dashboardComponent);
                 startActivity(intent);
             });

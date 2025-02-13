@@ -18,7 +18,6 @@ import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
-import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReport;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
 import com.github.mikephil.charting.animation.Easing;
@@ -33,7 +32,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -63,19 +61,6 @@ public class LineChartFragment extends RefreshableFragment implements OnChartVal
         Bundle args = new Bundle();
         args.putParcelable(Constants.ARG_FILTER, filter);
         this.setArguments(args);
-    }
-
-    private static Map<LocalDate, CalendarReportEntry> prepareContent(PurchaseFilter filter, CalendarReport calendarReport, List<CategoryView> categories) {
-        Map<LocalDate, CalendarReportEntry> content = new HashMap<>();
-
-        for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
-            content.put(calendarReportEntry.getLocalDate(), calendarReportEntry);
-        }
-        LocalDate dateIterator = filter.getFrom();
-        for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
-            content.putIfAbsent(dateIterator, new CalendarReportEntry(dateIterator.format(DateTimeFormatter.ISO_LOCAL_DATE), BigDecimal.ZERO, 0L, null));
-        }
-        return content;
     }
 
     @Override
@@ -146,11 +131,15 @@ public class LineChartFragment extends RefreshableFragment implements OnChartVal
             int i=0;
             for (Map.Entry<LocalDate, List<Entry>> entry : entriesMap.entrySet()) {
                 List<Entry> entries = entry.getValue();
-                LineDataSet barDataSet = new LineDataSet(entries, "Purchases");
-                barDataSet.setDrawIcons(false);
-                barDataSet.setColor(colors.get(i++));
-                barDataSet.setLabel(entry.getKey().format(DATE_TIME_FORMATTER));
-                data.addDataSet(barDataSet);
+                int color = colors.get(i++);
+
+                LineDataSet lineDataSet = new LineDataSet(entries, "Purchases");
+//                lineDataSet.setDrawIcons(false);
+                lineDataSet.setDrawCircleHole(false);
+                lineDataSet.setColor(color);
+                lineDataSet.setCircleColor(color);
+                lineDataSet.setLabel(entry.getKey().format(DATE_TIME_FORMATTER));
+                data.addDataSet(lineDataSet);
             }
             data.setValueTextColor(appColorCollection.getForegroundColor());
             notifyDataChanged(data);

@@ -19,10 +19,10 @@ public class CustomizationAdapter extends RecyclerView.Adapter<CustomizationAdap
     final static List<DashboardComponent> DEFAULT_COMPONENTS = new ArrayList<>();
 
     static {
-        DEFAULT_COMPONENTS.add(new DashboardComponent(R.string.title_pie_chart, R.drawable.piechart, R.string.description_pie_chart, "PieChartFragment"));
-        DEFAULT_COMPONENTS.add(new DashboardComponent(R.string.title_line_chart, R.drawable.linechart, R.string.description_line_chart, "LineChartFragment"));
-        DEFAULT_COMPONENTS.add(new DashboardComponent(R.string.title_stacked_bar_chart, R.drawable.barchart, R.string.description_bar_chart, "BarChartFragment"));
-        DEFAULT_COMPONENTS.add(new DashboardComponent(R.string.title_purchases_list, R.drawable.list, R.string.description_purchases_list, "PurchaseListPurchaseFragment"));
+        DEFAULT_COMPONENTS.add(new DashboardComponent("PieChartFragment"));
+        DEFAULT_COMPONENTS.add(new DashboardComponent("LineChartFragment"));
+        DEFAULT_COMPONENTS.add(new DashboardComponent("BarChartFragment"));
+        DEFAULT_COMPONENTS.add(new DashboardComponent("PurchaseListPurchaseFragment"));
     }
 
     private List<DashboardComponent> fragments;

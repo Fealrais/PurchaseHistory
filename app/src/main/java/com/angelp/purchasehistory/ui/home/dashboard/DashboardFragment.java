@@ -27,6 +27,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
@@ -41,12 +42,13 @@ public class DashboardFragment extends Fragment implements RefreshablePurchaseFr
     private List<DashboardComponent> selectedFragments = new ArrayList<>();
     @Setter
     private PurchaseFilter filter;
-    private Gson gson;
+    private final Gson gson = new Gson();;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         selectedFragments = initializeDashboardFragments();
+
         filterDialog = new PurchaseFilterDialog(false);
         this.applyFilter(filter);
         binding.dashboardFilterButton.setOnClickListener(v -> openFilter(this::updateFilter));
@@ -68,8 +70,9 @@ public class DashboardFragment extends Fragment implements RefreshablePurchaseFr
         String savedFragmentsJson = preferences.getString("saved_fragments", "[]");
         Type type = new TypeToken<List<DashboardComponent>>() {
         }.getType();
-        gson = new Gson();
-        return gson.fromJson(savedFragmentsJson, type);
+
+        List<DashboardComponent> dashboardComponents = gson.fromJson(savedFragmentsJson, type);
+        return dashboardComponents.stream().map(DashboardComponent::fillFromName).collect(Collectors.toList());
     }
 
     private void saveFragmentsSetupToPreferences(List<DashboardComponent> selectedFragments) {
