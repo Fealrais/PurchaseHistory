@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import androidx.fragment.app.Fragment;
+import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
@@ -77,7 +78,7 @@ public class SpectatorDashboardFragment extends Fragment {
                 fragment.refresh(purchaseFilter);
             } else {
                 DashboardFragment dashboardFragment = new DashboardFragment();
-                dashboardFragment.setFilter(purchaseFilter);
+                dashboardFragment.getArguments().putParcelable(Constants.DASHBOARD_FILTER, purchaseFilter);
                 getParentFragmentManager()
                         .beginTransaction()
                         .replace(binding.fragmentContainerView.getId(), dashboardFragment)

@@ -28,13 +28,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 @AndroidEntryPoint
 public class HomeActivity extends AppCompatActivity {
-    private static final String IS_FIRST_TIME_OPEN = "isFirstTimeOpen_HomeActivity";
-    public static final String APP_PREFERENCES = "app_preferences";
 
     @Inject
     AuthClient authClient;
@@ -42,15 +38,6 @@ public class HomeActivity extends AppCompatActivity {
     PurchaseClient purchaseClient;
     private ActivityHomeBinding binding;
     private int tourStep = 0;
-    private static final List<TourStep> tourSteps = new ArrayList<>();
-
-    static {
-        tourSteps.add(new TourStep(R.id.navigation_dashboard, R.string.tour_navigation_dashboard, R.string.tour_navigation_dashboard_secondary));
-        tourSteps.add(new TourStep(R.id.dashboard_filterButton, R.string.tour_filter_button, R.string.tour_filter_button_secondary));
-        tourSteps.add(new TourStep(R.id.navigation_qrscanner, R.string.tour_navigation_qrscanner, R.string.tour_navigation_qrscanner_secondary));
-        tourSteps.add(new TourStep(R.id.navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses_secondary));
-        tourSteps.add(new TourStep(R.id.navigation_profile, R.string.tour_navigation_profile, R.string.tour_navigation_profile_secondary));
-    }
 
     /**
      *
@@ -100,9 +87,9 @@ public class HomeActivity extends AppCompatActivity {
 
         Button skipButton = dialog.findViewById(R.id.tour_guide_skip);
         skipButton.setOnClickListener(v -> {
-            SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences(Constants.APP_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(IS_FIRST_TIME_OPEN, false);
+            editor.putBoolean(Constants.IS_FIRST_TIME_OPEN, false);
             editor.apply();
             dialog.dismiss();
         });
@@ -110,12 +97,12 @@ public class HomeActivity extends AppCompatActivity {
     }
     private boolean isFirstTimeOpen() {
         SharedPreferences preferences = getSharedPreferences("app_preferences", MODE_PRIVATE);
-        return preferences.getBoolean(IS_FIRST_TIME_OPEN, true);
+        return preferences.getBoolean(Constants.IS_FIRST_TIME_OPEN, true);
     }
 
     private void showNextTourStep() {
-        if (tourStep < tourSteps.size()) {
-            TourStep step = tourSteps.get(tourStep);
+        if (tourStep < Constants.tourSteps.size()) {
+            TourStep step = Constants.tourSteps.get(tourStep);
             new MaterialTapTargetPrompt.Builder(this)
                     .setTarget(findViewById(step.getId()))
                     .setPrimaryText(step.getPrimaryText())
@@ -129,9 +116,9 @@ public class HomeActivity extends AppCompatActivity {
                     .show();
         } else {
             binding.navView.setEnabled(true);
-            SharedPreferences preferences = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences(Constants.APP_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(IS_FIRST_TIME_OPEN, false);
+            editor.putBoolean(Constants.IS_FIRST_TIME_OPEN, false);
             editor.apply();
         }
     }

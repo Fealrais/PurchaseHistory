@@ -11,19 +11,13 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.recyclerview.widget.RecyclerView;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class CustomizationAdapter extends RecyclerView.Adapter<CustomizationAdapter.ViewHolder> {
-    final static List<DashboardComponent> DEFAULT_COMPONENTS = new ArrayList<>();
-
-    static {
-        DEFAULT_COMPONENTS.add(new DashboardComponent("PieChartFragment"));
-        DEFAULT_COMPONENTS.add(new DashboardComponent("LineChartFragment"));
-        DEFAULT_COMPONENTS.add(new DashboardComponent("BarChartFragment"));
-        DEFAULT_COMPONENTS.add(new DashboardComponent("PurchaseListPurchaseFragment"));
-    }
 
     private List<DashboardComponent> fragments;
 
@@ -69,10 +63,6 @@ public class CustomizationAdapter extends RecyclerView.Adapter<CustomizationAdap
     @Override
     public int getItemCount() {
         return fragments.size();
-    }
-
-    public List<DashboardComponent> getFragments() {
-        return fragments;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
