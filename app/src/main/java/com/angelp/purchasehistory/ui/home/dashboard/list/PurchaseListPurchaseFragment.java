@@ -42,6 +42,7 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
     private PurchasesViewModel purchasesViewModel;
     private PurchasesAdapter purchasesAdapter;
     private boolean showFilter;
+    private int maxSize;
 
     public PurchaseListPurchaseFragment(PurchaseFilter filter, Consumer<PurchaseFilter> onFilterChange) {
         super(filter, onFilterChange);
@@ -62,7 +63,7 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPurchasesListCardBinding.inflate(inflater, container, false);
-        int maxSize = -1;
+        maxSize = -1;
         if (getArguments() != null) {
             filter = getArguments().getParcelable(Constants.ARG_FILTER);
             showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
@@ -99,23 +100,24 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
     }
 
     private void setupShowMoreButton(int purchaseSize, int maxSize) {
+        binding.seeAllButton.setOnClickListener((v) -> {
+            Intent intent = new Intent(getActivity(), FullscreenGraphActivity.class);
+            DashboardComponent dashboardComponent = new DashboardComponent("PurchaseListPurchaseFragment");
+            intent.putExtra(Constants.ARG_COMPONENT, dashboardComponent);
+            intent.putExtra(Constants.ARG_FILTER, filter);
+            startActivity(intent);
+        });
+        updateSeeAllButton(purchaseSize, maxSize);
+    }
+
+    private void updateSeeAllButton(int purchaseSize, int maxSize) {
+        purchasesAdapter.setLimit(maxSize);
         boolean isBiggerThanLimit = maxSize > 0 && maxSize < purchaseSize;
-        if (isBiggerThanLimit) {
-            purchasesAdapter.setLimit(maxSize);
-            binding.seeAllButton.setOnClickListener((v) -> {
-                Intent intent = new Intent(getActivity(), FullscreenGraphActivity.class);
-                DashboardComponent dashboardComponent = new DashboardComponent("PurchaseListPurchaseFragment");
-                intent.putExtra(Constants.ARG_COMPONENT, dashboardComponent);
-                intent.putExtra(Constants.ARG_FILTER, filter);
-                startActivity(intent);
-            });
+        new Handler(Looper.getMainLooper()).post(() -> {
             binding.seeAllButton.setText(getString(R.string.see_all_n_purchases, purchaseSize));
-        }
-        new Handler(Looper.getMainLooper()).post(()->{
             binding.seeAllButton.setVisibility(isBiggerThanLimit ? View.VISIBLE : View.GONE);
             binding.seeAllBackdrop.setVisibility(isBiggerThanLimit ? View.VISIBLE : View.GONE);
         });
-
     }
 
     public void refresh(PurchaseFilter filter) {
@@ -128,6 +130,7 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
             List<PurchaseView> allPurchases = purchasesViewModel.getPurchaseClient().getAllPurchases(filter);
             Log.i(TAG, "Received purchases list with size of " + allPurchases.size());
             purchasesAdapter.setPurchaseViews(allPurchases);
+            updateSeeAllButton(allPurchases.size(), maxSize);
             getActivity().runOnUiThread(() -> purchasesAdapter.notifyDataSetChanged());
             Log.i(TAG, "Adapter notified");
         }).start();
@@ -135,22 +138,28 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
 
     private void initFilterRow() {
         binding.filterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
-        binding.filterDateText.setTextColor(getContext().getColor(R.color.foreground_color));
-            binding.filterRow.setVisibility(showFilter?View.VISIBLE : View.GONE);
+        new Handler(Looper.getMainLooper()).post(() -> {
+            binding.filterDateText.setTextColor(getContext().getColor(R.color.foreground_color));
+            binding.filterRow.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+        });
     }
 
     private void applyFilter(PurchaseFilter newFilter) {
-        binding.filterButton.setText(R.string.filterButton);
-        binding.filterDateText.setText(newFilter.getReadableString());
+        filter = newFilter;
+        new Handler(Looper.getMainLooper()).post(() -> {
+            binding.filterButton.setText(R.string.filterButton);
+            binding.filterDateText.setText(newFilter.getReadableString());
+        });
     }
+
     private void openFilter(Consumer<PurchaseFilter> setFilter) {
         if (filterDialog.getFilter() == null)
             filterDialog.setFilter(getDefaultFilter());
         filterDialog.show(getParentFragmentManager(), "barchartFilterDialog");
         filterDialog.setOnSuccess(setFilter);
     }
+
     private void updateFilter(PurchaseFilter newFilter) {
-        this.filter = newFilter;
         this.applyFilter(newFilter);
         if (filterDialog.isAdded())
             filterDialog.dismiss();

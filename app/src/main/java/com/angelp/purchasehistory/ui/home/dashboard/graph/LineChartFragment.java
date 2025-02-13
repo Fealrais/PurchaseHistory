@@ -100,13 +100,10 @@ public class LineChartFragment extends RefreshableFragment implements OnChartVal
     private void initFilterRow() {
         binding.graphFilterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
         binding.textView.setTextColor(getContext().getColor(R.color.foreground_color));
-        if (showFilter) {
-            binding.graphFilterButton.setVisibility(View.VISIBLE);
-            binding.textView.setVisibility((View.VISIBLE));
-        } else {
-            binding.graphFilterButton.setVisibility(View.GONE);
-            binding.textView.setVisibility((View.GONE));
-        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            binding.graphFilterButton.setVisibility(showFilter?View.VISIBLE:View.GONE);
+            binding.textView.setVisibility(showFilter?View.VISIBLE:View.GONE);
+        });
     }
 
     private void initGraph(LineChart chart) {

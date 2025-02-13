@@ -90,13 +90,10 @@ public class PieChartFragment extends RefreshableFragment implements OnChartValu
     private void initFilterRow() {
         binding.piechartFilterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
         binding.textView.setTextColor(getContext().getColor(R.color.foreground_color));
-        if (showFilter) {
-            binding.piechartFilterButton.setVisibility(View.VISIBLE);
-            binding.textView.setVisibility((View.VISIBLE));
-        } else {
-            binding.piechartFilterButton.setVisibility(View.GONE);
-            binding.textView.setVisibility((View.GONE));
-        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            binding.piechartFilterButton.setVisibility(showFilter?View.VISIBLE:View.GONE);
+            binding.textView.setVisibility(showFilter?View.VISIBLE:View.GONE);
+        });
     }
     private void openFilter(Consumer<PurchaseFilter> setFilter) {
         if (filterDialog.getFilter() == null)
