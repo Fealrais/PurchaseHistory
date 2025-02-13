@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.angelp.purchasehistory.receivers.scheduled.InitiateNotificationReceiver.NOTIFICATION_EXTRA_ARG;
+import static com.angelp.purchasehistory.data.Constants.NOTIFICATION_EXTRA_ARG;
 
 @AndroidEntryPoint
 public class ScheduledExpensesFragment extends Fragment {
@@ -111,7 +111,9 @@ public class ScheduledExpensesFragment extends Fragment {
     private void refresh() {
         new Thread(() -> {
             adapter.getScheduledExpenses().clear();
-            adapter.getScheduledExpenses().addAll(scheduledExpenseClient.findAllForUser());
+            List<ScheduledExpenseView> allForUser = scheduledExpenseClient.findAllForUser();
+            ScheduledExpenseAdapter.sort(allForUser);
+            adapter.getScheduledExpenses().addAll(allForUser);
             new Handler(Looper.getMainLooper()).post(() -> adapter.notifyDataSetChanged());
         }).start();
     }

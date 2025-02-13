@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    android:background="@drawable/card_background"
+    android:elevation="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="6dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/fragmentIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/fragmentName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:textAppearance="?attr/textAppearanceListItem" />
+
+        <CheckBox
+            android:id="@+id/displayCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingHorizontal="8dp" />
+
+        <ImageButton
+            android:id="@+id/buttonMoveUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/move_up"
+            android:src="@drawable/baseline_arrow_up_24" />
+
+        <ImageButton
+            android:id="@+id/buttonMoveDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/move_down"
+            android:src="@drawable/baseline_arrow_down_24" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.model.ScheduledNotification;
 
 import java.util.ArrayList;
@@ -13,12 +14,12 @@ import java.util.List;
 
 public class InitiateNotificationReceiver extends BroadcastReceiver {
     private static final String TAG = "InitiateNotificationReceiver";
-    public static final String NOTIFICATION_EXTRA_ARG = "scheduledNotifications";
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "Received signal to initiate notification alarms");
 
-        ArrayList<ScheduledNotification> scheduledExpenses = intent.getParcelableArrayListExtra(NOTIFICATION_EXTRA_ARG);
+        ArrayList<ScheduledNotification> scheduledExpenses = intent.getParcelableArrayListExtra(Constants.NOTIFICATION_EXTRA_ARG);
         if (scheduledExpenses == null) {
             Log.e(TAG, "Invalid list");
             return;

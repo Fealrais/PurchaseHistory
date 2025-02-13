@@ -34,6 +34,7 @@
     </LinearLayout>
 
     <ImageView
+        android:layout_marginHorizontal="8dp"
         android:id="@+id/iconNextDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

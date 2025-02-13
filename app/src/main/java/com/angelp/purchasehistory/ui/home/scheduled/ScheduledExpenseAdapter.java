@@ -13,6 +13,7 @@ import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.angelp.purchasehistory.util.AndroidUtils.setNextTimestampString;
@@ -29,8 +30,17 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
     }
 
     public ScheduledExpenseAdapter(List<ScheduledExpenseView> scheduledExpenses, OnItemClickListener listener) {
+        sort(scheduledExpenses);
         this.scheduledExpenses = scheduledExpenses;
         this.listener = listener;
+    }
+
+    public static void sort(List<ScheduledExpenseView> scheduledExpenses) {
+        scheduledExpenses.sort((a, b) -> {
+            LocalDateTime nextTimestampA = a.getPeriod().getNextTimestamp(a.getTimestamp());
+            LocalDateTime nextTimestampB = b.getPeriod().getNextTimestamp(b.getTimestamp());
+            return nextTimestampA.compareTo(nextTimestampB);
+        });
     }
 
     @NonNull

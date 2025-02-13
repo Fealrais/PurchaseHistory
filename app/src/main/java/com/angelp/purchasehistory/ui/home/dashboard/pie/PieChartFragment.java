@@ -1,6 +1,5 @@
 package com.angelp.purchasehistory.ui.home.dashboard.pie;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,17 +7,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.data.AppColorCollection;
+import com.angelp.purchasehistory.data.Constants;
+import com.angelp.purchasehistory.data.filters.PurchaseFilter;
+import com.angelp.purchasehistory.databinding.FragmentPieChartBinding;
+import com.angelp.purchasehistory.ui.home.dashboard.DashboardViewModel;
+import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
+import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsEntry;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
-import com.angelp.purchasehistory.R;
-import com.angelp.purchasehistory.data.filters.PurchaseFilter;
-import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
-import com.angelp.purchasehistory.databinding.FragmentPieChartBinding;
-import com.angelp.purchasehistory.ui.home.dashboard.DashboardViewModel;
-import com.angelp.purchasehistory.util.AndroidUtils;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -31,7 +31,6 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 import dagger.hilt.android.AndroidEntryPoint;
-import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -39,22 +38,20 @@ import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
 @AndroidEntryPoint
-public class PieChartFragment extends Fragment implements OnChartValueSelectedListener, RefreshablePurchaseFragment {
+public class PieChartFragment extends RefreshableFragment implements OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter";
     private final String TAG = this.getClass().getSimpleName();
-
-    private PurchaseFilter filter;
-    private Consumer<PurchaseFilter> setFilter;
     private DashboardViewModel viewModel;
     private FragmentPieChartBinding binding;
+    private boolean showFilter;
+    private AppColorCollection appColorCollection;
 
     public PieChartFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
+        super(filter, setFilter);
         Bundle args = new Bundle();
         args.putParcelable(ARG_FILTER, filter);
         this.setArguments(args);
-        this.setFilter = setFilter;
     }
 
     @Override
@@ -62,6 +59,7 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
 
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            showFilter = getArguments().getBoolean(Constants.SHOW_FILTER);
             filter = getArguments().getParcelable(ARG_FILTER);
         }
     }
@@ -71,13 +69,10 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
                              Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentPieChartBinding.inflate(inflater, container, false);
-        initPieGraph();
-        return binding.getRoot();
-    }
-
-    private void initPieGraph() {
+        appColorCollection = appColorCollection = new AppColorCollection(inflater.getContext());
         initPieChart(binding.pieChart);
         new Thread(() -> setData(filter)).start();
+        return binding.getRoot();
     }
 
     private void setData(PurchaseFilter filter) {
@@ -132,9 +127,9 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         chart.setDrawEntryLabels(true);
 
         chart.setDrawHoleEnabled(true);
-        chart.setHoleColor(Color.WHITE);
+        chart.setHoleColor(appColorCollection.getForegroundColor());
 
-        chart.setTransparentCircleColor(Color.WHITE);
+        chart.setTransparentCircleColor(appColorCollection.getForegroundColor());
 //        chart.setTransparentCircleAlpha(50);
 
 //        chart.setHoleRadius(58f);
@@ -155,13 +150,14 @@ public class PieChartFragment extends Fragment implements OnChartValueSelectedLi
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setTextColor(appColorCollection.getForegroundColor());
         l.setDrawInside(false);
         l.setXEntrySpace(7f);
         l.setYEntrySpace(0f);
         l.setYOffset(0f);
 
         // entry label styling
-        chart.setEntryLabelColor(Color.WHITE);
+        chart.setEntryLabelColor(appColorCollection.getForegroundColor());
 //        chart.setEntryLabelTextSize(12f);
     }
 

@@ -130,14 +130,14 @@
     <string name="tour_navigation_qrscanner">QR Скенер</string>
 <!--    <string name="tour_qrFloatingQrButton">Сканирайте QR код с вашата камера</string>-->
 <!--    <string name="tour_qrFloatingQrButton_secondary">Можете също да сканирате QR кодове, използвайки плаващия бутон. Подгответе вашата сметка и сканирайте QR кода.</string>-->
-    <string name="tour_navigation_graph">Графика</string>
+    <string name="tour_navigation_profile">Профил</string>
     <string name="tour_filter_button">Филтрирай бележки</string>
     <string name="tour_prompt_title">Добре дошли!</string>
     <string name="tour_navigation_scheduled_expenses">Планирайте разходите си предварително!</string>
     <string name="tour_navigation_scheduled_expenses_secondary">Планирайте разходите си предварително. Когато настъпи датата, ще получите известие за потвърждение и то автоматично ще бъде добавено към историята на покупките ви.</string>
     <string name="tour_navigation_dashboard_secondary">Това е таблото. Тук можете да видите преглед на последните си покупки и тенденциите в разходите.</string>
     <string name="tour_navigation_qrscanner_secondary">Използвайте това, за да сканирате QR кодовете на вашите касови бележки и бързо да добавите покупки към историята си.</string>
-    <string name="tour_navigation_graph_secondary">Този раздел показва графични представяния на вашите данни за разходите във времето.</string>
+    <string name="tour_navigation_profile_secondary">Управлявайте настройките на профила си и преглеждайте историята на активността си тук.</string>
     <string name="tour_filter_button_secondary">Винаги можете да промените периода от време или категорията на показаните покупки от тук.</string>
     <string name="tour_prompt_message">Добре дошли в PurchaseHistory!\nТова е проект, създаден от самостоятелен разработчик в свободното му време, вдъхновен от българската система за QR кодове на касови бележки и желанието ми да видя месечните си разходи. Не се колебайте да се свържете за предложения и проблеми на моя имейл <a href="mailto:purchase.history.bg@gmail.com">purchase.history.bg@gmail.com</a></string>
     <string name="terms_of_service">Условия за ползване</string>
@@ -162,5 +162,25 @@
     <string name="scheduled_notification_title">Дължимо плащане (%s)</string>
     <string name="error_must_not_be_empty">Попълнете полето, моля</string>
     <string name="error_price_empty">Моля въведете правилна сума</string>
-
+    <string name="turn_on_flashlight">Включване на фенерчето</string>
+    <string name="turn_off_flashlight">Изключване на фенерчето</string>
+    <string name="customize_dashboard">Персонализиране на изгледа на таблото</string>
+    <string name="customize_dashboard_view">Персонализиране на изгледа на таблото</string>
+    <string name="pie_chart">Разбивка по категории</string>
+    <string name="line_chart">Тенденции в разходите</string>
+    <string name="bar_chart">Дневни разходи</string>
+    <string name="title_pie_chart">Разбивка по категории</string>
+    <string name="title_line_chart">Месечни тенденции в разходите</string>
+    <string name="title_stacked_bar_chart">Дневни категоризирани разходи</string>
+    <string name="description_pie_chart">Показване на всички покупки за период, групирани по категории и оформени в кръгова диаграма</string>
+    <string name="description_line_chart">Линейна диаграма, показваща сумата на всички покупки на ден. Полезно за виждане на модели за всеки месец</string>
+    <string name="description_bar_chart">Стълбовидна диаграма, показваща сумарните покупки за всеки ден, разделени по категории. Полезно за детайлен преглед на всеки ден.</string>
+    <string name="description_purchases_list">Списък на последните покупки</string>
+    <string name="move_up">Премести нагоре</string>
+    <string name="move_down">Премести надолу</string>
+    <string name="details">Детайли</string>
+    <string name="see_all_n_purchases">Виж всички %d покупки</string>
+    <string name="total_sum">Обща сума</string>
+    <string name="title_activity_profile">Профил</string>
+    <string name="avatar">Аватар</string>
 </resources>

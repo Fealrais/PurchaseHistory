@@ -143,13 +143,13 @@
     <!--    <string name="tour_qrFloatingQrButton">Scan QR Code with your camera</string>-->
     <!--    <string name="tour_qrFloatingQrButton_secondary">You can also scan QR codes using the floating button. Prepare your bill and scan the QR code.</string>-->
     <string name="tour_navigation_scheduled_expenses">Schedule your expenses ahead of time!</string>
-    <string name="tour_navigation_graph">Graph</string>
+    <string name="tour_navigation_profile">Profile</string>
     <string name="tour_filter_button">Filter purchases</string>
     <string name="tour_prompt_title">Welcome!</string>
     <string name="tour_navigation_dashboard_secondary">This is the dashboard. You can see an overview of your recent purchases and spending trends here.</string>
     <string name="tour_navigation_qrscanner_secondary">Use this to scan QR codes on your receipts to quickly add purchases to your history.</string>
     <string name="tour_navigation_scheduled_expenses_secondary">Plan your expenses in advance. When the date arrives, you\'ll receive a notification to confirm, and it will be automatically added to your purchase history.</string>
-    <string name="tour_navigation_graph_secondary">View graphical representations of your spending data over time in this section.</string>
+    <string name="tour_navigation_profile_secondary">Manage your profile settings and view your activity history here.</string>
     <string name="tour_filter_button_secondary">You can always change the time period or the category of purchases displayed from here.</string>
     <string name="tour_prompt_message">Welcome to PurchaseHistory!\nThis is a project made by a solo developer in his free time, inspired by the Bulgarian QR code receipt system and by my will to see my monthly spending. Feel free to reach out for suggestions and issues on my email <a href="@mailto:purchase.history.bg@gmail.com">purchase.history.bg@gmail.com</a></string>
     <string name="terms_of_service">Terms of Service</string>
@@ -173,6 +173,25 @@
     <string name="scheduled_notification_title">A payment is due (%s)</string>
     <string name="error_must_not_be_empty">Field should not be empty</string>
     <string name="error_price_empty">Enter a valid price</string>
-    <string name="turn_on_flashlight">ON</string>
-    <string name="turn_off_flashlight">OFF</string>
+    <string name="turn_on_flashlight">Torch ON</string>
+    <string name="turn_off_flashlight">Torch OFF</string>
+    <string name="customize_dashboard">Customize dashboard view</string>
+    <string name="customize_dashboard_view">Customize Dashboard View</string>
+    <string name="pie_chart">Category Breakdown</string>
+    <string name="line_chart">Spending Trends</string>
+    <string name="bar_chart">Daily Expenses</string>
+    <string name="title_pie_chart">Category Breakdown</string>
+    <string name="title_line_chart">Monthly Spending Trends</string>
+    <string name="title_stacked_bar_chart">Daily Categorized Expenses</string>
+    <string name="description_pie_chart">Displaying all purchases within a period, grouped by category and formed into a piechart</string>
+    <string name="description_line_chart">A line chart showing the sum of all purchases per day. Usefull to see patterns for each month</string>
+    <string name="description_bar_chart">A stacked bar chart displaying the summed purchases for each day, separated by categories. Useful for detailed view of each day.</string>
+    <string name="description_purchases_list">A list of the latest purchases</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="details">Details</string>
+    <string name="see_all_n_purchases">See all %d purchases</string>
+    <string name="total_sum">Total sum</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="avatar">Avatar</string>
 </resources>

@@ -50,7 +50,6 @@ public class ScheduledNotification implements Parcelable {
         long l = in.readLong();
         categoryId = l == -1 ? null : l;
         color = in.readInt();
-        note = in.readString();
         timestamp = in.readLong();
         period = in.readLong();
         id = in.readLong();
@@ -63,7 +62,6 @@ public class ScheduledNotification implements Parcelable {
         dest.writeString(note);
         dest.writeLong(categoryId == null ? -1 : categoryId);
         dest.writeInt(color);
-        dest.writeString(note);
         dest.writeLong(timestamp);
         dest.writeLong(period);
         dest.writeLong(id);

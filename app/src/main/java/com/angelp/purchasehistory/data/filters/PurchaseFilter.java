@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +18,6 @@ import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class PurchaseFilter implements Parcelable {
     public static final Creator<PurchaseFilter> CREATOR = new Creator<>() {
         @Override
@@ -38,6 +36,11 @@ public class PurchaseFilter implements Parcelable {
     private Long categoryId;
     //    private PageRequest pageRequest;
     private UUID userId;
+
+    public PurchaseFilter() {
+        setFrom(LocalDate.now().withDayOfMonth(1));
+        setTo(LocalDate.now());
+    }
 
     public PurchaseFilter(LocalDate from){
         this.from = from;

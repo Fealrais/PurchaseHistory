@@ -1,4 +1,4 @@
-package com.angelp.purchasehistory.ui.home.purchases;
+package com.angelp.purchasehistory.ui.home.dashboard.purchases;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.interfaces.ViewHolder;
+import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
@@ -25,7 +26,8 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
     private final List<PurchaseView> purchaseViews = new ArrayList<>();
     private final FragmentActivity fragmentActivity;
     private final Runnable refreshDashboard;
-
+    @Setter
+    private int limit = -1;
 
     public PurchasesAdapter(List<PurchaseView> purchaseViews, FragmentActivity fragmentActivity, Runnable refreshDashboard) {
         setPurchaseViews(purchaseViews);
@@ -58,18 +60,17 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
     @Override
     public ViewHolder<PurchaseView> onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view;
-        switch (viewType) {
-            case PurchaseViewHeader.TYPE_HEADER: {
+        return switch (viewType) {
+            case PurchaseViewHeader.TYPE_HEADER -> {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_purchase_header, parent, false);
-                return new PurchasesHeaderViewHolder(view);
+                yield new PurchasesHeaderViewHolder(view);
             }
-            case PurchaseViewHeader.TYPE_PURCHASE: {
+            case PurchaseViewHeader.TYPE_PURCHASE -> {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_purchase, parent, false);
-                return new PurchasesViewHolder(view);
+                yield new PurchasesViewHolder(view);
             }
-            default:
-                throw new IllegalStateException("unsupported item type");
-        }
+            default -> throw new IllegalStateException("unsupported item type");
+        };
 
     }
 
@@ -79,6 +80,7 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
         PurchaseView purchaseView = purchaseViews.get(position);
         holder.bind(purchaseView, fragmentActivity.getSupportFragmentManager(), refreshDashboard);
     }
+
     private void removePurchase(int index) {
         this.purchaseViews.remove(index);
         new Handler(Looper.getMainLooper()).post(() -> notifyItemRemoved(index));
@@ -86,6 +88,8 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
 
     @Override
     public int getItemCount() {
+        if (limit > 0)
+            return Math.min(purchaseViews.size(), limit);
         return purchaseViews.size();
     }
 

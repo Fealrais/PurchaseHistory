@@ -1,4 +1,4 @@
-package com.angelp.purchasehistory.ui.home.purchases;
+package com.angelp.purchasehistory.ui.home.dashboard.purchases;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
+import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.databinding.FragmentListedPurchasesBinding;
+import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +60,7 @@ public class ListedPurchasesFragment extends Fragment {
         binding.swiperefresh.setOnRefreshListener(this::onSwipeRefresh);
         binding.filterButton.setOnClickListener(v -> openFilter((newFilter) -> {
             setFilter(newFilter);
-            binding.filterButton.setText(newFilter.isEmpty() ? "Filter" : "Filtered");
+            binding.filterButton.setText(R.string.filterButton);
             binding.filterDateText.setText(filter.getReadableString());
             filterDialog.dismiss();
             onSwipeRefresh();

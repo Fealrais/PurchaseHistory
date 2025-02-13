@@ -13,9 +13,8 @@ android {
         applicationId = "com.angelp.purchasehistory"
         minSdk = 29
         targetSdk = AndroidVersion.VersionCodes.TIRAMISU
-        versionCode = 3
-        versionName = "0.1.2"
-
+        versionCode = 5
+        versionName = "1.0.0"
         testInstrumentationRunner = "com.angelp.purchasehistory.setup.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true

@@ -20,4 +20,13 @@
         <!-- Background color -->
         <item name="android:colorBackground">@color/gray_100</item>
     </style>
+
+    <style name="Theme.PurchaseHistory.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.PurchaseHistory.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.PurchaseHistory.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

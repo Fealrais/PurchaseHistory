@@ -6,10 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -28,6 +28,9 @@
         android:theme="@style/Theme.PurchaseHistory"
         android:windowSoftInputMode="adjustPan"
         tools:targetApi="34">
+        <activity
+            android:name=".ui.FullscreenGraphActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.legal.PrivacyPolicyActivity"
             android:exported="false" />
@@ -87,7 +90,7 @@
 
         <receiver
             android:name=".receivers.AppBootReceiver"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -101,15 +104,10 @@
         <receiver
             android:name=".receivers.scheduled.TriggerScheduledExpenseReceiver"
             android:exported="false" />
+
         <meta-data
             android:name="com.google.android.gms.privacy_policy"
             android:value="file:///android_asset/privacy_policy.html" />
-<!--        <meta-data-->
-<!--            android:name="com.google.android.gms.ads.AD_MANAGER_APP"-->
-<!--        android:value="true" />-->
-<!--        <meta-data-->
-<!--            android:name="com.google.android.gms.ads.APPLICATION_ID"-->
-<!--            android:value="ca-app-pub-9339704833965519~6807019954" />-->
     </application>
 
 </manifest>

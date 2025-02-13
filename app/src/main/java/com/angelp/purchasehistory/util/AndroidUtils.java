@@ -11,9 +11,15 @@ import android.widget.TextView;
 import com.angelp.purchasehistory.MainActivity;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.data.AppColorCollection;
+import com.angelp.purchasehistory.data.Constants;
+import com.angelp.purchasehistory.ui.home.dashboard.graph.DayAxisValueFormatter;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
+import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -134,5 +140,38 @@ public final class AndroidUtils {
     @NotNull
     public static String formatCurrency(BigDecimal price) {
         return String.format(Locale.getDefault(), "%.2f", price.floatValue());
+    }
+    public static void initChart(Chart<?> chart, AppColorCollection colors, String format){
+//        chart.setBackgroundColor(colors.getBackgroundColor());
+        chart.getXAxis().setTextColor(colors.getForegroundColor());
+        chart.getLegend().setTextColor(colors.getForegroundColor());
+        // Grid and Borders
+        chart.getXAxis().setGridColor(colors.getMiddleColor());
+        chart.getLegend().setTextColor(colors.getForegroundColor());
+        chart.getDescription().setTextColor(colors.getForegroundColor());
+
+        chart.setExtraOffsets(5, 10, 5, 5);
+        chart.setDragDecelerationFrictionCoef(0.95f);
+        chart.setHighlightPerTapEnabled(true);
+        chart.getDescription().setEnabled(false);
+        chart.setMinimumHeight(Constants.GRAPH_MIN_HEIGHT);
+        DayAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(format);
+
+        XAxis xLabels = chart.getXAxis();
+        xLabels.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xLabels.setValueFormatter(xAxisFormatter);
+        xLabels.setGranularity(1f);
+        xLabels.setTextColor(colors.getForegroundColor());
+
+        Legend l = chart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setTextColor(colors.getForegroundColor());
+        l.setDrawInside(true);
+        l.setFormSize(8f);
+        l.setFormToTextSpace(4f);
+        l.setXEntrySpace(6f);
+
     }
 }

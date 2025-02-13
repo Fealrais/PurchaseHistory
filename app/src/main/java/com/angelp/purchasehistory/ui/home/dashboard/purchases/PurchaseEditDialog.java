@@ -1,4 +1,4 @@
-package com.angelp.purchasehistory.ui.home.purchases;
+package com.angelp.purchasehistory.ui.home.dashboard.purchases;
 
 import android.os.Bundle;
 import android.os.Handler;

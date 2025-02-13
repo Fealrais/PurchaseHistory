@@ -19,7 +19,8 @@
         android:id="@+id/dashboard_filterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
         android:background="@color/design_default_color_secondary"
         android:contentDescription="@string/filterButton"
         android:text="@string/filterButton"
@@ -27,10 +28,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:id="@+id/customize_dashboardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/customize_dashboard"
+        android:src="@drawable/baseline_edit_24"
+        android:text="@string/customize_dashboard_view"
+        app:layout_constraintEnd_toStartOf="@+id/dashboard_filterButton"
+        app:layout_constraintTop_toTopOf="@+id/dashboard_filterButton" />
+
     <ScrollView
         android:id="@+id/dashboardScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -38,23 +52,12 @@
         app:layout_constraintTop_toBottomOf="@id/dashboard_filterButton">
 
         <LinearLayout
+            android:id="@+id/dashboardFragmentsLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/pieChartFragmentContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/listedPurchasesFragmentContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="400dp" />
-
-        </LinearLayout>
-
+            android:orientation="vertical"
+            android:padding="20dp"
+            />
     </ScrollView>
 
 

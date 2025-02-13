@@ -1,5 +1,6 @@
 package com.angelp.purchasehistory.ui.home.dashboard.list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,50 +9,48 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
+import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
-import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
+import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.FragmentPurchasesListCardBinding;
-import com.angelp.purchasehistory.ui.home.purchases.PurchasesAdapter;
-import com.angelp.purchasehistory.ui.home.purchases.PurchasesViewModel;
+import com.angelp.purchasehistory.ui.FullscreenGraphActivity;
+import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
+import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchasesAdapter;
+import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchasesViewModel;
+import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import dagger.hilt.android.AndroidEntryPoint;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-@NoArgsConstructor
 @AndroidEntryPoint
-public class PurchaseListPurchaseFragment extends Fragment implements RefreshablePurchaseFragment {
-    private static final String ARG_FILTER = "purchase_filter";
+public class PurchaseListPurchaseFragment extends RefreshableFragment {
     private final String TAG = this.getClass().getSimpleName();
     private FragmentPurchasesListCardBinding binding;
     private PurchasesViewModel purchasesViewModel;
     private PurchasesAdapter purchasesAdapter;
-    @Setter
-    private PurchaseFilter filter;
-    private Runnable refreshDashboard;
 
-    public PurchaseListPurchaseFragment(PurchaseFilter filter, Runnable refresh) {
-        this.filter = filter;
+    public PurchaseListPurchaseFragment(PurchaseFilter filter, Consumer<PurchaseFilter> onFilterChange) {
+        super(filter, onFilterChange);
         Bundle args = new Bundle();
-        args.putParcelable(ARG_FILTER, filter);
+        args.putParcelable(Constants.ARG_FILTER, filter);
         this.setArguments(args);
-        this.refreshDashboard = refresh;
     }
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPurchasesListCardBinding.inflate(inflater, container, false);
+        int maxSize = -1;
         if (getArguments() != null) {
-            filter = getArguments().getParcelable(ARG_FILTER);
+            filter = getArguments().getParcelable(Constants.ARG_FILTER);
+            maxSize = getArguments().getInt(Constants.ARG_MAX_SIZE);
         }
         purchasesViewModel = new ViewModelProvider(this).get(PurchasesViewModel.class);
-        initializePurchasesRecyclerView();
+        initializePurchasesRecyclerView(maxSize);
         return binding.getRoot();
     }
 
@@ -61,10 +60,11 @@ public class PurchaseListPurchaseFragment extends Fragment implements Refreshabl
         binding = null;
     }
 
-    private void initializePurchasesRecyclerView() {
+    private void initializePurchasesRecyclerView(int maxSize) {
         new Thread(() -> {
             List<PurchaseView> purchases = purchasesViewModel.getPurchaseClient().getAllPurchases(filter);
-            purchasesAdapter = new PurchasesAdapter(purchases, getActivity(), refreshDashboard);
+            purchasesAdapter = new PurchasesAdapter(purchases, getActivity(), () -> setFilter.accept(filter));
+            setupShowMoreButton(purchases.size(), maxSize);
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             new Handler(Looper.getMainLooper()).post(() -> {
@@ -75,6 +75,25 @@ public class PurchaseListPurchaseFragment extends Fragment implements Refreshabl
                 }
             });
         }).start();
+    }
+
+    private void setupShowMoreButton(int purchaseSize, int maxSize) {
+        boolean isBiggerThanLimit = maxSize > 0 && maxSize < purchaseSize;
+        if (isBiggerThanLimit) {
+            purchasesAdapter.setLimit(maxSize);
+            binding.seeAllButton.setOnClickListener((v) -> {
+                Intent intent = new Intent(getActivity(), FullscreenGraphActivity.class);
+                DashboardComponent dashboardComponent = new DashboardComponent(R.string.title_purchases_list, R.drawable.list, R.string.description_purchases_list, "PurchaseListPurchaseFragment");
+                intent.putExtra("component", dashboardComponent);
+                startActivity(intent);
+            });
+            binding.seeAllButton.setText(getString(R.string.see_all_n_purchases, purchaseSize));
+        }
+        new Handler(Looper.getMainLooper()).post(()->{
+            binding.seeAllButton.setVisibility(isBiggerThanLimit ? View.VISIBLE : View.GONE);
+            binding.seeAllBackdrop.setVisibility(isBiggerThanLimit ? View.VISIBLE : View.GONE);
+        });
+
     }
 
     public void refresh(PurchaseFilter filter) {

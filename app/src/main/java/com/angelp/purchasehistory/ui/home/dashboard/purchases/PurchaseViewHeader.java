@@ -1,4 +1,4 @@
-package com.angelp.purchasehistory.ui.home.purchases;
+package com.angelp.purchasehistory.ui.home.dashboard.purchases;
 
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import lombok.Getter;
