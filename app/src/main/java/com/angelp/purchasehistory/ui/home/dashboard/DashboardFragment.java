@@ -38,12 +38,11 @@ import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 @AndroidEntryPoint
 public class DashboardFragment extends Fragment implements RefreshablePurchaseFragment, CustomizableDashboard {
     private final String TAG = this.getClass().getSimpleName();
+    private final Gson gson = new Gson();
     private FragmentDashboardBinding binding;
     private PurchaseFilterDialog filterDialog;
     private List<DashboardComponent> selectedFragments = new ArrayList<>();
     private PurchaseFilter filter = Constants.getDefaultFilter();
-    private final Gson gson = new Gson();
-    ;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -58,9 +57,9 @@ public class DashboardFragment extends Fragment implements RefreshablePurchaseFr
     }
 
     private void initializeFromArgs(Bundle state) {
-        if(state == null) return;
+        if (state == null) return;
         PurchaseFilter purchaseFilter = state.getParcelable(Constants.DASHBOARD_FILTER);
-        if(purchaseFilter!=null) filter = purchaseFilter;
+        if (purchaseFilter != null) filter = purchaseFilter;
     }
 
     private void initializeDashboardFragments() {
