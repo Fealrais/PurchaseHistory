@@ -15,6 +15,7 @@ import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.databinding.FragmentPieChartBinding;
 import com.angelp.purchasehistory.ui.home.dashboard.DashboardViewModel;
 import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
+import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsEntry;
@@ -31,6 +32,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 import dagger.hilt.android.AndroidEntryPoint;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -38,10 +40,14 @@ import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
+
 @AndroidEntryPoint
+@NoArgsConstructor
 public class PieChartFragment extends RefreshableFragment implements OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter";
     private final String TAG = this.getClass().getSimpleName();
+    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(false);
     private DashboardViewModel viewModel;
     private FragmentPieChartBinding binding;
     private boolean showFilter;
@@ -59,7 +65,7 @@ public class PieChartFragment extends RefreshableFragment implements OnChartValu
 
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            showFilter = getArguments().getBoolean(Constants.SHOW_FILTER);
+            showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
             filter = getArguments().getParcelable(ARG_FILTER);
         }
     }
@@ -69,10 +75,42 @@ public class PieChartFragment extends RefreshableFragment implements OnChartValu
                              Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentPieChartBinding.inflate(inflater, container, false);
-        appColorCollection = appColorCollection = new AppColorCollection(inflater.getContext());
+        appColorCollection = new AppColorCollection(inflater.getContext());
+        applyFilter(filter);
+        initFilterRow();
         initPieChart(binding.pieChart);
         new Thread(() -> setData(filter)).start();
         return binding.getRoot();
+    }
+
+    private void applyFilter(PurchaseFilter newFilter) {
+        binding.piechartFilterButton.setText(R.string.filterButton);
+        binding.textView.setText(newFilter.getReadableString());
+    }
+    private void initFilterRow() {
+        binding.piechartFilterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
+        binding.textView.setTextColor(getContext().getColor(R.color.foreground_color));
+        if (showFilter) {
+            binding.piechartFilterButton.setVisibility(View.VISIBLE);
+            binding.textView.setVisibility((View.VISIBLE));
+        } else {
+            binding.piechartFilterButton.setVisibility(View.GONE);
+            binding.textView.setVisibility((View.GONE));
+        }
+    }
+    private void openFilter(Consumer<PurchaseFilter> setFilter) {
+        if (filterDialog.getFilter() == null)
+            filterDialog.setFilter(getDefaultFilter());
+        filterDialog.show(getParentFragmentManager(), "piechartFilterDialog");
+        filterDialog.setOnSuccess(setFilter);
+    }
+
+    private void updateFilter(PurchaseFilter newFilter) {
+        this.filter = newFilter;
+        this.applyFilter(newFilter);
+        if (filterDialog.isAdded())
+            filterDialog.dismiss();
+        refresh(newFilter);
     }
 
     private void setData(PurchaseFilter filter) {

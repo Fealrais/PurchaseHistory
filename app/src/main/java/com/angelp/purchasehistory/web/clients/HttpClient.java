@@ -4,6 +4,7 @@ import android.util.Log;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.data.filters.PageRequest;
 import com.angelp.purchasehistory.web.LocalDateGsonAdapter;
+import com.angelp.purchasehistory.web.WebUtils;
 import com.angelp.purchasehistory.web.interceptors.AuthInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,7 +18,10 @@ public class HttpClient {
     public static String BACKEND_URL = HOST_NAME + ":8080/api";
     protected final OkHttpClient client;
     protected final AuthInterceptor authInterceptor = new AuthInterceptor();
-    protected final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateGsonAdapter()).create();
+    protected final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateGsonAdapter())
+            .create();
+    protected final WebUtils utils = new WebUtils(gson);
     private final String TAG = this.getClass().getSimpleName();
 
     public HttpClient() {

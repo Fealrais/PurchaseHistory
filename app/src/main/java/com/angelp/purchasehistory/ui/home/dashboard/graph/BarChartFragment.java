@@ -31,6 +31,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import dagger.hilt.android.AndroidEntryPoint;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
 import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
 @AndroidEntryPoint
+@NoArgsConstructor
 public class BarChartFragment extends RefreshableFragment implements OnChartValueSelectedListener {
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
@@ -95,7 +97,7 @@ public class BarChartFragment extends RefreshableFragment implements OnChartValu
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             filter = getArguments().getParcelable(Constants.ARG_FILTER);
-            showFilter = getArguments().getBoolean(Constants.SHOW_FILTER);
+            showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
         } else {
             filter = new PurchaseFilter();
         }
@@ -201,7 +203,7 @@ public class BarChartFragment extends RefreshableFragment implements OnChartValu
     private void openFilter(Consumer<PurchaseFilter> setFilter) {
         if (filterDialog.getFilter() == null)
             filterDialog.setFilter(getDefaultFilter());
-        filterDialog.show(getParentFragmentManager(), "purchasesFilterDialog");
+        filterDialog.show(getParentFragmentManager(), "barchartFilterDialog");
         filterDialog.setOnSuccess(setFilter);
     }
 
@@ -215,7 +217,7 @@ public class BarChartFragment extends RefreshableFragment implements OnChartValu
 
     private void applyFilter(PurchaseFilter newFilter) {
         binding.graphFilterButton.setText(R.string.filterButton);
-        binding.textView.setText(filter.getReadableString());
+        binding.textView.setText(newFilter.getReadableString());
     }
 
     public void refresh(PurchaseFilter filter) {

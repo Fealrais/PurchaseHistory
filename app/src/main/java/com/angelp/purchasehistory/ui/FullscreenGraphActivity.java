@@ -25,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class FullscreenGraphActivity extends AppCompatActivity {
     private static final String TAG = FullscreenGraphActivity.class.getSimpleName();
     private ActivityFullscreenGraphBinding binding;
-    private PurchaseFilter filter = new PurchaseFilter();
+    private PurchaseFilter filter;
     private DashboardComponent dashboardComponent;
 
     @Override
@@ -35,7 +35,8 @@ public class FullscreenGraphActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         ActionBar actionBar = getSupportActionBar();
 
-        dashboardComponent = (DashboardComponent) getIntent().getSerializableExtra("component");
+        dashboardComponent = getIntent().getParcelableExtra(Constants.ARG_COMPONENT);
+        filter = getIntent().getParcelableExtra(Constants.ARG_FILTER);
         if (dashboardComponent != null) {
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
@@ -46,7 +47,7 @@ public class FullscreenGraphActivity extends AppCompatActivity {
             RefreshableFragment fragment = DashboardComponentsFactory.createFragment(dashboardComponent.getFragmentName(), filter, this::updateFilter);
             if (fragment.getArguments() != null) {
                 fragment.getArguments().putInt(Constants.ARG_MAX_SIZE, -1);
-                fragment.getArguments().putBoolean(Constants.SHOW_FILTER, true);
+                fragment.getArguments().putBoolean(Constants.ARG_SHOW_FILTER, true);
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
                     .replace(binding.fullscreenFragmentContainer.getId(), fragment);

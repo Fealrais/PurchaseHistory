@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="err1001">Потребителят не може да бъде намерен.</string>
+    <string name="err1002">Цената не може да бъде нула.</string>
+    <string name="err1003">Сметката вече е сканирана.</string>
+    <string name="err1004">Не е намерен влязъл потребител.</string>
+    <string name="err1005">Покупката не може да бъде намерена по ID.</string>
+    <string name="err1006">Нямате разрешение за тази покупка.</string>
+    <string name="err1007">Категорията не може да бъде намерена по ID.</string>
+    <string name="err1008">Категорията не съществува.</string>
+    <string name="err1009">Няма покупки за показване.</string>
+    <string name="err1010">Неуспешно извличане на потребителски данни.</string>
+
+    <string name="error_web_response">Възникна грешка. Моля, опитайте отново по-късно.</string>
+    <string name="invalid_purchase_title">Покупката не е приета</string>
+</resources>

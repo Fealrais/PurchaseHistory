@@ -13,15 +13,17 @@ import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.FragmentDashboardCardBinding;
 import com.angelp.purchasehistory.ui.FullscreenGraphActivity;
+import lombok.NoArgsConstructor;
 
 import java.util.function.Consumer;
 
+@NoArgsConstructor
 public class DashboardCardFragment extends Fragment implements RefreshablePurchaseFragment {
 
-    private final DashboardComponent component;
-    private final PurchaseFilter filter;
-    private final Consumer<PurchaseFilter> setFilter;
-    private final int generatedId;
+    private DashboardComponent component;
+    private PurchaseFilter filter;
+    private Consumer<PurchaseFilter> setFilter;
+    private int generatedId;
     private FragmentDashboardCardBinding binding;
     private RefreshableFragment fragment;
 
@@ -30,11 +32,21 @@ public class DashboardCardFragment extends Fragment implements RefreshablePurcha
         this.filter = filter;
         this.setFilter = setFilter;
         generatedId = View.generateViewId();
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.ARG_COMPONENT, dashboardComponent);
+        args.putParcelable(Constants.ARG_FILTER, filter);
+        args.putInt("viewId", generatedId);
+        setArguments(args);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            component = getArguments().getParcelable(Constants.ARG_COMPONENT);
+            filter = getArguments().getParcelable(Constants.ARG_FILTER);
+            generatedId = getArguments().getInt("viewId");
+        }
     }
 
     @Override
@@ -45,13 +57,14 @@ public class DashboardCardFragment extends Fragment implements RefreshablePurcha
         binding.title.setText(component.getTitle());
         binding.imageButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), FullscreenGraphActivity.class);
-            intent.putExtra("component", component);
+            intent.putExtra(Constants.ARG_COMPONENT, component);
+            intent.putExtra(Constants.ARG_FILTER, filter);
             startActivity(intent);
         });
         fragment = DashboardComponentsFactory.createFragment(component.getFragmentName(), filter, setFilter);
         if (fragment.getArguments() != null) {
             fragment.getArguments().putInt(Constants.ARG_MAX_SIZE, 10);
-            fragment.getArguments().putBoolean(Constants.SHOW_FILTER, false);
+            fragment.getArguments().putBoolean(Constants.ARG_SHOW_FILTER, false);
         }
         getParentFragmentManager().beginTransaction()
                 .replace(binding.fragmentContainerView.getId(), fragment)

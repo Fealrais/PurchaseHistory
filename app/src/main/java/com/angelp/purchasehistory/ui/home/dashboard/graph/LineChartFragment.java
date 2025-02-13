@@ -29,6 +29,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import dagger.hilt.android.AndroidEntryPoint;
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -44,6 +45,7 @@ import java.util.function.Consumer;
 import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
 @AndroidEntryPoint
+@NoArgsConstructor
 public class LineChartFragment extends RefreshableFragment implements OnChartValueSelectedListener {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MMM yy");
     private final String TAG = this.getClass().getSimpleName();
@@ -54,7 +56,6 @@ public class LineChartFragment extends RefreshableFragment implements OnChartVal
     private FragmentLineChartBinding binding;
     private boolean showFilter;
     private AppColorCollection appColorCollection;
-
 
     public LineChartFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
         super(filter, setFilter);
@@ -68,7 +69,7 @@ public class LineChartFragment extends RefreshableFragment implements OnChartVal
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             filter = getArguments().getParcelable(Constants.ARG_FILTER);
-            showFilter = getArguments().getBoolean(Constants.SHOW_FILTER);
+            showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
         } else {
             filter = new PurchaseFilter();
             filter.setFrom(LocalDate.now().withDayOfMonth(1));

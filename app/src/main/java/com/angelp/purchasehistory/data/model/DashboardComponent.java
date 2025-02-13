@@ -42,25 +42,25 @@ public class DashboardComponent implements Parcelable {
         switch (fragmentName){
                 case "PieChartFragment" -> {
                     title = R.string.title_pie_chart;
-                    cardIconId =  R.drawable.piechart;
+                    cardIconId =  R.mipmap.piechart;
                     infoDescription = R.string.help_info_pie_chart;
                     description = R.string.description_pie_chart;
                 }
                 case "LineChartFragment" -> {
                     title = R.string.title_line_chart;
-                    cardIconId =  R.drawable.linechart;
+                    cardIconId =  R.mipmap.linechart;
                     infoDescription = R.string.help_info_line_chart;
                     description = R.string.description_line_chart;
                 }
                 case "BarChartFragment" -> {
                     title = R.string.title_stacked_bar_chart;
-                    cardIconId =  R.drawable.barchart;
+                    cardIconId =  R.mipmap.barchart;
                     infoDescription = R.string.help_info_stacked_bar_chart;
                     description = R.string.description_bar_chart;
                 }
                 case "PurchaseListPurchaseFragment" -> {
                     title = R.string.title_purchases_list;
-                    cardIconId =  R.drawable.list;
+                    cardIconId =  R.mipmap.list;
                     infoDescription = R.string.help_info_purchases_list;
                     description = R.string.description_purchases_list;
                 }

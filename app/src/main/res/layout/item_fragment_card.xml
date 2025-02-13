@@ -7,8 +7,23 @@
     android:background="@drawable/card_background"
     android:elevation="4dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="6dp"
-    >
+    app:cardElevation="6dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginEnd="120dp">
+
+        <ImageView
+            android:alpha="70"
+            android:id="@+id/fragmentIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:src="@mipmap/barchart" />
+    </FrameLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,19 +31,14 @@
         android:orientation="horizontal"
         android:padding="8dp">
 
-        <ImageView
-            android:id="@+id/fragmentIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp" />
-
         <TextView
             android:id="@+id/fragmentName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical"
+            android:layout_marginStart="80dp"
+            android:layout_gravity="center|end"
+            android:textAlignment="textEnd"
             android:textAppearance="?attr/textAppearanceListItem" />
 
         <CheckBox

@@ -52,6 +52,14 @@ public class PurchaseClient extends HttpClient {
         return null;
     }
 
+    public void validatePurchase(PurchaseDTO purchaseDTO) {
+        try (Response res = post(BACKEND_URL + "/purchase/check", purchaseDTO)) {
+            utils.getBody(res, PurchaseView.class);
+        } catch (IOException e) {
+            Log.e(TAG, "validatePurchase: ", e);
+        }
+    }
+
     public PurchaseView editPurchase(PurchaseDTO purchaseDTO, Long id) {
         try (Response res = put(BACKEND_URL + "/purchase/" + id, purchaseDTO)) {
             ResponseBody body = res.body();
@@ -160,7 +168,6 @@ public class PurchaseClient extends HttpClient {
         }
         return null;
     }
-
 
 
     public List<CategoryView> getAllCategories() {

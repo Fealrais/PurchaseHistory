@@ -2,6 +2,7 @@ package com.angelp.purchasehistory.ui.home.qr;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -62,10 +63,11 @@ public class QrScannerFragment extends Fragment {
                     if (intent != null) {
                         String data = intent.getStringExtra(ScanResultExtra);
                         Log.i(TAG, "Scanned: " + data);
-                        fillQRForm(new PurchaseDTO(data));
-                        Toast.makeText(getContext(), "Scanned : " + data, Toast.LENGTH_LONG).show();
+                        PurchaseDTO purchaseDTO = new PurchaseDTO(data);
+                        qrScannerViewModel.validatePurchaseView(purchaseDTO, this::onInvalidPurchase);
+                        fillQRForm(purchaseDTO);
                     } else {
-                        Log.i(TAG,"QR scan Cancelled");
+                        Log.i(TAG, "QR scan Cancelled");
                     }
                 }
             });
@@ -206,7 +208,8 @@ public class QrScannerFragment extends Fragment {
 
     private void resetForm() {
         qrScannerViewModel.resetPurchaseDto();
-        binding.qrCategorySpinner.setSelection(0, true);
+        if (!binding.qrCategorySpinner.getAdapter().isEmpty())
+            binding.qrCategorySpinner.setSelection(0, true);
         binding.qrPriceInput.setText(AndroidUtils.formatCurrency(BigDecimal.ZERO));
         binding.qrDateInput.setText(R.string.date);
         binding.qrTimeInput.setText(R.string.time);
@@ -278,5 +281,18 @@ public class QrScannerFragment extends Fragment {
         super.onResume();
         // Resume the AdView.
 //        mAdView.resume();
+    }
+
+    private void onInvalidPurchase(Integer errorCode) {
+        new Handler(Looper.getMainLooper()).post(() ->
+                new AlertDialog.Builder(getContext())
+                        .setIcon(R.drawable.baseline_money_off_24)
+                        .setTitle(R.string.invalid_purchase_title)
+                        .setMessage(errorCode)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> resetForm())
+                        .setOnDismissListener((dialog) -> resetForm())
+                        .create()
+                        .show()
+        );
     }
 }
