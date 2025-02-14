@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
+import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.model.ScheduledNotification;
 import com.angelp.purchasehistory.databinding.FragmentScheduledExpensesBinding;
 import com.angelp.purchasehistory.receivers.scheduled.InitiateNotificationReceiver;
@@ -61,6 +62,17 @@ public class ScheduledExpensesFragment extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
             adapter = new ScheduledExpenseAdapter(scheduledExpenses, new ScheduledExpenseAdapter.OnItemClickListener() {
+                @Override
+                public void onTriggerClick(ScheduledExpenseView item) {
+                    new Thread(() -> {
+                        try {
+                            scheduledExpenseClient.triggerScheduledPurchase(item.getId());
+                            PurchaseHistoryApplication.getInstance().alert(R.string.purchase_created_title);
+                        } catch (Exception e) {
+                            PurchaseHistoryApplication.getInstance().alert("Error deleting scheduled expense: " + e.getMessage());
+                        }
+                    }).start();
+                }
                 @Override
                 public void onEditClick(ScheduledExpenseView item) {
                     editScheduledExpenseDialog = new EditScheduledExpenseDialog(item, (view) -> {

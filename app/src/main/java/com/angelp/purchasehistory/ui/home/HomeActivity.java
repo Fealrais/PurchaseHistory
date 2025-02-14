@@ -64,6 +64,7 @@ public class HomeActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setIcon(R.drawable.ic_home_24dp);
+
         }
         if (isFirstTimeOpen()) {
             showTourPrompt();

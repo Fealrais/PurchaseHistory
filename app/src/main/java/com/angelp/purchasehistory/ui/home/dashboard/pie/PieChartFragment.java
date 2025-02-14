@@ -7,14 +7,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
+import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentPieChartBinding;
 import com.angelp.purchasehistory.ui.home.dashboard.DashboardViewModel;
-import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
@@ -32,19 +34,14 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 import dagger.hilt.android.AndroidEntryPoint;
-import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
-
 @AndroidEntryPoint
-@NoArgsConstructor
-public class PieChartFragment extends RefreshableFragment implements OnChartValueSelectedListener {
+public class PieChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter";
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(false);
@@ -53,20 +50,12 @@ public class PieChartFragment extends RefreshableFragment implements OnChartValu
     private boolean showFilter;
     private AppColorCollection appColorCollection;
 
-    public PieChartFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
-        super(filter, setFilter);
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_FILTER, filter);
-        this.setArguments(args);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
-            filter = getArguments().getParcelable(ARG_FILTER);
         }
     }
 
@@ -76,38 +65,34 @@ public class PieChartFragment extends RefreshableFragment implements OnChartValu
         viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentPieChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
-        applyFilter(filter);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        applyFilter(filterViewModel.getFilterValue());
         initFilterRow();
         initPieChart(binding.pieChart);
-        new Thread(() -> setData(filter)).start();
-        return binding.getRoot();
+        new Thread(() -> setData(filterViewModel.getFilterValue())).start();
     }
 
     private void applyFilter(PurchaseFilter newFilter) {
         binding.piechartFilterButton.setText(R.string.filterButton);
         binding.textView.setText(newFilter.getReadableString());
     }
+
     private void initFilterRow() {
-        binding.piechartFilterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
+        binding.piechartFilterButton.setOnClickListener((v) -> openFilter());
         binding.textView.setTextColor(getContext().getColor(R.color.foreground_color));
         new Handler(Looper.getMainLooper()).post(() -> {
-            binding.piechartFilterButton.setVisibility(showFilter?View.VISIBLE:View.GONE);
-            binding.textView.setVisibility(showFilter?View.VISIBLE:View.GONE);
+            binding.piechartFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+            binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
         });
     }
-    private void openFilter(Consumer<PurchaseFilter> setFilter) {
-        if (filterDialog.getFilter() == null)
-            filterDialog.setFilter(getDefaultFilter());
-        filterDialog.show(getParentFragmentManager(), "piechartFilterDialog");
-        filterDialog.setOnSuccess(setFilter);
-    }
 
-    private void updateFilter(PurchaseFilter newFilter) {
-        this.filter = newFilter;
-        this.applyFilter(newFilter);
-        if (filterDialog.isAdded())
-            filterDialog.dismiss();
-        refresh(newFilter);
+    private void openFilter() {
+        filterDialog.show(getParentFragmentManager(), "piechartFilterDialog");
     }
 
     private void setData(PurchaseFilter filter) {
@@ -122,7 +107,7 @@ public class PieChartFragment extends RefreshableFragment implements OnChartValu
         List<Integer> categoryColors = report.getContent().stream().map(entry -> AndroidUtils.getColor(entry.getCategory())
         ).collect(Collectors.toList());
         dataSet.setAutomaticallyDisableSliceSpacing(true);
-        String centerText = report.getTotalSum() == null ? getString(R.string.no_data) :  getString(R.string.pie_chart_sum, report.getTotalSum());
+        String centerText = report.getTotalSum() == null ? getString(R.string.no_data) : getString(R.string.pie_chart_sum, report.getTotalSum());
         binding.pieChart.setCenterText(centerText);
         dataSet.setDrawIcons(false);
         dataSet.setSliceSpace(3f);
@@ -204,19 +189,20 @@ public class PieChartFragment extends RefreshableFragment implements OnChartValu
             return;
         Log.i(TAG, String.format("Selected value: %s, index: %s, DataSet index: %d", e.getY(), h.getX(), h.getDataSetIndex()));
         CategoryView category = (CategoryView) e.getData();
-        filter.setCategoryId(category.getId());
-        setFilter.accept(filter);
+        PurchaseFilter filterValue = filterViewModel.getFilterValue();
+        filterValue.setCategoryId(category.getId());
+        filterViewModel.updateFilter(filterValue);
     }
 
     @Override
     public void onNothingSelected() {
         Log.i(TAG, "nothing selected");
-        filter.setCategoryId(null);
-        setFilter.accept(filter);
+        PurchaseFilter filterValue = filterViewModel.getFilterValue();
+        filterValue.setCategoryId(null);
+        filterViewModel.updateFilter(filterValue);
     }
 
     public void refresh(PurchaseFilter filter) {
-        this.filter = filter;
         new Thread(() -> {
             setData(filter);
             getActivity().runOnUiThread(() -> {

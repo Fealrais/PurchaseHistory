@@ -3,8 +3,7 @@ package com.angelp.purchasehistory.ui.home.scheduled;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +26,8 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
     public interface OnItemClickListener {
         void onEditClick(ScheduledExpenseView item);
         void onDeleteClick(ScheduledExpenseView item);
+
+        void onTriggerClick(ScheduledExpenseView scheduledExpense);
     }
 
     public ScheduledExpenseAdapter(List<ScheduledExpenseView> scheduledExpenses, OnItemClickListener listener) {
@@ -66,10 +67,9 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
         private final TextView textViewName;
         private final TextView textViewPrice;
         private final TextView textViewNextDate;
-        private final ImageView iconNextDate;
         private final View viewCategoryBorder;
-        private final ImageButton buttonEdit;
-        private final ImageButton buttonDelete;
+        private final View menuOptions;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,9 +77,7 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
             textViewName = itemView.findViewById(R.id.textViewName);
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
             textViewNextDate = itemView.findViewById(R.id.textViewNextDate);
-            iconNextDate = itemView.findViewById(R.id.iconNextDate);
-            buttonEdit = itemView.findViewById(R.id.buttonEdit);
-            buttonDelete = itemView.findViewById(R.id.buttonDelete);
+            menuOptions = itemView.findViewById(R.id.menuOptions);
         }
 
         public void bind(ScheduledExpenseView scheduledExpense, OnItemClickListener listener) {
@@ -87,8 +85,25 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
             textViewName.setText(scheduledExpense.getNote());
             textViewPrice.setText(String.valueOf(scheduledExpense.getPrice()));
             setNextTimestampString(textViewNextDate, scheduledExpense);
-            buttonEdit.setOnClickListener(v -> listener.onEditClick(scheduledExpense));
-            buttonDelete.setOnClickListener(v -> listener.onDeleteClick(scheduledExpense));
+            menuOptions.setOnClickListener(view -> {
+                PopupMenu popup = new PopupMenu(super.itemView.getContext(), menuOptions);
+                popup.inflate(R.menu.scheduled_purchase_options_menu);
+                popup.setOnMenuItemClickListener(item -> {
+                    int itemId = item.getItemId();
+                    if (itemId == R.id.menu_edit) {
+                        listener.onEditClick(scheduledExpense);
+                        return true;
+                    } else if (itemId == R.id.menu_delete) {
+                        listener.onDeleteClick(scheduledExpense);
+                        return true;
+                    } else if (itemId == R.id.menu_trigger) {
+                        listener.onTriggerClick(scheduledExpense);
+                        return true;
+                    }
+                    return false;
+                });
+                popup.show();
+            });
         }
 
 

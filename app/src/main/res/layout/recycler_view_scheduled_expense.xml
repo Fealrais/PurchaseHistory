@@ -13,6 +13,14 @@
         android:layout_marginEnd="8dp"
         android:background="@color/success_green" />
 
+    <ImageView
+        android:layout_marginHorizontal="8dp"
+        android:id="@+id/iconNextDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/next_date"
+        android:src="@drawable/ic_calendar" />
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -33,14 +41,6 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:layout_marginHorizontal="8dp"
-        android:id="@+id/iconNextDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:contentDescription="@string/next_date"
-        android:src="@drawable/ic_calendar" />
 
     <TextView
         android:id="@+id/textViewNextDate"
@@ -50,21 +50,12 @@
         android:layout_marginEnd="3dp"
         android:textAppearance="?attr/textAppearanceListItemSecondary" />
 
-    <ImageButton
-        android:id="@+id/buttonEdit"
+    <TextView
+        android:id="@+id/menuOptions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
         android:layout_gravity="center_vertical"
-        android:contentDescription="@string/edit_text"
-        android:padding="10dp"
-        android:src="@drawable/baseline_edit_24" />
-
-    <ImageButton
-        android:id="@+id/buttonDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:contentDescription="@string/delete"
-        android:padding="10dp"
-        android:src="@drawable/baseline_delete_24" />
+        android:text="@string/menu_three_dots"
+        android:textAppearance="?android:textAppearanceLarge" />
 </LinearLayout>

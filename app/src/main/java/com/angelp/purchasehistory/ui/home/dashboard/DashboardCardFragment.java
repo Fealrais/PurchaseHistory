@@ -8,33 +8,25 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.factories.DashboardComponentsFactory;
-import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.FragmentDashboardCardBinding;
 import com.angelp.purchasehistory.ui.FullscreenGraphActivity;
 import lombok.NoArgsConstructor;
 
-import java.util.function.Consumer;
-
 @NoArgsConstructor
-public class DashboardCardFragment extends Fragment implements RefreshablePurchaseFragment {
+public class DashboardCardFragment extends Fragment {
 
     private DashboardComponent component;
-    private PurchaseFilter filter;
-    private Consumer<PurchaseFilter> setFilter;
     private int generatedId;
     private FragmentDashboardCardBinding binding;
-    private RefreshableFragment fragment;
+    private RefreshablePurchaseFragment fragment;
 
-    public DashboardCardFragment(DashboardComponent dashboardComponent, PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
+    public DashboardCardFragment(DashboardComponent dashboardComponent) {
         this.component = dashboardComponent;
-        this.filter = filter;
-        this.setFilter = setFilter;
         generatedId = View.generateViewId();
         Bundle args = new Bundle();
         args.putParcelable(Constants.ARG_COMPONENT, dashboardComponent);
-        args.putParcelable(Constants.ARG_FILTER, filter);
         args.putInt("viewId", generatedId);
         setArguments(args);
     }
@@ -44,7 +36,6 @@ public class DashboardCardFragment extends Fragment implements RefreshablePurcha
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             component = getArguments().getParcelable(Constants.ARG_COMPONENT);
-            filter = getArguments().getParcelable(Constants.ARG_FILTER);
             generatedId = getArguments().getInt("viewId");
         }
     }
@@ -58,10 +49,9 @@ public class DashboardCardFragment extends Fragment implements RefreshablePurcha
         binding.imageButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), FullscreenGraphActivity.class);
             intent.putExtra(Constants.ARG_COMPONENT, component);
-            intent.putExtra(Constants.ARG_FILTER, filter);
             startActivity(intent);
         });
-        fragment = DashboardComponentsFactory.createFragment(component.getFragmentName(), filter, setFilter);
+        fragment = DashboardComponentsFactory.createFragment(component.getFragmentName());
         if (fragment.getArguments() != null) {
             fragment.getArguments().putInt(Constants.ARG_MAX_SIZE, 10);
             fragment.getArguments().putBoolean(Constants.ARG_SHOW_FILTER, false);
@@ -72,18 +62,13 @@ public class DashboardCardFragment extends Fragment implements RefreshablePurcha
         return binding.getRoot();
     }
 
-    @Override
-    public void refresh(PurchaseFilter filter) {
-        fragment.refresh(filter);
-    }
-
     /**
      *
      */
     @Override
     public void onDetach() {
         super.onDetach();
-        RefreshableFragment fragment = component.getFragment();
+        RefreshablePurchaseFragment fragment = component.getFragment();
         if (fragment != null)
             getParentFragmentManager().beginTransaction().remove(fragment);
     }

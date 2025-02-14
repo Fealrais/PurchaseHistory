@@ -8,11 +8,8 @@ import androidx.fragment.app.Fragment;
 import com.angelp.purchasehistory.databinding.FragmentProfileBinding;
 
 public class ProfileFragment extends Fragment {
-    FragmentProfileBinding binding;
-
+    private FragmentProfileBinding binding;
     public ProfileFragment() {
-        Bundle args = new Bundle();
-        setArguments(args);
     }
 
 
@@ -27,8 +24,13 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        binding = FragmentProfileBinding.inflate(inflater);
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

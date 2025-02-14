@@ -6,12 +6,12 @@ import android.text.format.DateUtils;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
-import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
-import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.data.interfaces.ViewHolder;
 import com.angelp.purchasehistory.databinding.RecyclerViewPurchaseBinding;
 import com.angelp.purchasehistory.util.AndroidUtils;
+import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
+import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +35,7 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         binding = RecyclerViewPurchaseBinding.bind(itemView);
     }
 
-    public void bind(PurchaseView purchaseView, FragmentManager fragmentManager, Runnable refresh) {
+    public void bind(PurchaseView purchaseView, FragmentManager fragmentManager) {
         editDialog = new PurchaseEditDialog();
         this.fragmentManager = fragmentManager;
         if (purchaseView.getPrice() != null)
@@ -43,14 +43,12 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         else binding.purchasePriceText.setText("-");
         if (purchaseView.getNote() != null) {
             binding.purchaseNoteText.setText(purchaseView.getNote());
-        }
-        else binding.purchaseNoteText.setText("");
+        } else binding.purchaseNoteText.setText("");
         if (purchaseView.getTimestamp() != null) {
             long epochMilli = purchaseView.getTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             CharSequence timeString = DateUtils.getRelativeTimeSpanString(epochMilli);
             binding.purchaseTimeText.setText(timeString);
-        }
-        else binding.purchaseTimeText.setText("-");
+        } else binding.purchaseTimeText.setText("-");
 
         if (purchaseView.getCategory() != null) {
             binding.purchaseCategoryText.setVisibility(View.VISIBLE);
@@ -73,16 +71,13 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
                     editDialog.setArguments(bundle);
                     editDialog.show(fragmentManager, "editDialog" + purchaseView.getBillId());
                     editDialog.setOnSuccess((newView) -> {
-                        if(newView!=null && purchaseDTO.getPrice().equals(newView.getPrice()))
-                            this.bind(newView, fragmentManager, refresh);
-                        else
-                            refresh.run();
+                        if (newView != null)
+                            this.bind(newView, fragmentManager);
                     });
                 } else PurchaseHistoryApplication.getInstance().alert("Purchase does not have an id");
 
             });
-        }
-        else binding.purchaseEditButton.setEnabled(false);
+        } else binding.purchaseEditButton.setEnabled(false);
 
 
     }

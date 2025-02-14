@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/material_dynamic_primary60"
+    android:background="@color/primaryColor"
     tools:context=".ui.home.profile.ProfileFragment">
 
 

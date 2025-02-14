@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.angelp.purchasehistory.R;
-import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
+import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class DashboardComponent implements Parcelable {
     private transient int cardIconId;
     private transient int description;
     private transient int infoDescription;
-    private transient RefreshableFragment fragment;
+    private transient RefreshablePurchaseFragment fragment;
 
     public DashboardComponent(String fragment) {
         this.fragmentName = fragment;

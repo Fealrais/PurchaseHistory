@@ -9,12 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
+import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentBarChartBinding;
-import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
@@ -42,14 +43,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
 @AndroidEntryPoint
 @NoArgsConstructor
-public class BarChartFragment extends RefreshableFragment implements OnChartValueSelectedListener {
+public class BarChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
@@ -60,46 +58,11 @@ public class BarChartFragment extends RefreshableFragment implements OnChartValu
     private boolean showFilter;
     private AppColorCollection appColorCollection;
 
-
-    public BarChartFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
-        super(filter, setFilter);
-        Bundle args = new Bundle();
-        args.putParcelable(Constants.ARG_FILTER, filter);
-        this.setArguments(args);
-    }
-
-    private static Map<LocalDate, List<CalendarReportEntry>> prepareContent(PurchaseFilter filter, CalendarReport calendarReport, List<CategoryView> categories) {
-        Map<LocalDate, List<CalendarReportEntry>> content = new HashMap<>();
-        LocalDate dateIterator = filter.getFrom();
-        for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
-            List<CalendarReportEntry> list = content.computeIfAbsent(dateIterator, (key) -> new ArrayList<>());
-
-            for (CategoryView category : categories) {
-                boolean added = false;
-                for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
-                    if (calendarReportEntry.getLocalDate().equals(dateIterator) && calendarReportEntry.getCategory().getId().equals(category.getId())) {
-                        list.add(calendarReportEntry);
-                        added = true;
-                        break;
-                    }
-                }
-                if (!added) {
-                    list.add(new CalendarReportEntry(dateIterator.format(DateTimeFormatter.ISO_LOCAL_DATE), BigDecimal.ZERO, 0L, new CategoryView()));
-                }
-            }
-            content.put(dateIterator, list);
-        }
-        return content;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            filter = getArguments().getParcelable(Constants.ARG_FILTER);
             showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
-        } else {
-            filter = new PurchaseFilter();
         }
         alertBuilder = new AlertDialog.Builder(getActivity());
     }
@@ -107,7 +70,7 @@ public class BarChartFragment extends RefreshableFragment implements OnChartValu
     @Override
     public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(Constants.ARG_FILTER, filter);
+        outState.putBoolean(Constants.ARG_SHOW_FILTER, showFilter);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -115,19 +78,25 @@ public class BarChartFragment extends RefreshableFragment implements OnChartValu
         Log.i(TAG, "onCreateView: View created");
         binding = FragmentBarChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
-        applyFilter(filter);
-        initFilterRow();
-        initGraph(binding.barChartView);
-        setData(filter);
+
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.applyFilter(filterViewModel.getFilterValue());
+        initFilterRow();
+        initGraph(binding.barChartView);
+        setData(filterViewModel.getFilterValue());
+    }
+
     private void initFilterRow() {
-        binding.graphFilterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
+        binding.graphFilterButton.setOnClickListener((v) -> openFilter());
         binding.textView.setTextColor(getContext().getColor(R.color.foreground_color));
         new Handler(Looper.getMainLooper()).post(() -> {
-            binding.graphFilterButton.setVisibility(showFilter?View.VISIBLE:View.GONE);
-            binding.textView.setVisibility(showFilter?View.VISIBLE:View.GONE);
+            binding.graphFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+            binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
         });
     }
 
@@ -197,20 +166,11 @@ public class BarChartFragment extends RefreshableFragment implements OnChartValu
         return new BarEntry(x, list, entries);
     }
 
-    private void openFilter(Consumer<PurchaseFilter> setFilter) {
-        if (filterDialog.getFilter() == null)
-            filterDialog.setFilter(getDefaultFilter());
+    private void openFilter() {
         filterDialog.show(getParentFragmentManager(), "barchartFilterDialog");
-        filterDialog.setOnSuccess(setFilter);
     }
 
-    private void updateFilter(PurchaseFilter newFilter) {
-        this.filter = newFilter;
-        this.applyFilter(newFilter);
-        if (filterDialog.isAdded())
-            filterDialog.dismiss();
-        refresh(newFilter);
-    }
+
 
     private void applyFilter(PurchaseFilter newFilter) {
         binding.graphFilterButton.setText(R.string.filterButton);
@@ -218,7 +178,7 @@ public class BarChartFragment extends RefreshableFragment implements OnChartValu
     }
 
     public void refresh(PurchaseFilter filter) {
-        this.filter = filter;
+        applyFilter(filter);
         new Thread(() -> {
             setData(filter);
             getActivity().runOnUiThread(() -> {
@@ -257,5 +217,29 @@ public class BarChartFragment extends RefreshableFragment implements OnChartValu
         alertBuilder.setMessage(text).setTitle(title);
         dialog = alertBuilder.create();
         dialog.show();
+    }
+
+    private static Map<LocalDate, List<CalendarReportEntry>> prepareContent(PurchaseFilter filter, CalendarReport calendarReport, List<CategoryView> categories) {
+        Map<LocalDate, List<CalendarReportEntry>> content = new HashMap<>();
+        LocalDate dateIterator = filter.getFrom();
+        for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
+            List<CalendarReportEntry> list = content.computeIfAbsent(dateIterator, (key) -> new ArrayList<>());
+
+            for (CategoryView category : categories) {
+                boolean added = false;
+                for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
+                    if (calendarReportEntry.getLocalDate().equals(dateIterator) && calendarReportEntry.getCategory().getId().equals(category.getId())) {
+                        list.add(calendarReportEntry);
+                        added = true;
+                        break;
+                    }
+                }
+                if (!added) {
+                    list.add(new CalendarReportEntry(dateIterator.format(DateTimeFormatter.ISO_LOCAL_DATE), BigDecimal.ZERO, 0L, new CategoryView()));
+                }
+            }
+            content.put(dateIterator, list);
+        }
+        return content;
     }
 }

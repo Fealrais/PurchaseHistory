@@ -16,26 +16,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
+import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.FragmentPurchasesListCardBinding;
 import com.angelp.purchasehistory.ui.FullscreenGraphActivity;
-import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchasesAdapter;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchasesViewModel;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import dagger.hilt.android.AndroidEntryPoint;
-import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Consumer;
-
-import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
 @AndroidEntryPoint
-@NoArgsConstructor
-public class PurchaseListPurchaseFragment extends RefreshableFragment {
+public class PurchaseListPurchaseFragment extends RefreshablePurchaseFragment {
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     private FragmentPurchasesListCardBinding binding;
@@ -44,33 +39,26 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
     private boolean showFilter;
     private int maxSize;
 
-    public PurchaseListPurchaseFragment(PurchaseFilter filter, Consumer<PurchaseFilter> onFilterChange) {
-        super(filter, onFilterChange);
+    public PurchaseListPurchaseFragment() {
         Bundle args = new Bundle();
-        args.putParcelable(Constants.ARG_FILTER, filter);
         this.setArguments(args);
     }
 
-    /**
-     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     *                           from a previous saved state as given here.
-     */
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentPurchasesListCardBinding.inflate(inflater, container, false);
         maxSize = -1;
         if (getArguments() != null) {
-            filter = getArguments().getParcelable(Constants.ARG_FILTER);
             showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
             maxSize = getArguments().getInt(Constants.ARG_MAX_SIZE);
         }
         purchasesViewModel = new ViewModelProvider(this).get(PurchasesViewModel.class);
-        initializePurchasesRecyclerView(maxSize);
+
+        initializePurchasesRecyclerView(maxSize, filterViewModel.getFilterValue());
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentPurchasesListCardBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -80,13 +68,13 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
         binding = null;
     }
 
-    private void initializePurchasesRecyclerView(int maxSize) {
+    private void initializePurchasesRecyclerView(int maxSize, PurchaseFilter filter) {
         new Thread(() -> {
             List<PurchaseView> purchases = purchasesViewModel.getPurchaseClient().getAllPurchases(filter);
-            purchasesAdapter = new PurchasesAdapter(purchases, getActivity(), () -> setFilter.accept(filter));
+            purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
             initFilterRow();
-            applyFilter(filter);
             setupShowMoreButton(purchases.size(), maxSize);
+            applyFilter(filter);
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             new Handler(Looper.getMainLooper()).post(() -> {
@@ -104,7 +92,6 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
             Intent intent = new Intent(getActivity(), FullscreenGraphActivity.class);
             DashboardComponent dashboardComponent = new DashboardComponent("PurchaseListPurchaseFragment");
             intent.putExtra(Constants.ARG_COMPONENT, dashboardComponent);
-            intent.putExtra(Constants.ARG_FILTER, filter);
             startActivity(intent);
         });
         updateSeeAllButton(purchaseSize, maxSize);
@@ -137,7 +124,7 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
     }
 
     private void initFilterRow() {
-        binding.filterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
+        binding.filterButton.setOnClickListener((v) -> openFilter());
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.filterDateText.setTextColor(getContext().getColor(R.color.foreground_color));
             binding.filterRow.setVisibility(showFilter ? View.VISIBLE : View.GONE);
@@ -145,25 +132,17 @@ public class PurchaseListPurchaseFragment extends RefreshableFragment {
     }
 
     private void applyFilter(PurchaseFilter newFilter) {
-        filter = newFilter;
+        filterViewModel.updateFilter(newFilter);
+        ;
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.filterButton.setText(R.string.filterButton);
             binding.filterDateText.setText(newFilter.getReadableString());
         });
     }
 
-    private void openFilter(Consumer<PurchaseFilter> setFilter) {
-        if (filterDialog.getFilter() == null)
-            filterDialog.setFilter(getDefaultFilter());
+    private void openFilter() {
         filterDialog.show(getParentFragmentManager(), "barchartFilterDialog");
-        filterDialog.setOnSuccess(setFilter);
     }
 
-    private void updateFilter(PurchaseFilter newFilter) {
-        this.applyFilter(newFilter);
-        if (filterDialog.isAdded())
-            filterDialog.dismiss();
-        refresh(newFilter);
-    }
 
 }

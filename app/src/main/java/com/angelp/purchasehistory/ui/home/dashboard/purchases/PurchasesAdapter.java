@@ -25,14 +25,12 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
     @Getter
     private final List<PurchaseView> purchaseViews = new ArrayList<>();
     private final FragmentActivity fragmentActivity;
-    private final Runnable refreshDashboard;
     @Setter
     private int limit = -1;
 
-    public PurchasesAdapter(List<PurchaseView> purchaseViews, FragmentActivity fragmentActivity, Runnable refreshDashboard) {
+    public PurchasesAdapter(List<PurchaseView> purchaseViews, FragmentActivity fragmentActivity) {
         setPurchaseViews(purchaseViews);
         this.fragmentActivity = fragmentActivity;
-        this.refreshDashboard = refreshDashboard;
     }
 
     public void setPurchaseViews(List<PurchaseView> purchaseViews) {
@@ -78,7 +76,7 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
     public void onBindViewHolder(@NonNull @NotNull ViewHolder<PurchaseView> holder, int position) {
         if (purchaseViews.size() <= position) return;
         PurchaseView purchaseView = purchaseViews.get(position);
-        holder.bind(purchaseView, fragmentActivity.getSupportFragmentManager(), refreshDashboard);
+        holder.bind(purchaseView, fragmentActivity.getSupportFragmentManager());
     }
 
     private void removePurchase(int index) {

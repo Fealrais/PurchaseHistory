@@ -128,7 +128,6 @@ public class QrScannerFragment extends Fragment {
                 }
             });
         }).start();
-
     }
 
     private void openCameraFlow(LayoutInflater inflater) {

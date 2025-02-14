@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
+import com.angelp.purchasehistory.data.filters.PurchaseFilterSingleton;
 import com.angelp.purchasehistory.databinding.FragmentPurchaseFilterDialogBinding;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
@@ -31,7 +32,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
@@ -44,13 +44,16 @@ public class PurchaseFilterDialog extends DialogFragment {
 
     @Inject
     PurchaseClient purchaseClient;
+    @Inject
+    PurchaseFilterSingleton filterViewModel;
+
     private FragmentPurchaseFilterDialogBinding binding;
     private DatePickerFragment datePickerFrom;
     private DatePickerFragment datePickerTo;
     private ArrayAdapter<CategoryView> categoryAdapter;
     private PurchaseFilter filter;
     private List<CategoryView> categoryOptions = new ArrayList<>();
-    private Consumer<PurchaseFilter> onSuccess;
+
 
     public PurchaseFilterDialog(boolean containCategory) {
         this.containCategory = containCategory;
@@ -60,6 +63,20 @@ public class PurchaseFilterDialog extends DialogFragment {
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i(getTag(), "onCreateView: View created");
         binding = FragmentPurchaseFilterDialogBinding.inflate(inflater, container, false);
+        filterViewModel.getFilter().observe(getViewLifecycleOwner(), this::updateFilter);
+        updateFilter(filterViewModel.getFilterValue());
+        setupDatePickers();
+        setupCategorySpinner(containCategory);
+        fillEditForm(filter);
+        binding.purchaseFilterSubmitButton.setOnClickListener((view) -> {
+            filterViewModel.updateFilter(filter);
+            this.dismiss();
+        });
+
+        return binding.getRoot();
+    }
+
+    private void setupDatePickers() {
         datePickerFrom = new DatePickerFragment();
         datePickerTo = new DatePickerFragment();
         datePickerFrom.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
@@ -74,7 +91,6 @@ public class PurchaseFilterDialog extends DialogFragment {
             if (getActivity() != null)
                 getActivity().runOnUiThread(this::resetForm);
         });
-        binding.purchaseFilterFilterButton.setOnClickListener((view) -> onSuccess.accept(filter));
         binding.purchaseFilterFromDate.setOnClickListener((v) -> datePickerFrom.show(getParentFragmentManager(), "datePickerFrom"));
         binding.purchaseFilterToDate.setOnClickListener((v) -> datePickerTo.show(getParentFragmentManager(), "datePickerTo"));
         binding.filterWeek.setOnClickListener((v)->{
@@ -102,9 +118,6 @@ public class PurchaseFilterDialog extends DialogFragment {
             LocalDate to = LocalDate.now().minusYears(1).withMonth(12).withDayOfMonth(31);
             quickUpdateFilter(from,to);
         });
-        setupCategorySpinner(containCategory);
-        fillEditForm(filter);
-        return binding.getRoot();
     }
 
     private void quickUpdateFilter(LocalDate from) {
@@ -171,11 +184,10 @@ public class PurchaseFilterDialog extends DialogFragment {
     }
 
     private void resetForm() {
-        this.filter = getDefaultFilter();
+        this.updateFilter(getDefaultFilter());
         binding.purchaseFilterCategorySpinner.setSelection(0);
         binding.purchaseFilterToDate.setText(R.string.to);
         binding.purchaseFilterFromDate.setText(R.string.from);
-        onSuccess.accept(filter);
     }
 
     @Override
@@ -191,5 +203,9 @@ public class PurchaseFilterDialog extends DialogFragment {
             return;
         }
         super.show(manager, tag);
+    }
+
+    private void updateFilter(PurchaseFilter observedFilter) {
+        filter = observedFilter;
     }
 }

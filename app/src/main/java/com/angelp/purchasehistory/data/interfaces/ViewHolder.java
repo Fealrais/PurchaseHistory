@@ -10,5 +10,5 @@ public abstract class ViewHolder<T> extends RecyclerView.ViewHolder{
     public ViewHolder(@NonNull @NotNull View itemView) {
         super(itemView);
     }
-    abstract public void bind(T object, FragmentManager fragmentManager, Runnable onItemDelete);
+    abstract public void bind(T object, FragmentManager fragmentManager);
 }

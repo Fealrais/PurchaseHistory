@@ -3,8 +3,6 @@ package com.angelp.purchasehistory.ui.home.dashboard;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,37 +27,30 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
 @NoArgsConstructor
 @AndroidEntryPoint
-public class DashboardFragment extends Fragment implements RefreshablePurchaseFragment, CustomizableDashboard {
+public class DashboardFragment extends RefreshablePurchaseFragment implements CustomizableDashboard {
     private final String TAG = this.getClass().getSimpleName();
     private final Gson gson = new Gson();
     private FragmentDashboardBinding binding;
     private PurchaseFilterDialog filterDialog;
     private List<DashboardComponent> selectedFragments = new ArrayList<>();
-    private PurchaseFilter filter = Constants.getDefaultFilter();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
-        initializeDashboardFragments();
-        initializeFromArgs(savedInstanceState);
-        filterDialog = new PurchaseFilterDialog(false);
-        this.applyFilter(filter);
-        binding.dashboardFilterButton.setOnClickListener(v -> openFilter(this::updateFilter));
-        binding.customizeDashboardButton.setOnClickListener(v -> openCustomizationDialog());
         return binding.getRoot();
     }
 
-    private void initializeFromArgs(Bundle state) {
-        if (state == null) return;
-        PurchaseFilter purchaseFilter = state.getParcelable(Constants.DASHBOARD_FILTER);
-        if (purchaseFilter != null) filter = purchaseFilter;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initializeDashboardFragments();
+        filterDialog = new PurchaseFilterDialog(false);
+        binding.dashboardFilterButton.setOnClickListener(v -> openFilter());
+        binding.customizeDashboardButton.setOnClickListener(v -> openCustomizationDialog());
     }
 
     private void initializeDashboardFragments() {
@@ -100,51 +91,24 @@ public class DashboardFragment extends Fragment implements RefreshablePurchaseFr
         if (!binding.dashboardFilterButton.isEnabled()) binding.dashboardFilterButton.setEnabled(true);
     }
 
-    private PurchaseFilter loadFilterArg(Bundle bundle) {
-        if (bundle == null || bundle.getParcelable(Constants.DASHBOARD_FILTER) == null)
-            return getDefaultFilter();
-        return bundle.getParcelable(Constants.DASHBOARD_FILTER);
-    }
-
     private void applyFilter(PurchaseFilter newFilter) {
-        this.filter = newFilter;
-        new Handler(Looper.getMainLooper()).post(() -> {
-            binding.dashboardFilterButton.setText(R.string.filterButton);
-            binding.dashboardFilterDateText.setText(newFilter.getReadableString());
-        });
+        binding.dashboardFilterButton.setText(R.string.filterButton);
+        binding.dashboardFilterDateText.setText(newFilter.getReadableString());
     }
 
-    private void openFilter(Consumer<PurchaseFilter> setFilter) {
-        if (filterDialog.getFilter() == null)
-            filterDialog.setFilter(getDefaultFilter());
+    private void openFilter() {
         filterDialog.show(getParentFragmentManager(), "purchasesFilterDialog");
-        filterDialog.setOnSuccess(setFilter);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.filter = loadFilterArg(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(Constants.DASHBOARD_FILTER, filter);
     }
 
     public void refresh(PurchaseFilter filter) {
-        for (int i = 0; i < binding.dashboardFragmentsLinearLayout.getChildCount(); i++) {
-            Fragment fragment = getParentFragmentManager().findFragmentByTag(Constants.DASHBOARD_FRAGMENT + i);
-            refreshFragment(filter, fragment);
-        }
+        applyFilter(filter);
     }
 
-    private void refreshFragment(PurchaseFilter filter, Fragment fragment) {
-        if (fragment instanceof RefreshablePurchaseFragment refreshablePurchaseFragment) {
-            refreshablePurchaseFragment.refresh(filter);
-        }
-    }
 
     private void setupFragments(List<DashboardComponent> fragments, List<DashboardComponent> newFragments) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
@@ -156,7 +120,7 @@ public class DashboardFragment extends Fragment implements RefreshablePurchaseFr
         for (int i = 0; i < newFragments.size(); i++) {
             DashboardComponent selectedFragment = newFragments.get(i);
             if (selectedFragment.isVisible()) {
-                DashboardCardFragment dashboardCardFragment = new DashboardCardFragment(selectedFragment, filter, this::updateFilter);
+                DashboardCardFragment dashboardCardFragment = new DashboardCardFragment(selectedFragment);
                 transaction.add(binding.dashboardFragmentsLinearLayout.getId(), dashboardCardFragment, "dashboardFragment" + i);
             }
         }
@@ -172,14 +136,5 @@ public class DashboardFragment extends Fragment implements RefreshablePurchaseFr
             selectedFragments.addAll(updatedFragments);
         });
         dialog.show(getParentFragmentManager(), "customizationDialog");
-    }
-
-    private void updateFilter(PurchaseFilter newFilter) {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            this.applyFilter(newFilter);
-            if (filterDialog.isAdded())
-                filterDialog.dismiss();
-            refresh(newFilter);
-        });
     }
 }

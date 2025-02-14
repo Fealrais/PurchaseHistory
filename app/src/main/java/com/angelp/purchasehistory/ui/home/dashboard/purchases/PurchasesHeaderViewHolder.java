@@ -22,7 +22,7 @@ public class PurchasesHeaderViewHolder extends ViewHolder<PurchaseView> {
         binding = RecyclerViewPurchaseHeaderBinding.bind(itemView);
     }
 
-    public void bind(PurchaseView purchaseView, FragmentManager fragmentManager, Runnable onDelete) {
+    public void bind(PurchaseView purchaseView, FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
         PurchaseViewHeader header = (PurchaseViewHeader) purchaseView;
         binding.purchaseHeaderTimeText.setText(header.getTitle());

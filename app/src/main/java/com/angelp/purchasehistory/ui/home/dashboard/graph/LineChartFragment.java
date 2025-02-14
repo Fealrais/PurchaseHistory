@@ -1,6 +1,8 @@
 package com.angelp.purchasehistory.ui.home.dashboard.graph;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,12 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
+import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentLineChartBinding;
-import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
@@ -40,13 +43,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
-
-import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
 @AndroidEntryPoint
 @NoArgsConstructor
-public class LineChartFragment extends RefreshableFragment implements OnChartValueSelectedListener {
+public class LineChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MMM yy");
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
@@ -56,53 +56,39 @@ public class LineChartFragment extends RefreshableFragment implements OnChartVal
     private FragmentLineChartBinding binding;
     private boolean showFilter;
     private AppColorCollection appColorCollection;
-
-    public LineChartFragment(PurchaseFilter filter, Consumer<PurchaseFilter> setFilter) {
-        super(filter, setFilter);
-        Bundle args = new Bundle();
-        args.putParcelable(Constants.ARG_FILTER, filter);
-        this.setArguments(args);
-    }
+    private AlertDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            filter = getArguments().getParcelable(Constants.ARG_FILTER);
             showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
-        } else {
-            filter = new PurchaseFilter();
-            filter.setFrom(LocalDate.now().withDayOfMonth(1));
-            filter.setTo(LocalDate.now());
         }
         alertBuilder = new AlertDialog.Builder(getActivity());
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(Constants.ARG_FILTER, filter);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: View created");
-
         binding = FragmentLineChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
-        applyFilter(filter);
+        return binding.getRoot();
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.applyFilter(filterViewModel.getFilterValue());
         initFilterRow();
         initGraph(binding.lineChartView);
-        setData(filter);
-        return binding.getRoot();
+        setData(filterViewModel.getFilterValue());
     }
 
     private void initFilterRow() {
-        binding.graphFilterButton.setOnClickListener((v) -> openFilter(this::updateFilter));
+        binding.graphFilterButton.setOnClickListener((v) -> openFilter());
         binding.textView.setTextColor(getContext().getColor(R.color.foreground_color));
         new Handler(Looper.getMainLooper()).post(() -> {
-            binding.graphFilterButton.setVisibility(showFilter?View.VISIBLE:View.GONE);
-            binding.textView.setVisibility(showFilter?View.VISIBLE:View.GONE);
+            binding.graphFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+            binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
         });
     }
 
@@ -124,18 +110,20 @@ public class LineChartFragment extends RefreshableFragment implements OnChartVal
         new Thread(() -> {
             CalendarReport calendarReport = purchaseClient.getCalendarReport(filter);
             Map<LocalDate, List<Entry>> entriesMap = getEntries(calendarReport);
-            List<Integer> colors = getColors();
+            ArrayList<Integer> colors = getColors();
             LineData data = new LineData();
-            int i=0;
+            int i = 0;
             for (Map.Entry<LocalDate, List<Entry>> entry : entriesMap.entrySet()) {
                 List<Entry> entries = entry.getValue();
-                int color = colors.get(i++);
 
                 LineDataSet lineDataSet = new LineDataSet(entries, "Purchases");
 //                lineDataSet.setDrawIcons(false);
                 lineDataSet.setDrawCircleHole(false);
-                lineDataSet.setColor(color);
-                lineDataSet.setCircleColor(color);
+                if (i < colors.size()) {
+                    int color = colors.get(i++);
+                    lineDataSet.setColor(color);
+                    lineDataSet.setCircleColor(color);
+                }
                 lineDataSet.setLabel(entry.getKey().format(DATE_TIME_FORMATTER));
                 data.addDataSet(lineDataSet);
             }
@@ -144,29 +132,32 @@ public class LineChartFragment extends RefreshableFragment implements OnChartVal
         }).start();
     }
 
-private List<Integer> getColors() {
-    List<Integer> list = new ArrayList<>();
-    list.add(getResources().getColor(R.color.line_chart_color_1, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_2, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_3, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_4, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_5, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_6, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_7, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_8, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_9, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_10, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_11, getContext().getTheme()));
-    list.add(getResources().getColor(R.color.line_chart_color_12, getContext().getTheme()));
-    return list;
-}
+    private ArrayList<Integer> getColors() {
+        ArrayList<Integer> list = new ArrayList<>();
+        Context context = getContext();
+        Resources resources = getResources();
+        if (context == null) return list;
+        list.add(resources.getColor(R.color.line_chart_color_1, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_2, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_3, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_4, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_5, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_6, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_7, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_8, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_9, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_10, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_11, context.getTheme()));
+        list.add(resources.getColor(R.color.line_chart_color_12, context.getTheme()));
+        return list;
+    }
 
     @NotNull
-    private Map<LocalDate,List<Entry>> getEntries(CalendarReport calendarReport) {
+    private Map<LocalDate, List<Entry>> getEntries(CalendarReport calendarReport) {
         Map<LocalDate, List<Entry>> map = new HashMap<>();
         for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
             LocalDate key = calendarReportEntry.getLocalDate().withDayOfMonth(1);
-            List<Entry> entries = map.computeIfAbsent(key,(k)->new ArrayList<>());
+            List<Entry> entries = map.computeIfAbsent(key, (k) -> new ArrayList<>());
             Entry entry = parseEntries(calendarReportEntry);
             entries.add(entry);
             map.put(key, entries);
@@ -193,28 +184,18 @@ private List<Integer> getColors() {
         return new Entry(x, entry.getSum().floatValue(), entry);
     }
 
-    private void openFilter(Consumer<PurchaseFilter> setFilter) {
-        if (filterDialog.getFilter() == null)
-            filterDialog.setFilter(getDefaultFilter());
+    private void openFilter() {
         filterDialog.show(getParentFragmentManager(), "purchasesFilterDialog");
-        filterDialog.setOnSuccess(setFilter);
     }
 
-    private void updateFilter(PurchaseFilter newFilter) {
-        this.filter = newFilter;
-        this.applyFilter(newFilter);
-        if (filterDialog.isAdded())
-            filterDialog.dismiss();
-        refresh(newFilter);
-    }
+
 
     private void applyFilter(PurchaseFilter newFilter) {
         binding.graphFilterButton.setText(R.string.filterButton);
-        binding.textView.setText(filter.getReadableString());
+        binding.textView.setText(newFilter.getReadableString());
     }
 
     public void refresh(PurchaseFilter filter) {
-        this.filter = filter;
         new Thread(() -> {
             setData(filter);
             getActivity().runOnUiThread(() -> {
@@ -232,19 +213,21 @@ private List<Integer> getColors() {
         setTooltipText(data.getLocalDate().format(DateTimeFormatter.ofPattern("dd MMM yyyy")), getDescription(data));
     }
 
-    public String getDescription(CalendarReportEntry entry) {
-        return getString(R.string.total_sum) + ": " + entry.getSum() + "\n" +
-                getString(R.string.number_of_purchases) + ": " + entry.getCount();
-    }
-
     @Override
     public void onNothingSelected() {
 
     }
 
+    public String getDescription(CalendarReportEntry entry) {
+        return getString(R.string.total_sum) + ": " + entry.getSum() + "\n" +
+                getString(R.string.number_of_purchases) + ": " + entry.getCount();
+    }
+
     private void setTooltipText(String title, String text) {
+        if (dialog != null && dialog.isShowing()) dialog.dismiss();
+
         alertBuilder.setMessage(text).setTitle(title);
-        AlertDialog dialog = alertBuilder.create();
+        dialog = alertBuilder.create();
         dialog.show();
     }
 }

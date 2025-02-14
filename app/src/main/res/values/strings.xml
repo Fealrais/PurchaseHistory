@@ -199,4 +199,7 @@
     <string name="help_info_stacked_bar_chart">This is a stacked bar chart displaying the summed purchases for each day, separated by categories. It provides a detailed view of each day\'s expenses, helping you to identify spending patterns and manage your budget more effectively.</string>
     <string name="help_info_line_chart">This is a line chart showing the sum of all purchases per day. It is useful for seeing spending trends and patterns over a period, allowing you to manage your budget effectively and make informed financial decisions.</string>
     <string name="help_info_pie_chart">This is a pie chart displaying all purchases within a period, grouped by category. It helps you to understand the distribution of your expenses across different categories, providing insights into where your money is going.</string>
+    <string name="menu_three_dots" translatable="false">⋮</string>
+    <string name="purchase_created_title">Bill created successfully</string>
+    <string name="submit_new_payment">Submit new payment</string>
 </resources>

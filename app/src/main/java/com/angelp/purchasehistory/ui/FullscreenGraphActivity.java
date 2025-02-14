@@ -14,18 +14,16 @@ import androidx.fragment.app.FragmentTransaction;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.factories.DashboardComponentsFactory;
-import com.angelp.purchasehistory.data.filters.PurchaseFilter;
+import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.ActivityFullscreenGraphBinding;
 import com.angelp.purchasehistory.ui.home.HomeActivity;
-import com.angelp.purchasehistory.ui.home.dashboard.RefreshableFragment;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class FullscreenGraphActivity extends AppCompatActivity {
     private static final String TAG = FullscreenGraphActivity.class.getSimpleName();
     private ActivityFullscreenGraphBinding binding;
-    private PurchaseFilter filter;
     private DashboardComponent dashboardComponent;
 
     @Override
@@ -36,7 +34,6 @@ public class FullscreenGraphActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
 
         dashboardComponent = getIntent().getParcelableExtra(Constants.ARG_COMPONENT);
-        filter = getIntent().getParcelableExtra(Constants.ARG_FILTER);
         if (dashboardComponent != null) {
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
@@ -44,7 +41,7 @@ public class FullscreenGraphActivity extends AppCompatActivity {
                 actionBar.setTitle(dashboardComponent.getTitle());
 
             }
-            RefreshableFragment fragment = DashboardComponentsFactory.createFragment(dashboardComponent.getFragmentName(), filter, this::updateFilter);
+            RefreshablePurchaseFragment fragment = DashboardComponentsFactory.createFragment(dashboardComponent.getFragmentName());
             if (fragment.getArguments() != null) {
                 fragment.getArguments().putInt(Constants.ARG_MAX_SIZE, -1);
                 fragment.getArguments().putBoolean(Constants.ARG_SHOW_FILTER, true);
@@ -101,9 +98,5 @@ public class FullscreenGraphActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
-    }
-
-    private void updateFilter(PurchaseFilter filter) {
-        this.filter = filter;
     }
 }

@@ -13,19 +13,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
-import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
-import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.components.form.CreateCategoryDialog;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.components.form.TimePickerFragment;
+import com.angelp.purchasehistory.data.filters.PurchaseFilterSingleton;
 import com.angelp.purchasehistory.databinding.FragmentPurchaseEditDialogBinding;
 import com.angelp.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
 import com.angelp.purchasehistory.util.CommonUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
+import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
+import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
+import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import dagger.hilt.android.AndroidEntryPoint;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,6 +51,9 @@ public class PurchaseEditDialog extends DialogFragment {
 
     @Inject
     PurchaseClient purchaseClient;
+    @Inject
+    PurchaseFilterSingleton filterViewModel;
+
     private PurchaseDTO purchase;
     private FragmentPurchaseEditDialogBinding binding;
     private TimePickerFragment timePicker;
@@ -59,6 +63,7 @@ public class PurchaseEditDialog extends DialogFragment {
     private List<CategoryView> allCategories = new ArrayList<>();
     private Consumer<PurchaseView> onSuccess;
     private Long purchaseId;
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -153,6 +158,7 @@ public class PurchaseEditDialog extends DialogFragment {
         boolean isSuccess = purchaseClient.deletePurchase(purchaseId);
         if (isSuccess) {
             onSuccess.accept(null);
+            filterViewModel.refresh();
             dismiss();
         }
     }
@@ -193,7 +199,9 @@ public class PurchaseEditDialog extends DialogFragment {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             resetForm();
-                            if (onSuccess != null) onSuccess.accept(purchaseView);
+                            if (onSuccess != null) {
+                                filterViewModel.refresh();
+                            };
                         });
                     }
                     dismiss();
