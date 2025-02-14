@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.angelp.purchasehistory.R;
@@ -22,11 +21,12 @@ import com.angelp.purchasehistory.databinding.FragmentPurchasesListCardBinding;
 import com.angelp.purchasehistory.ui.FullscreenGraphActivity;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchasesAdapter;
-import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchasesViewModel;
+import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
 import java.util.List;
 
 @AndroidEntryPoint
@@ -34,8 +34,9 @@ public class PurchaseListPurchaseFragment extends RefreshablePurchaseFragment {
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     private FragmentPurchasesListCardBinding binding;
-    private PurchasesViewModel purchasesViewModel;
     private PurchasesAdapter purchasesAdapter;
+    @Inject
+    PurchaseClient purchaseClient;
     private boolean showFilter;
     private int maxSize;
 
@@ -52,7 +53,6 @@ public class PurchaseListPurchaseFragment extends RefreshablePurchaseFragment {
             showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
             maxSize = getArguments().getInt(Constants.ARG_MAX_SIZE);
         }
-        purchasesViewModel = new ViewModelProvider(this).get(PurchasesViewModel.class);
 
         initializePurchasesRecyclerView(maxSize, filterViewModel.getFilterValue());
     }
@@ -70,7 +70,7 @@ public class PurchaseListPurchaseFragment extends RefreshablePurchaseFragment {
 
     private void initializePurchasesRecyclerView(int maxSize, PurchaseFilter filter) {
         new Thread(() -> {
-            List<PurchaseView> purchases = purchasesViewModel.getPurchaseClient().getAllPurchases(filter);
+            List<PurchaseView> purchases = purchaseClient.getAllPurchases(filter);
             purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
             initFilterRow();
             setupShowMoreButton(purchases.size(), maxSize);
@@ -114,13 +114,18 @@ public class PurchaseListPurchaseFragment extends RefreshablePurchaseFragment {
         }
         new Thread(() -> {
             purchasesAdapter.getPurchaseViews().clear();
-            List<PurchaseView> allPurchases = purchasesViewModel.getPurchaseClient().getAllPurchases(filter);
+            List<PurchaseView> allPurchases = purchaseClient.getAllPurchases(filter);
             Log.i(TAG, "Received purchases list with size of " + allPurchases.size());
+            updateAdapter(allPurchases);
+        }).start();
+    }
+
+    private void updateAdapter(List<PurchaseView> allPurchases) {
+        new Handler(Looper.getMainLooper()).post(()->{
             purchasesAdapter.setPurchaseViews(allPurchases);
             updateSeeAllButton(allPurchases.size(), maxSize);
-            getActivity().runOnUiThread(() -> purchasesAdapter.notifyDataSetChanged());
             Log.i(TAG, "Adapter notified");
-        }).start();
+        });
     }
 
     private void initFilterRow() {
@@ -133,7 +138,6 @@ public class PurchaseListPurchaseFragment extends RefreshablePurchaseFragment {
 
     private void applyFilter(PurchaseFilter newFilter) {
         filterViewModel.updateFilter(newFilter);
-        ;
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.filterButton.setText(R.string.filterButton);
             binding.filterDateText.setText(newFilter.getReadableString());

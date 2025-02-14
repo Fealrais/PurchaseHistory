@@ -75,7 +75,7 @@ dependencies {
     implementation("com.github.Mohammad3125:KavehColorPicker:v1.0.0")
     implementation ("uk.co.samuelwall:material-tap-target-prompt:3.0.0")
 
-
+    implementation("org.aspectj:aspectjweaver:1.9.22.1")
 
     // Chart and graph library
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")

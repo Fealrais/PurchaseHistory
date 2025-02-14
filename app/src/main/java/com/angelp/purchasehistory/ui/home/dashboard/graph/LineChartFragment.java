@@ -32,7 +32,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import dagger.hilt.android.AndroidEntryPoint;
-import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -45,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 
 @AndroidEntryPoint
-@NoArgsConstructor
 public class LineChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MMM yy");
     private final String TAG = this.getClass().getSimpleName();
@@ -57,6 +55,11 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     private boolean showFilter;
     private AppColorCollection appColorCollection;
     private AlertDialog dialog;
+
+    public LineChartFragment() {
+        Bundle args = new Bundle();
+        this.setArguments(args);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

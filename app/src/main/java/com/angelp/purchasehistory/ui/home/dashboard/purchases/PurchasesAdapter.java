@@ -36,6 +36,7 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
     public void setPurchaseViews(List<PurchaseView> purchaseViews) {
         this.purchaseViews.clear();
         this.purchaseViews.addAll(separateByMonth(purchaseViews));
+        notifyDataSetChanged();
     }
 
     private List<PurchaseView> separateByMonth(List<PurchaseView> purchaseViews) {

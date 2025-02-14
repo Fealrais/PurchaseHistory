@@ -50,6 +50,11 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     private boolean showFilter;
     private AppColorCollection appColorCollection;
 
+    public PieChartFragment() {
+        Bundle args = new Bundle();
+        this.setArguments(args);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 

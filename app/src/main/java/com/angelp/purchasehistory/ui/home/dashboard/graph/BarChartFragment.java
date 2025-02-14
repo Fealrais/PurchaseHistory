@@ -32,7 +32,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import dagger.hilt.android.AndroidEntryPoint;
-import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -46,7 +45,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @AndroidEntryPoint
-@NoArgsConstructor
 public class BarChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
@@ -57,6 +55,11 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
     private AlertDialog dialog;
     private boolean showFilter;
     private AppColorCollection appColorCollection;
+
+    public BarChartFragment() {
+        Bundle args = new Bundle();
+        this.setArguments(args);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
