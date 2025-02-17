@@ -19,7 +19,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-import static com.angelp.purchasehistory.data.Constants.PURCHASE_EDIT_DIALOG_ID_KEY;
+import static com.angelp.purchasehistory.data.Constants.Arguments.PURCHASE_EDIT_DIALOG_ID_KEY;
 
 @Getter
 public class PurchasesViewHolder extends ViewHolder<PurchaseView> {

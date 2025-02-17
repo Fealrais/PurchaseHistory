@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Gray">#c4c4c4</color>
@@ -11,13 +8,16 @@
     <color name="light_blue_600">#FF039BE5</color>
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
-    <!-- Primary Colors (Blue) -->
-    <color name="blue_500">#2196F3</color> <!-- Primary Blue -->
-    <color name="blue_700">#1976D2</color> <!-- Darker Variant of Blue -->
-    <color name="colorOnPrimary">#FFFFFF</color> <!-- White for text/icons on Blue -->
-    <color name="primaryColor">#64A4BD</color>
+    <color name="colorOnPrimary">#0D47A1</color> <!-- White for text/icons on Blue -->
+
+    <!--###################################################-->
+    <color name="primaryColor">#42d3cc</color>
+    <color name="secondaryColor">#a0d9d4</color>
+    <color name="accentColor">#77bbc9</color>
+    <!--###################################################-->
+
+
     <!-- Secondary Colors (Purple) -->
-    <color name="purple_500">#9C27B0</color> <!-- Primary Purple -->
     <color name="purple_700">#7B1FA2</color> <!-- Darker Variant of Purple -->
     <color name="colorOnSecondary">#FFFFFF</color> <!-- White for text/icons on Purple -->
 

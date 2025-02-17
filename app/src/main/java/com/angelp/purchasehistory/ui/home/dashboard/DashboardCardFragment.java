@@ -53,8 +53,8 @@ public class DashboardCardFragment extends Fragment {
         });
         fragment = DashboardComponentsFactory.createFragment(component.getFragmentName());
         if (fragment.getArguments() != null) {
-            fragment.getArguments().putInt(Constants.ARG_MAX_SIZE, 10);
-            fragment.getArguments().putBoolean(Constants.ARG_SHOW_FILTER, false);
+            fragment.getArguments().putInt(Constants.Arguments.ARG_MAX_SIZE, 10);
+            fragment.getArguments().putBoolean(Constants.Arguments.ARG_SHOW_FILTER, false);
         }
         getParentFragmentManager().beginTransaction()
                 .replace(binding.fragmentContainerView.getId(), fragment)

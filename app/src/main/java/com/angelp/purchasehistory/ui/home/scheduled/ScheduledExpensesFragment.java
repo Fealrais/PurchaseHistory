@@ -1,7 +1,9 @@
 package com.angelp.purchasehistory.ui.home.scheduled;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,18 +19,21 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.model.ScheduledNotification;
 import com.angelp.purchasehistory.databinding.FragmentScheduledExpensesBinding;
 import com.angelp.purchasehistory.receivers.scheduled.InitiateNotificationReceiver;
 import com.angelp.purchasehistory.web.clients.ScheduledExpenseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
+import com.google.gson.Gson;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.angelp.purchasehistory.data.Constants.NOTIFICATION_EXTRA_ARG;
+import static android.content.Context.MODE_PRIVATE;
+import static com.angelp.purchasehistory.data.Constants.Arguments.NOTIFICATION_EXTRA_ARG;
 
 @AndroidEntryPoint
 public class ScheduledExpensesFragment extends Fragment {
@@ -36,6 +41,7 @@ public class ScheduledExpensesFragment extends Fragment {
     private FragmentScheduledExpensesBinding binding;
     @Inject
     ScheduledExpenseClient scheduledExpenseClient;
+    private final Gson gson = new Gson();
     private ScheduledExpenseAdapter adapter;
     private EditScheduledExpenseDialog editScheduledExpenseDialog;
 
@@ -63,6 +69,21 @@ public class ScheduledExpensesFragment extends Fragment {
 
             adapter = new ScheduledExpenseAdapter(scheduledExpenses, new ScheduledExpenseAdapter.OnItemClickListener() {
                 @Override
+                public void onSilenceToggleTrigger(ScheduledExpenseView item, boolean silenced) {
+                    new Thread(() -> {
+                        Context context = getContext();
+                        if (context == null) return;
+                        SharedPreferences preferences = context.getSharedPreferences(Constants.Preferences.SILENCED_NOTIFICATIONS, MODE_PRIVATE);
+                        preferences.edit().putBoolean(item.getId().toString(), silenced).apply();
+                        Intent intent = new Intent(context, InitiateNotificationReceiver.class);
+                        ArrayList<ScheduledNotification> list = new ArrayList<>();
+                        list.add(new ScheduledNotification(item));
+                        intent.putParcelableArrayListExtra(Constants.Arguments.NOTIFICATION_EXTRA_ARG, list);
+                        context.sendBroadcast(intent);
+                    }).start();
+                }
+
+                @Override
                 public void onTriggerClick(ScheduledExpenseView item) {
                     new Thread(() -> {
                         try {
@@ -73,6 +94,7 @@ public class ScheduledExpensesFragment extends Fragment {
                         }
                     }).start();
                 }
+
                 @Override
                 public void onEditClick(ScheduledExpenseView item) {
                     editScheduledExpenseDialog = new EditScheduledExpenseDialog(item, (view) -> {
@@ -156,6 +178,7 @@ public class ScheduledExpensesFragment extends Fragment {
             }
         });
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

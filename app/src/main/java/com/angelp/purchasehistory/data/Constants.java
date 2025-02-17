@@ -7,23 +7,20 @@ import com.angelp.purchasehistory.data.tour.TourStep;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public final class Constants {
-    public static final String PURCHASE_EDIT_DIALOG_ID_KEY = "purchaseId";
-    public static final String ARG_SHOW_FILTER = "show_filter";
-    public static final String APP_BOOT_RECEIVER = "APP_BOOT_RECEIVER";
-    public static final String NOTIFICATION_EXTRA_ARG = "scheduledNotifications";
-    public static final String ARG_MAX_SIZE = "max_size";
     public static final int GRAPH_MIN_HEIGHT = 1000;
-    public static final String ARG_COMPONENT = "component";
     public final static List<DashboardComponent> DEFAULT_COMPONENTS = new ArrayList<>();
-    public static final String DASHBOARD_FRAGMENT = "dashboardFragment";
-    public static final String DASHBOARD_PREFS = "dashboard_prefs";
-    public static final String IS_FIRST_TIME_OPEN = "isFirstTimeOpen_HomeActivity";
-    public static final String APP_PREFERENCES = "app_preferences";
+    public static final String APP_BOOT_RECEIVER = "APP_BOOT_RECEIVER";
+    public static final String ARG_COMPONENT = "component";
     public static final List<TourStep> tourSteps = new ArrayList<>();
     public static final String DASHBOARD_FILTER = "dashboard_filter";
+
+    public static PurchaseFilter getDefaultFilter() {
+        return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now(), null, null);
+    }
 
     static {
         DEFAULT_COMPONENTS.add(new DashboardComponent("PieChartFragment"));
@@ -39,8 +36,33 @@ public final class Constants {
         tourSteps.add(new TourStep(R.id.navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses_secondary));
         tourSteps.add(new TourStep(R.id.navigation_profile, R.string.tour_navigation_profile, R.string.tour_navigation_profile_secondary));
     }
+    public static HashMap<String, Integer> errorsMap= new HashMap<>();
+    static {
+        errorsMap.put("err1001", R.string.err1001);
+        errorsMap.put("err1002", R.string.err1002);
+        errorsMap.put("err1003", R.string.err1003);
+        errorsMap.put("err1004", R.string.err1004);
+        errorsMap.put("err1005", R.string.err1005);
+        errorsMap.put("err1006", R.string.err1006);
+        errorsMap.put("err1007", R.string.err1007);
+        errorsMap.put("err1008", R.string.err1008);
+        errorsMap.put("err1009", R.string.err1009);
+        errorsMap.put("err1010", R.string.err1010);
+    }
 
-    public static PurchaseFilter getDefaultFilter() {
-        return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now(), null, null);
+    public interface Preferences {
+        String IS_FIRST_TIME_OPEN = "isFirstTimeOpen_HomeActivity";
+        String DASHBOARD_PREFS = "dashboard_prefs";
+        String APP_PREFERENCES = "app_preferences";
+        String SILENCED_NOTIFICATIONS = "silenced_notifications";
+        String PREFERRED_CURRENCY = "preferred_currency";
+    }
+
+    public interface Arguments {
+        String PURCHASE_EDIT_DIALOG_ID_KEY = "purchaseId";
+        String ARG_SHOW_FILTER = "show_filter";
+        String NOTIFICATION_EXTRA_ARG = "scheduledNotifications";
+        String ARG_MAX_SIZE = "max_size";
+        String ARG_FILTER = "purchases_filter";
     }
 }

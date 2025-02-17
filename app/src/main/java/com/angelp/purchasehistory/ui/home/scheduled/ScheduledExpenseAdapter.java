@@ -1,20 +1,27 @@
 package com.angelp.purchasehistory.ui.home.scheduled;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
+import com.google.gson.Gson;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.angelp.purchasehistory.util.AndroidUtils.setNextTimestampString;
 
 @Getter
@@ -25,8 +32,8 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
 
     public interface OnItemClickListener {
         void onEditClick(ScheduledExpenseView item);
+        void onSilenceToggleTrigger(ScheduledExpenseView item, boolean silenced);
         void onDeleteClick(ScheduledExpenseView item);
-
         void onTriggerClick(ScheduledExpenseView scheduledExpense);
     }
 
@@ -69,22 +76,40 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
         private final TextView textViewNextDate;
         private final View viewCategoryBorder;
         private final View menuOptions;
+        private final SwitchCompat silenceButton;
+        private final ImageView silenceIcon;
+        private final Context context;
+        private final Gson gson = new Gson();
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            context = itemView.getContext();
             viewCategoryBorder = itemView.findViewById(R.id.viewCategoryBorder);
             textViewName = itemView.findViewById(R.id.textViewName);
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
             textViewNextDate = itemView.findViewById(R.id.textViewNextDate);
             menuOptions = itemView.findViewById(R.id.menuOptions);
+            silenceButton = itemView.findViewById(R.id.silenceButton);
+            silenceIcon = itemView.findViewById(R.id.silence_icon);
         }
 
         public void bind(ScheduledExpenseView scheduledExpense, OnItemClickListener listener) {
+
+            SharedPreferences preferences = context.getSharedPreferences(Constants.Preferences.SILENCED_NOTIFICATIONS, MODE_PRIVATE);
+            boolean isSilenced = preferences.getBoolean(scheduledExpense.getId().toString(), false);
+
+
             viewCategoryBorder.setBackgroundColor(AndroidUtils.getColor(scheduledExpense.getCategory()));
             textViewName.setText(scheduledExpense.getNote());
             textViewPrice.setText(String.valueOf(scheduledExpense.getPrice()));
             setNextTimestampString(textViewNextDate, scheduledExpense);
+            silenceButton.setChecked(!isSilenced);
+            setSilencedState(isSilenced);
+            silenceButton.setOnCheckedChangeListener((v,value)->{
+                listener.onSilenceToggleTrigger(scheduledExpense, !value);
+                setSilencedState(!value);
+            });
             menuOptions.setOnClickListener(view -> {
                 PopupMenu popup = new PopupMenu(super.itemView.getContext(), menuOptions);
                 popup.inflate(R.menu.scheduled_purchase_options_menu);
@@ -104,6 +129,14 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
                 });
                 popup.show();
             });
+        }
+
+        private void setSilencedState(boolean isSilenced) {
+            if(isSilenced) {
+                silenceIcon.setImageResource(R.drawable.baseline_notifications_off_24);
+            } else {
+                silenceIcon.setImageResource(R.drawable.ic_notifications_black_24dp);
+            }
         }
 
 

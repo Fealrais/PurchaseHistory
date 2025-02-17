@@ -1,5 +1,6 @@
 package com.angelp.purchasehistory.ui.home.dashboard.pie;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
@@ -22,7 +24,6 @@ import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsEntry;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -49,6 +50,9 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     private FragmentPieChartBinding binding;
     private boolean showFilter;
     private AppColorCollection appColorCollection;
+    private Typeface tf;
+    private Typeface tfBold;
+    private PurchaseFilter previousFilter;
 
     public PieChartFragment() {
         Bundle args = new Bundle();
@@ -60,7 +64,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
+            showFilter = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
         }
     }
 
@@ -70,6 +74,9 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentPieChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
+        tf = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_regular);
+        tfBold = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_bold);
+
         return binding.getRoot();
     }
 
@@ -102,6 +109,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
     private void setData(PurchaseFilter filter) {
         CategoryAnalyticsReport report = viewModel.getCategoryAnalyticsReport(filter);
+        previousFilter = filter.copy();
         if (report == null) {
             binding.pieChart.setCenterText("Failed to load data.\nTry again later.");
             return;
@@ -112,7 +120,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         List<Integer> categoryColors = report.getContent().stream().map(entry -> AndroidUtils.getColor(entry.getCategory())
         ).collect(Collectors.toList());
         dataSet.setAutomaticallyDisableSliceSpacing(true);
-        String centerText = report.getTotalSum() == null ? getString(R.string.no_data) : getString(R.string.pie_chart_sum, report.getTotalSum());
+        String centerText = report.getTotalSum() == null ? getString(R.string.no_data) : report.getTotalSum().toString();
         binding.pieChart.setCenterText(centerText);
         dataSet.setDrawIcons(false);
         dataSet.setSliceSpace(3f);
@@ -120,8 +128,8 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         dataSet.setSelectionShift(5f);
         dataSet.setColors(categoryColors);
         dataSet.setValueTextColors(categoryColors.stream().map(AndroidUtils::getTextColor).collect(Collectors.toList()));
-        dataSet.setValueTextSize(11f);
-
+        dataSet.setValueTextSize(12f);
+        dataSet.setValueTypeface(tf);
         dataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
@@ -130,6 +138,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         });
 
         PieData newData = new PieData(dataSet);
+
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.pieChart.setData(newData);
             binding.pieChart.notifyDataSetChanged();
@@ -160,9 +169,12 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 //        chart.setHoleRadius(58f);
 //        chart.setTransparentCircleRadius(61f);
         chart.setDrawCenterText(true);
-        chart.setCenterTextSize(15f);
         chart.setRotationAngle(0);
         chart.setElevation(5);
+        chart.setCenterTextTypeface(tfBold);
+        chart.setCenterTextColor(R.color.primaryColor);
+
+        chart.setEntryLabelTypeface(tf);
         // enable rotation of the chart by touch
         chart.setRotationEnabled(true);
         chart.setHighlightPerTapEnabled(true);
@@ -175,6 +187,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
         l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setTypeface(tf);
         l.setTextColor(appColorCollection.getForegroundColor());
         l.setDrawInside(false);
         l.setXEntrySpace(7f);
@@ -208,12 +221,12 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     }
 
     public void refresh(PurchaseFilter filter) {
-        new Thread(() -> {
-            setData(filter);
-            getActivity().runOnUiThread(() -> {
-                binding.pieChart.notifyDataSetChanged();
-                binding.pieChart.animateY(1400, Easing.EaseInOutQuad);
-            });
-        }).start();
+        if (isSameFilter(filter)) return;
+        new Thread(() -> setData(filter)).start();
+    }
+    private boolean isSameFilter(PurchaseFilter filter) {
+        if(previousFilter == null) return false;
+        previousFilter.setCategoryId(filter.getCategoryId());
+        return filter.equals(previousFilter);
     }
 }

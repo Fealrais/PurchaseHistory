@@ -3,6 +3,7 @@ package com.angelp.purchasehistory.ui.home.dashboard.graph;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
 import com.angelp.purchasehistory.data.Constants;
@@ -23,9 +25,7 @@ import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReport;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -54,7 +54,8 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     private FragmentLineChartBinding binding;
     private boolean showFilter;
     private AppColorCollection appColorCollection;
-    private AlertDialog dialog;
+    private Typeface tf;
+    private PurchasesPerDayDialog dialog;
 
     public LineChartFragment() {
         Bundle args = new Bundle();
@@ -65,7 +66,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
+            showFilter = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
         }
         alertBuilder = new AlertDialog.Builder(getActivity());
     }
@@ -75,6 +76,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
         Log.i(TAG, "onCreateView: View created");
         binding = FragmentLineChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
+        tf = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_regular);
         return binding.getRoot();
     }
     @Override
@@ -96,17 +98,10 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     }
 
     private void initGraph(LineChart chart) {
-        AndroidUtils.initChart(chart, appColorCollection, "dd");
+        AndroidUtils.initChart(chart, appColorCollection, "dd",tf);
         if (showFilter) {
             chart.setOnChartValueSelectedListener(this);
         }
-        chart.setMinimumHeight(Constants.GRAPH_MIN_HEIGHT);
-        // change the position of the y-labels
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setTextColor(appColorCollection.getForegroundColor());
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-        YAxis rightAxis = chart.getAxisRight();
-        rightAxis.setEnabled(false);
     }
 
     private void setData(PurchaseFilter filter) {
@@ -118,10 +113,10 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
             int i = 0;
             for (Map.Entry<LocalDate, List<Entry>> entry : entriesMap.entrySet()) {
                 List<Entry> entries = entry.getValue();
-
                 LineDataSet lineDataSet = new LineDataSet(entries, "Purchases");
 //                lineDataSet.setDrawIcons(false);
                 lineDataSet.setDrawCircleHole(false);
+                lineDataSet.setValueTypeface(Typeface.DEFAULT);
                 if (i < colors.size()) {
                     int color = colors.get(i++);
                     lineDataSet.setColor(color);
@@ -199,38 +194,22 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     }
 
     public void refresh(PurchaseFilter filter) {
-        new Thread(() -> {
-            setData(filter);
-            getActivity().runOnUiThread(() -> {
-                binding.lineChartView.notifyDataSetChanged();
-                binding.lineChartView.animateY(1400, Easing.EaseInOutQuad);
-            });
-        }).start();
+        new Thread(() -> setData(filter)).start();
     }
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         if (e == null)
             return;
+        if (dialog != null && dialog.isAdded()) dialog.dismiss();
+
         CalendarReportEntry data = (CalendarReportEntry) e.getData();
-        setTooltipText(data.getLocalDate().format(DateTimeFormatter.ofPattern("dd MMM yyyy")), getDescription(data));
+        dialog = new PurchasesPerDayDialog(data);
+        dialog.show(getParentFragmentManager().beginTransaction(), "DialogFragment");
     }
 
     @Override
     public void onNothingSelected() {
 
-    }
-
-    public String getDescription(CalendarReportEntry entry) {
-        return getString(R.string.total_sum) + ": " + entry.getSum() + "\n" +
-                getString(R.string.number_of_purchases) + ": " + entry.getCount();
-    }
-
-    private void setTooltipText(String title, String text) {
-        if (dialog != null && dialog.isShowing()) dialog.dismiss();
-
-        alertBuilder.setMessage(text).setTitle(title);
-        dialog = alertBuilder.create();
-        dialog.show();
     }
 }

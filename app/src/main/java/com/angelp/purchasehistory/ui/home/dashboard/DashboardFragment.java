@@ -77,7 +77,7 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
 
     private void saveFragmentsSetupToPreferences(List<DashboardComponent> selectedFragments) {
         SharedPreferences preferences = PurchaseHistoryApplication.getContext()
-                .getSharedPreferences(Constants.DASHBOARD_PREFS, Context.MODE_PRIVATE);
+                .getSharedPreferences(Constants.Preferences.DASHBOARD_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         String fragmentsJson = gson.toJson(selectedFragments);
         editor.remove("saved_fragments");

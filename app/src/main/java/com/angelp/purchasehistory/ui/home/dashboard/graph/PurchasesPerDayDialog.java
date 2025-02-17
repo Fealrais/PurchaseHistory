@@ -1,5 +1,7 @@
-package com.angelp.purchasehistory.ui.home.dashboard.list;
+package com.angelp.purchasehistory.ui.home.dashboard.graph;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,59 +9,69 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
-import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
-import com.angelp.purchasehistory.databinding.FragmentPurchasesListCardBinding;
+import com.angelp.purchasehistory.databinding.DialogGraphDetailsBinding;
 import com.angelp.purchasehistory.ui.FullscreenGraphActivity;
-import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchasesAdapter;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
+import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
 import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @AndroidEntryPoint
-public class PurchaseListPurchaseFragment extends RefreshablePurchaseFragment {
-    private final String TAG = this.getClass().getSimpleName();
-    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
-    private FragmentPurchasesListCardBinding binding;
+public class PurchasesPerDayDialog extends DialogFragment {
+
+    public static final String TOTAL_SUM = "total_sum";
+    public static final String TITLE = "title";
+    private final String TAG = PurchasesPerDayDialog.class.getSimpleName();
+    private DialogGraphDetailsBinding binding;
     private PurchasesAdapter purchasesAdapter;
     @Inject
     PurchaseClient purchaseClient;
-    private boolean showFilter;
-    private int maxSize;
+    private final int maxSize = 10;
+    private AlertDialog dialog;
 
-    public PurchaseListPurchaseFragment() {
-        Bundle args = new Bundle();
-        this.setArguments(args);
+    public PurchasesPerDayDialog() {
+        Bundle bundle = new Bundle();
+        setArguments(bundle);
     }
 
+    public PurchasesPerDayDialog(CalendarReportEntry calendarReportEntry) {
+        Bundle bundle = new Bundle();
+        PurchaseFilter purchaseFilter = new PurchaseFilter(calendarReportEntry.getLocalDate(), calendarReportEntry.getLocalDate(), null, null);
+        bundle.putParcelable(Constants.Arguments.ARG_FILTER, purchaseFilter);
+        bundle.putString(TITLE, calendarReportEntry.getLocalDate().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+        bundle.putString(TOTAL_SUM, calendarReportEntry.getSum().toString());
+        setArguments(bundle);
+    }
+
+    @NotNull
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        maxSize = -1;
-        if (getArguments() != null) {
-            showFilter = getArguments().getBoolean(Constants.ARG_SHOW_FILTER);
-            maxSize = getArguments().getInt(Constants.ARG_MAX_SIZE);
-        }
-
-        initializePurchasesRecyclerView(maxSize, filterViewModel.getFilterValue());
-    }
-
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentPurchasesListCardBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        //Set all the title, button etc. for the AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater layoutInflater = getLayoutInflater();
+        binding = DialogGraphDetailsBinding.inflate(layoutInflater, null, false);
+        builder.setTitle(getArguments().getString(TITLE));
+        builder.setMessage(getArguments().getString(TOTAL_SUM));
+        builder.setView(binding.getRoot());
+        PurchaseFilter filter = getArguments().getParcelable(Constants.Arguments.ARG_FILTER);
+        initializePurchasesRecyclerView(maxSize, filter);
+        dialog = builder.create();
+        return dialog;
     }
 
     @Override
@@ -72,9 +84,9 @@ public class PurchaseListPurchaseFragment extends RefreshablePurchaseFragment {
         new Thread(() -> {
             List<PurchaseView> purchases = purchaseClient.getAllPurchases(filter);
             purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
-            initFilterRow();
+            BigDecimal sum = purchases.stream().map(PurchaseView::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+            dialog.setMessage(getString(R.string.currency_total, sum.floatValue()));
             setupShowMoreButton(purchases.size(), maxSize);
-            applyFilter(filter);
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             new Handler(Looper.getMainLooper()).post(() -> {
@@ -121,32 +133,9 @@ public class PurchaseListPurchaseFragment extends RefreshablePurchaseFragment {
     }
 
     private void updateAdapter(List<PurchaseView> allPurchases) {
-        new Handler(Looper.getMainLooper()).post(()->{
+        new Handler(Looper.getMainLooper()).post(() -> {
             purchasesAdapter.setPurchaseViews(allPurchases);
             updateSeeAllButton(allPurchases.size(), maxSize);
-            Log.i(TAG, "Adapter notified");
         });
     }
-
-    private void initFilterRow() {
-        binding.filterButton.setOnClickListener((v) -> openFilter());
-        new Handler(Looper.getMainLooper()).post(() -> {
-            binding.filterDateText.setTextColor(getContext().getColor(R.color.foreground_color));
-            binding.filterRow.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-        });
-    }
-
-    private void applyFilter(PurchaseFilter newFilter) {
-        filterViewModel.updateFilter(newFilter);
-        new Handler(Looper.getMainLooper()).post(() -> {
-            binding.filterButton.setText(R.string.filterButton);
-            binding.filterDateText.setText(newFilter.getReadableString());
-        });
-    }
-
-    private void openFilter() {
-        filterDialog.show(getParentFragmentManager(), "barchartFilterDialog");
-    }
-
-
 }

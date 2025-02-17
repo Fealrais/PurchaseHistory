@@ -23,13 +23,13 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
 
 
     @Getter
-    private final List<PurchaseView> purchaseViews = new ArrayList<>();
+    private List<PurchaseView> purchaseViews;
     private final FragmentActivity fragmentActivity;
     @Setter
     private int limit = -1;
 
     public PurchasesAdapter(List<PurchaseView> purchaseViews, FragmentActivity fragmentActivity) {
-        setPurchaseViews(purchaseViews);
+        this.purchaseViews = purchaseViews;
         this.fragmentActivity = fragmentActivity;
     }
 
@@ -75,25 +75,29 @@ public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseVi
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder<PurchaseView> holder, int position) {
-        if (purchaseViews.size() <= position) return;
+        if (position >= purchaseViews.size()) return;
         PurchaseView purchaseView = purchaseViews.get(position);
         holder.bind(purchaseView, fragmentActivity.getSupportFragmentManager());
     }
 
     private void removePurchase(int index) {
+        if (index < 0 || index >= purchaseViews.size()) return;
         this.purchaseViews.remove(index);
         new Handler(Looper.getMainLooper()).post(() -> notifyItemRemoved(index));
     }
 
     @Override
     public int getItemCount() {
-        if (limit > 0)
-            return Math.min(purchaseViews.size(), limit);
+        if (limit > 0 && limit < purchaseViews.size()) {
+            return limit;
+        }
         return purchaseViews.size();
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (position >= purchaseViews.size()) return -1;
         return PurchaseViewHeader.isHeader(purchaseViews.get(position)) ? PurchaseViewHeader.TYPE_HEADER : PurchaseViewHeader.TYPE_PURCHASE;
     }
+
 }

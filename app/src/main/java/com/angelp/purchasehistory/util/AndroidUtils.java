@@ -3,6 +3,7 @@ package com.angelp.purchasehistory.util;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -17,9 +18,10 @@ import com.angelp.purchasehistory.ui.home.dashboard.graph.DayAxisValueFormatter;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
-import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -141,7 +143,7 @@ public final class AndroidUtils {
     public static String formatCurrency(BigDecimal price) {
         return String.format(Locale.getDefault(), "%.2f", price.floatValue());
     }
-    public static void initChart(Chart<?> chart, AppColorCollection colors, String format){
+    public static void initChart(BarLineChartBase<?> chart, AppColorCollection colors, String format, Typeface tf){
 //        chart.setBackgroundColor(colors.getBackgroundColor());
         chart.getXAxis().setTextColor(colors.getForegroundColor());
         chart.getLegend().setTextColor(colors.getForegroundColor());
@@ -149,20 +151,28 @@ public final class AndroidUtils {
         chart.getXAxis().setGridColor(colors.getMiddleColor());
         chart.getLegend().setTextColor(colors.getForegroundColor());
         chart.getDescription().setTextColor(colors.getForegroundColor());
-
+        chart.getDescription().setTypeface(tf);
         chart.setExtraOffsets(5, 10, 5, 5);
         chart.setDragDecelerationFrictionCoef(0.95f);
         chart.setHighlightPerTapEnabled(true);
+        chart.setHighlightPerDragEnabled(false);
         chart.getDescription().setEnabled(false);
         chart.setMinimumHeight(Constants.GRAPH_MIN_HEIGHT);
         DayAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(format);
+        // change the position of the y-labels
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        leftAxis.setTextColor(colors.getForegroundColor());
+        leftAxis.setTypeface(tf);
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false);
 
         XAxis xLabels = chart.getXAxis();
         xLabels.setPosition(XAxis.XAxisPosition.BOTTOM);
         xLabels.setValueFormatter(xAxisFormatter);
         xLabels.setGranularity(1f);
         xLabels.setTextColor(colors.getForegroundColor());
-
+        xLabels.setTypeface(tf);
         Legend l = chart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
@@ -171,6 +181,7 @@ public final class AndroidUtils {
         l.setDrawInside(true);
         l.setFormSize(8f);
         l.setFormToTextSpace(4f);
+        l.setTypeface(tf);
         l.setXEntrySpace(6f);
 
     }

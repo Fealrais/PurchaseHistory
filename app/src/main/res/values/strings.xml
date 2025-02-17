@@ -103,8 +103,6 @@
     <string name="token">Enter user token</string>
     <string name="error_spectating_list_add_user">Failed to add user to spectating list</string>
     <string name="no_data">No data available</string>
-    <string name="pie_chart_sum">All Purchases
-        Sum: %.2f</string>
     <string name="add_user_button">Adds a new user</string>
     <string name="error_spectating_list_add_user_expired">Expired token! Try again with a new one.</string>
     <string name="invalid_password_match">Passwords do not match</string>
@@ -202,4 +200,6 @@
     <string name="menu_three_dots" translatable="false">⋮</string>
     <string name="purchase_created_title">Bill created successfully</string>
     <string name="submit_new_payment">Submit new payment</string>
+    <string name="notification_toggleButton">Toggle notifications</string>
+    <string name="currency_total">Total: <big>%.2f</big></string>
 </resources>

@@ -10,13 +10,11 @@
 
     <Button
         android:id="@+id/graph_filterButton"
-        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:elevation="10dp"
-        android:background="@color/design_default_color_secondary"
         android:contentDescription="@string/filterButton"
         android:text="@string/filterButton"
         app:icon="@drawable/ic_menu_filter"

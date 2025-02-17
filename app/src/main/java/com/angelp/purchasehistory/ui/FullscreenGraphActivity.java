@@ -43,8 +43,8 @@ public class FullscreenGraphActivity extends AppCompatActivity {
             }
             RefreshablePurchaseFragment fragment = DashboardComponentsFactory.createFragment(dashboardComponent.getFragmentName());
             if (fragment.getArguments() != null) {
-                fragment.getArguments().putInt(Constants.ARG_MAX_SIZE, -1);
-                fragment.getArguments().putBoolean(Constants.ARG_SHOW_FILTER, true);
+                fragment.getArguments().putInt(Constants.Arguments.ARG_MAX_SIZE, -1);
+                fragment.getArguments().putBoolean(Constants.Arguments.ARG_SHOW_FILTER, true);
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
                     .replace(binding.fullscreenFragmentContainer.getId(), fragment);

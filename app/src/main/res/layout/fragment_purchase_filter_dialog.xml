@@ -85,41 +85,41 @@
 
             <Button
                 android:id="@+id/filter_week"
-                style="?android:attr/buttonBarButtonStyle"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/this_week" />
 
             <Button
                 android:id="@+id/filter_month"
-                style="?android:attr/buttonBarButtonStyle"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/this_month" />
 
             <Button
                 android:id="@+id/filter_3month"
-                style="?android:attr/buttonBarButtonStyle"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/three_months" />
 
             <Button
                 android:id="@+id/filter_6month"
-                style="?android:attr/buttonBarButtonStyle"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/six_months" />
 
             <Button
                 android:id="@+id/filter_year"
-                style="?android:attr/buttonBarButtonStyle"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/this_year" />
             <Button
                 android:id="@+id/filter_last_year"
-                style="?android:attr/buttonBarButtonStyle"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/last_year" />

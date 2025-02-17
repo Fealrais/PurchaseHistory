@@ -22,12 +22,6 @@ public class PurchaseHistoryApplication extends Application {
         return instance;
     }
 
-    public static Integer getErrorString(String errorCode) {
-        String packageName = instance.getPackageName();
-        return instance.getResources().getIdentifier("err"+errorCode, "string", packageName);
-    }
-
-
     @Override
     public void onCreate() {
         instance = this;

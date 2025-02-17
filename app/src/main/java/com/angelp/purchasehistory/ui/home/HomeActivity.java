@@ -88,9 +88,9 @@ public class HomeActivity extends AppCompatActivity {
 
         Button skipButton = dialog.findViewById(R.id.tour_guide_skip);
         skipButton.setOnClickListener(v -> {
-            SharedPreferences preferences = getSharedPreferences(Constants.APP_PREFERENCES, MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences(Constants.Preferences.APP_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(Constants.IS_FIRST_TIME_OPEN, false);
+            editor.putBoolean(Constants.Preferences.IS_FIRST_TIME_OPEN, false);
             editor.apply();
             dialog.dismiss();
         });
@@ -98,7 +98,7 @@ public class HomeActivity extends AppCompatActivity {
     }
     private boolean isFirstTimeOpen() {
         SharedPreferences preferences = getSharedPreferences("app_preferences", MODE_PRIVATE);
-        return preferences.getBoolean(Constants.IS_FIRST_TIME_OPEN, true);
+        return preferences.getBoolean(Constants.Preferences.IS_FIRST_TIME_OPEN, true);
     }
 
     private void showNextTourStep() {
@@ -117,9 +117,9 @@ public class HomeActivity extends AppCompatActivity {
                     .show();
         } else {
             binding.navView.setEnabled(true);
-            SharedPreferences preferences = getSharedPreferences(Constants.APP_PREFERENCES, MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences(Constants.Preferences.APP_PREFERENCES, MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(Constants.IS_FIRST_TIME_OPEN, false);
+            editor.putBoolean(Constants.Preferences.IS_FIRST_TIME_OPEN, false);
             editor.apply();
         }
     }

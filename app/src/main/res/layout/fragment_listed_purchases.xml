@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/filterDateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,6 +16,7 @@
         app:layout_constraintTop_toTopOf="@+id/filterButton" />
 
     <Button
+        android:visibility="gone"
         android:id="@+id/filterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

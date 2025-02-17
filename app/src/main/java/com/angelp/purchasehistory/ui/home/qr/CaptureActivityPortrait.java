@@ -34,8 +34,8 @@ public class CaptureActivityPortrait extends Activity implements CompoundBarcode
         }
         switchFlashlightButton.setOnClickListener(v -> {
             if (getString(R.string.turn_on_flashlight).contentEquals(switchFlashlightButton.getText())) {
-                barcodeScannerView.setTorchOn();
-            } else barcodeScannerView.setTorchOff();
+                barcodeScannerView.setTorchOff();
+            } else barcodeScannerView.setTorchOn();
         });
         capture = new CaptureManager(this, barcodeScannerView);
         capture.initializeFromIntent(getIntent(), savedInstanceState);

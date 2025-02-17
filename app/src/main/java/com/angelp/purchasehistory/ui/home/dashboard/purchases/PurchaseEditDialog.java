@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-import static com.angelp.purchasehistory.data.Constants.PURCHASE_EDIT_DIALOG_ID_KEY;
+import static com.angelp.purchasehistory.data.Constants.Arguments.PURCHASE_EDIT_DIALOG_ID_KEY;
 
 @Getter
 @Setter

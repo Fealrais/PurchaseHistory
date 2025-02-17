@@ -70,6 +70,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+
+//  Caching
+//    implementation("com.google.guava:guava:33.4.0-android")
 //  UI
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
     implementation("com.github.Mohammad3125:KavehColorPicker:v1.0.0")

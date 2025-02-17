@@ -1,6 +1,6 @@
 package com.angelp.purchasehistory.web.clients;
 
-import com.angelp.purchasehistory.PurchaseHistoryApplication;
+import com.angelp.purchasehistory.data.Constants;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -24,6 +24,6 @@ public class WebException extends RuntimeException{
     public Integer getErrorResource() {
         if(errorResource!=null)
             return errorResource;
-        return PurchaseHistoryApplication.getErrorString(errorCode);
+        return Constants.errorsMap.get(errorCode);
     }
 }

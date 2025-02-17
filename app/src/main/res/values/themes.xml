@@ -2,14 +2,13 @@
     <!-- Base application theme. -->
     <style name="Theme.PurchaseHistory" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color: Blue for professionalism -->
-        <item name="colorPrimary">@color/blue_500</item>
-        <item name="colorPrimaryVariant">@color/blue_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryVariant">@color/secondaryColor</item>
+        <item name="colorOnPrimary">@color/foreground_color</item>
 
         <!-- Secondary brand color: Purple for elegance -->
-        <item name="colorSecondary">@color/purple_500</item>
-        <item name="colorSecondaryVariant">@color/purple_700</item>
-        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorAccent">@color/accentColor</item>
 
         <!-- Text colors -->
         <item name="android:textColor">@color/gray_900</item>
@@ -19,6 +18,7 @@
 
         <!-- Background color -->
         <item name="android:colorBackground">@color/gray_100</item>
+        <item name="fontFamily">@font/ibmplexmono_regular</item>
     </style>
 
     <style name="Theme.PurchaseHistory.NoActionBar">

@@ -31,7 +31,7 @@ public class AppBootReceiver extends BroadcastReceiver {
                     ScheduledNotification scheduledNotification = new ScheduledNotification(scheduledExpenseView);
                     list.add(scheduledNotification);
                 }
-                notificationIntent.putParcelableArrayListExtra(Constants.NOTIFICATION_EXTRA_ARG,list);
+                notificationIntent.putParcelableArrayListExtra(Constants.Arguments.NOTIFICATION_EXTRA_ARG,list);
                 context.sendBroadcast(notificationIntent);
             }).start();
         }

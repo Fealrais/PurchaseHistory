@@ -1,15 +1,19 @@
 package com.angelp.purchasehistory.ui.home.settings;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistory.web.clients.UserClient;
@@ -48,7 +52,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     .commit();
             return true;
         });
-
+        SharedPreferences appPreferences = getContext().getSharedPreferences(Constants.Preferences.APP_PREFERENCES, Context.MODE_PRIVATE);
+        String preferredCurrency = appPreferences.getString(Constants.Preferences.PREFERRED_CURRENCY, "");
+        EditTextPreference currencyPreference = findPreference("currency_preference");
+        currencyPreference.setText(preferredCurrency);
+        currencyPreference.setOnPreferenceChangeListener((a,value)-> appPreferences.edit()
+                .putString(Constants.Preferences.PREFERRED_CURRENCY, value.toString()).commit());
     }
 
     private void loadAccountSettings() {

@@ -39,6 +39,8 @@
     <string name="qr_open_camera_button_hint">Отвори камерата за QR код</string>
     <string name="hello_blank_fragment">Здравей, празен фрагмент</string>
     <string name="currency_zero">0.00</string>
+    <string name="currency_total">Общо: <big>%.2f</big> <small>лв</small></string>
+
     <string name="edit_text">Редактирай</string>
     <string name="add_button_text">Добави</string>
     <string name="create_category">Нова категория</string>
@@ -91,7 +93,6 @@
     <string name="token">Въведи токен</string>
     <string name="error_spectating_list_add_user">Грешка при добавянето на потребител към наблюдаваните потребители</string>
     <string name="no_data">Липсва информация</string>
-    <string name="pie_chart_sum">Всички бележки\\nСума: %.2f</string>
     <string name="add_user_button">Добави потребител</string>
     <string name="error_spectating_list_add_user_expired">Времето за ползване на кода е изтекло. Пробвай с нов.</string>
     <string name="invalid_password_match">Паролите не съвпадат</string>
@@ -128,8 +129,8 @@
 
     <string name="tour_navigation_dashboard">Табло</string>
     <string name="tour_navigation_qrscanner">QR Скенер</string>
-<!--    <string name="tour_qrFloatingQrButton">Сканирайте QR код с вашата камера</string>-->
-<!--    <string name="tour_qrFloatingQrButton_secondary">Можете също да сканирате QR кодове, използвайки плаващия бутон. Подгответе вашата сметка и сканирайте QR кода.</string>-->
+    <!--    <string name="tour_qrFloatingQrButton">Сканирайте QR код с вашата камера</string>-->
+    <!--    <string name="tour_qrFloatingQrButton_secondary">Можете също да сканирате QR кодове, използвайки плаващия бутон. Подгответе вашата сметка и сканирайте QR кода.</string>-->
     <string name="tour_navigation_profile">Профил</string>
     <string name="tour_filter_button">Филтрирай бележки</string>
     <string name="tour_prompt_title">Добре дошли!</string>
@@ -188,4 +189,7 @@
     <string name="help_info_stacked_bar_chart">Това е стълбовидна диаграма, показваща сумарните покупки за всеки ден, разделени по категории. Тя предоставя детайлен преглед на разходите за всеки ден, помагайки ви да идентифицирате модели на разходите и да управлявате бюджета си по-ефективно.</string>
     <string name="help_info_line_chart">Това е линейна диаграма, показваща сумата на всички покупки на ден. Тя е полезна за виждане на тенденции и модели на разходите за период, позволявайки ви да управлявате бюджета си ефективно и да вземате информирани финансови решения.</string>
     <string name="help_info_pie_chart">Това е кръгова диаграма, показваща всички покупки за период, групирани по категории. Тя ви помага да разберете разпределението на разходите ви по различни категории, предоставяйки ви информация за това къде отиват парите ви.</string>
+    <string name="purchase_created_title">Фактурата е създадена успешно</string>
+    <string name="submit_new_payment">Изпратете ново плащане</string>
+    <string name="notification_toggleButton">Превключване на известията</string>
 </resources>

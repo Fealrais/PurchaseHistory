@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
@@ -102,5 +103,35 @@ public class PurchaseFilter implements Parcelable {
         if (EpochDate != -1)
             return LocalDate.ofEpochDay(EpochDate);
         return null;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) return false;
+
+        PurchaseFilter that = (PurchaseFilter) object;
+
+        if (!from.equals(that.from)) return false;
+        if (!to.equals(that.to)) return false;
+        if (!Objects.equals(categoryId, that.categoryId)) return false;
+        return Objects.equals(userId, that.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = from.hashCode();
+        result = 31 * result + to.hashCode();
+        result = 31 * result + (categoryId != null ? categoryId.hashCode() : 0);
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        return result;
+    }
+
+    public @NotNull PurchaseFilter copy() {
+        PurchaseFilter purchaseFilter = new PurchaseFilter();
+        purchaseFilter.setCategoryId(categoryId);
+        purchaseFilter.setFrom(from);
+        purchaseFilter.setTo(to);
+        purchaseFilter.setUserId(userId);
+        return purchaseFilter;
     }
 }
