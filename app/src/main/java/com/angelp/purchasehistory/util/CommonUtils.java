@@ -1,6 +1,7 @@
 package com.angelp.purchasehistory.util;
 
 import android.util.Log;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,4 +33,9 @@ public final class CommonUtils {
         }
     }
 
+    @NotNull
+    public static String limitString(String name, int limit) {
+        if(name.length() > limit) name = name.substring(0,limit) + "…";
+        return name;
+    }
 }

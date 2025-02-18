@@ -51,7 +51,7 @@ public class PurchasesPerDayDialog extends DialogFragment {
 
     public PurchasesPerDayDialog(CalendarReportEntry calendarReportEntry) {
         Bundle bundle = new Bundle();
-        PurchaseFilter purchaseFilter = new PurchaseFilter(calendarReportEntry.getLocalDate(), calendarReportEntry.getLocalDate(), null, null);
+        PurchaseFilter purchaseFilter = new PurchaseFilter(calendarReportEntry.getLocalDate());
         bundle.putParcelable(Constants.Arguments.ARG_FILTER, purchaseFilter);
         bundle.putString(TITLE, calendarReportEntry.getLocalDate().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
         bundle.putString(TOTAL_SUM, calendarReportEntry.getSum().toString());

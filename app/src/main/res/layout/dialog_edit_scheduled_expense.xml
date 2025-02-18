@@ -30,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        style="?android:attr/buttonBarStyle"
         android:layout_marginBottom="8dp">
 
         <Button
@@ -94,14 +95,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        style="?android:attr/buttonBarStyle"
         android:layout_marginBottom="8dp">
 
-        <Button
-            android:id="@+id/edit_scheduled_expense_save_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/save" />
 
         <Button
             android:id="@+id/edit_scheduled_expense_dismiss_button"
@@ -109,7 +105,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/cancel"
-             />
+            style="?android:attr/buttonBarButtonStyle" />
+        <Button
+            android:id="@+id/edit_scheduled_expense_save_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/save"
+            style="?android:attr/buttonBarButtonStyle" />
 
     </LinearLayout>
 

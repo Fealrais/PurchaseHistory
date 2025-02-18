@@ -21,6 +21,7 @@ import com.angelp.purchasehistory.databinding.FragmentPieChartBinding;
 import com.angelp.purchasehistory.ui.home.dashboard.DashboardViewModel;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
+import com.angelp.purchasehistory.util.CommonUtils;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsEntry;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
@@ -37,6 +38,7 @@ import com.github.mikephil.charting.utils.MPPointF;
 import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -45,7 +47,7 @@ import java.util.stream.Collectors;
 public class PieChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter";
     private final String TAG = this.getClass().getSimpleName();
-    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(false);
+    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     private DashboardViewModel viewModel;
     private FragmentPieChartBinding binding;
     private boolean showFilter;
@@ -53,6 +55,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     private Typeface tf;
     private Typeface tfBold;
     private PurchaseFilter previousFilter;
+    private BigDecimal sum;
 
     public PieChartFragment() {
         Bundle args = new Bundle();
@@ -120,8 +123,9 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         List<Integer> categoryColors = report.getContent().stream().map(entry -> AndroidUtils.getColor(entry.getCategory())
         ).collect(Collectors.toList());
         dataSet.setAutomaticallyDisableSliceSpacing(true);
-        String centerText = report.getTotalSum() == null ? getString(R.string.no_data) : report.getTotalSum().toString();
-        binding.pieChart.setCenterText(centerText);
+        sum = report.getTotalSum();
+        setPiechartCenterText(sum);
+
         dataSet.setDrawIcons(false);
         dataSet.setSliceSpace(3f);
         dataSet.setIconsOffset(new MPPointF(0, 40));
@@ -145,6 +149,23 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
             binding.pieChart.animateY(1000);
             binding.pieChart.invalidate();
         });
+    }
+
+    private void setPiechartCenterText(BigDecimal sum) {
+        String centerText = (sum == null) ? getString(R.string.no_data) : sum.toString();
+        binding.pieChart.setCenterText(centerText);
+        binding.pieChart.setCenterTextColor(R.color.primaryColor);
+        binding.pieChart.setCenterTextSize(24);
+        binding.pieChart.setCenterTextTypeface(tf);
+    }
+
+    private void setPiechartCenterText(String centerText, float secondValue, CategoryView category) {
+        String name = category.getName();
+        name = CommonUtils.limitString(name,12);
+        binding.pieChart.setCenterText(name + "\n" + centerText + "\n" + secondValue);
+        binding.pieChart.setCenterTextColor(AndroidUtils.getColor(category));
+        binding.pieChart.setCenterTextSize(20);
+        binding.pieChart.setCenterTextTypeface(tf);
     }
 
     private PieEntry parsePieEntries(CategoryAnalyticsEntry entry) {
@@ -171,8 +192,6 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         chart.setDrawCenterText(true);
         chart.setRotationAngle(0);
         chart.setElevation(5);
-        chart.setCenterTextTypeface(tfBold);
-        chart.setCenterTextColor(R.color.primaryColor);
 
         chart.setEntryLabelTypeface(tf);
         // enable rotation of the chart by touch
@@ -196,36 +215,40 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
         // entry label styling
         chart.setEntryLabelColor(appColorCollection.getForegroundColor());
-//        chart.setEntryLabelTextSize(12f);
     }
 
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
-        if (e == null)
+        if (e == null || e.getData() == null)
             return;
         Log.i(TAG, String.format("Selected value: %s, index: %s, DataSet index: %d", e.getY(), h.getX(), h.getDataSetIndex()));
         CategoryView category = (CategoryView) e.getData();
         PurchaseFilter filterValue = filterViewModel.getFilterValue();
-        filterValue.setCategoryId(category.getId());
+        filterValue.setCategory(category);
         filterViewModel.updateFilter(filterValue);
+        float percentages = (e.getY() / sum.floatValue()) * 100;
+        setPiechartCenterText(String.format(Locale.getDefault(), "%.2f%%", percentages), e.getY(), category);
+
     }
 
     @Override
     public void onNothingSelected() {
         Log.i(TAG, "nothing selected");
         PurchaseFilter filterValue = filterViewModel.getFilterValue();
-        filterValue.setCategoryId(null);
+        filterValue.setCategory(null);
         filterViewModel.updateFilter(filterValue);
+        setPiechartCenterText(sum);
     }
 
     public void refresh(PurchaseFilter filter) {
         if (isSameFilter(filter)) return;
         new Thread(() -> setData(filter)).start();
     }
+
     private boolean isSameFilter(PurchaseFilter filter) {
-        if(previousFilter == null) return false;
+        if (previousFilter == null) return false;
         previousFilter.setCategoryId(filter.getCategoryId());
         return filter.equals(previousFilter);
     }

@@ -27,6 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private RegisterViewModel registerViewModel;
     private ActivityRegisterBinding binding;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
+        final EditText confirmPassword = binding.confirmPassword;
         final EditText emailEditText = binding.email;
         final Button registerButton = binding.registerRegisterButton;
         final ProgressBar loadingProgressBar = binding.loading;
@@ -53,7 +55,10 @@ public class RegisterActivity extends AppCompatActivity {
                 usernameEditText.setError(getString(registerFormState.getUsernameError()));
             }
             if (registerFormState.getPasswordError() != null) {
-                passwordEditText.setError(getString(registerFormState.getPasswordError()));
+                if (registerFormState.getPasswordError().equals(R.string.invalid_password_match))
+                    confirmPassword.setError(getString(registerFormState.getPasswordError()));
+                else
+                    passwordEditText.setError(getString(registerFormState.getPasswordError()));
             }
         });
 
@@ -77,12 +82,13 @@ public class RegisterActivity extends AppCompatActivity {
         TextWatcher afterTextChangedListener = new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                registerViewModel.registerDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString(), emailEditText.getText().toString());
+                registerViewModel.registerDataChanged(usernameEditText.getText().toString().trim(),
+                        passwordEditText.getText().toString().trim(), confirmPassword.getText().toString().trim(), emailEditText.getText().toString().trim());
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
+        confirmPassword.addTextChangedListener(afterTextChangedListener);
         emailEditText.addTextChangedListener(afterTextChangedListener);
 
         acceptTermsCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -112,16 +118,17 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
+
     private void checkIfLoggedIn() {
         new Thread(registerViewModel.checkIfLoggedIn(), "CheckLogin").start();
     }
 
     private void register(EditText usernameEditText, EditText passwordEditText, EditText emailEditText) {
         LocaleList locales = getResources().getConfiguration().getLocales();
-        Locale locale = locales.isEmpty()? Locale.getDefault():locales.get(0);
+        Locale locale = locales.isEmpty() ? Locale.getDefault() : locales.get(0);
 
-        new Thread(registerViewModel.register(usernameEditText.getText().toString(),
-                passwordEditText.getText().toString(), emailEditText.getText().toString(), locale), "Register").start();
+        new Thread(registerViewModel.register(usernameEditText.getText().toString().trim(),
+                passwordEditText.getText().toString().trim(), emailEditText.getText().toString().trim(), locale), "Register").start();
     }
 
     private void updateUiWithUser(UserView ignoredModel) {

@@ -1,13 +1,19 @@
 package com.angelp.purchasehistory.util;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import com.angelp.purchasehistory.MainActivity;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
@@ -34,6 +40,7 @@ import java.util.stream.Collectors;
 
 public final class AndroidUtils {
     public static final List<String> SCHEDULED_PERIOD_LIST = Arrays.stream(ScheduledPeriod.values()).map(Enum::toString).collect(Collectors.toList());
+    public static final int SAVE_CSV_REQUEST_CODE = 199999;
 
     public static void shareString(String token, String title, Context context) {
         Log.i("Sharing", "Attempting to share a string.");
@@ -57,15 +64,19 @@ public final class AndroidUtils {
     }
 
     public static int getColor(CategoryView category) {
+        if (category == null || category.getColor() == null || category.getColor().isBlank())
+            return Color.GRAY;
+        String colorHex = category.getColor();
+        return getColor(colorHex);
+    }
+
+    public static int getColor(String colorHex) {
         try {
-            if (category != null && category.getColor() != null && !category.getColor().isBlank())
-                return Color.parseColor(category.getColor());
-            else return Color.GRAY;
+            return Color.parseColor(colorHex);
         } catch (IllegalArgumentException e) {
-            Log.e("AndroidUtils", "Invalid color: " + category.getColor());
+            Log.e("AndroidUtils", "Invalid color: " + colorHex);
             return Color.GRAY;
         }
-
     }
 
     public static int getTextColor(int bgColor) {
@@ -97,18 +108,19 @@ public final class AndroidUtils {
         return password != null && password.trim().length() > 5;
     }
 
-    public static void openCsvFile(Context context, Uri uri) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(uri, "text/csv");
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    public static void openCsvFile(Activity context, String name) {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.setType("text/csv");
+        intent.putExtra(Intent.EXTRA_TITLE, name);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         // Check if there's an activity available to handle this intent
         if (intent.resolveActivity(context.getPackageManager()) != null) {
-            context.startActivity(intent);
+            context.startActivityForResult(intent, SAVE_CSV_REQUEST_CODE);
         } else {
             // Handle the case when there's no activity available to handle the intent
-            PurchaseHistoryApplication.getInstance().alert("No application available to open CSV files");
+            PurchaseHistoryApplication.getInstance().alert("No application available to save CSV files");
         }
     }
 
@@ -139,11 +151,13 @@ public final class AndroidUtils {
         }
         textView.setText(getNextTimestampString(scheduledExpense));
     }
+
     @NotNull
     public static String formatCurrency(BigDecimal price) {
         return String.format(Locale.getDefault(), "%.2f", price.floatValue());
     }
-    public static void initChart(BarLineChartBase<?> chart, AppColorCollection colors, String format, Typeface tf){
+
+    public static void initChart(BarLineChartBase<?> chart, AppColorCollection colors, String format, Typeface tf) {
 //        chart.setBackgroundColor(colors.getBackgroundColor());
         chart.getXAxis().setTextColor(colors.getForegroundColor());
         chart.getLegend().setTextColor(colors.getForegroundColor());
@@ -184,5 +198,44 @@ public final class AndroidUtils {
         l.setTypeface(tf);
         l.setXEntrySpace(6f);
 
+    }
+
+    public static void showSuccessAnimation(View view) {
+        if (view == null) return;
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        LayoutInflater inflater = LayoutInflater.from(view.getContext());
+        View customView = inflater.inflate(R.layout.success_toast, null);
+        builder.setView(customView);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
+            AlertDialog dialog = builder.create();
+            if (dialog.getWindow() != null)
+                dialog.getWindow().getAttributes().windowAnimations = R.anim.success_toast;
+            dialog.show();
+            handler.postDelayed(dialog::dismiss, 1000);
+        });
+
+    }
+
+    public static boolean validateCategoryValues(AutoCompleteTextView nameView, AutoCompleteTextView colorView) {
+        Context context = nameView.getContext();
+        String name = nameView.getText().toString();
+        String color = colorView.getText().toString();
+        if (name.trim().isEmpty()) {
+            nameView.setError(context.getString(R.string.error_name_empty));
+            return false;
+        } else nameView.setError(null);
+        if (color.trim().isEmpty()) {
+            colorView.setError(context.getString(R.string.error_color_empty));
+            return false;
+        } else if (!color.startsWith("#")) {
+            colorView.setError(context.getString(R.string.error_color_invalid));
+            return false;
+        } else if (color.length() < 6) {
+            colorView.setError(context.getString(R.string.error_color_length));
+            return false;
+        } else colorView.setError(null);
+        return true;
     }
 }

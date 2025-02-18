@@ -3,6 +3,7 @@ package com.angelp.purchasehistory.data.filters;
 import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
+import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,6 +36,7 @@ public class PurchaseFilter implements Parcelable {
     private LocalDate from;
     private LocalDate to;
     private Long categoryId;
+    private String categoryName;
     //    private PageRequest pageRequest;
     private UUID userId;
 
@@ -43,19 +45,29 @@ public class PurchaseFilter implements Parcelable {
         setTo(LocalDate.now());
     }
 
-    public PurchaseFilter(LocalDate from){
-        this.from = from;
+    public PurchaseFilter(LocalDate singleDay) {
+        this.from = singleDay;
+        this.to = singleDay;
     }
+
     protected PurchaseFilter(Parcel in) {
         setFrom(getDateFromParcel(in));
         setTo(getDateFromParcel(in));
         long categoryId = in.readLong();
-        if (categoryId >= 0)
-            setCategoryId(categoryId);
+        if (categoryId >= 0) {
+            this.categoryId = categoryId;
+        }
+        this.categoryName = in.readString();
         String userString = in.readString();
         if (userString != null && !userString.isBlank())
             setUserId(UUID.fromString(userString));
     }
+
+    public void setCategory(CategoryView category) {
+        this.categoryId = category.getId();
+        this.categoryName = category.getName();
+    }
+
 
     public boolean isEmpty() {
         return from == null && to == null && categoryId == null && userId == null;
@@ -81,7 +93,7 @@ public class PurchaseFilter implements Parcelable {
         PurchaseFilter def = getDefaultFilter();
         LocalDate from = getFrom() != null ? getFrom() : def.getFrom();
         LocalDate filterTo = getTo() != null ? getTo() : def.getTo();
-        return "Filtered by period of:\n" + from.format(dtf) + " - " + filterTo.format(dtf) + "\n" + (getCategoryId() == null ? "" : "And by category");
+        return from.format(dtf) + " - " + filterTo.format(dtf) + (categoryName == null ? "" : "\nCategory:" + categoryName);
     }
 
     @Override
@@ -94,6 +106,7 @@ public class PurchaseFilter implements Parcelable {
         dest.writeLong(from == null ? -1L : from.toEpochDay());
         dest.writeLong(to == null ? -1L : to.toEpochDay());
         dest.writeLong(categoryId == null ? -1L : categoryId);
+        dest.writeString(categoryName == null ? "" : categoryName);
         dest.writeString(userId == null ? "" : userId.toString());
 //        dest.writeParcelable(pageRequest);
     }
@@ -129,6 +142,7 @@ public class PurchaseFilter implements Parcelable {
     public @NotNull PurchaseFilter copy() {
         PurchaseFilter purchaseFilter = new PurchaseFilter();
         purchaseFilter.setCategoryId(categoryId);
+        purchaseFilter.setCategoryName(categoryName);
         purchaseFilter.setFrom(from);
         purchaseFilter.setTo(to);
         purchaseFilter.setUserId(userId);

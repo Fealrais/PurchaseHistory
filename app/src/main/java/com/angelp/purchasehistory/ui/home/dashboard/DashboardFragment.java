@@ -48,7 +48,7 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeDashboardFragments();
-        filterDialog = new PurchaseFilterDialog(false);
+        filterDialog = new PurchaseFilterDialog(true);
         binding.dashboardFilterButton.setOnClickListener(v -> openFilter());
         binding.customizeDashboardButton.setOnClickListener(v -> openCustomizationDialog());
     }

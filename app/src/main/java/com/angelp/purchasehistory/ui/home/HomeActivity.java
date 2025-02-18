@@ -3,12 +3,14 @@ package com.angelp.purchasehistory.ui.home;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -144,5 +146,15 @@ public class HomeActivity extends AppCompatActivity {
             }).start();
         }
         return false;
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (data != null) {
+                Uri uri = data.getData();
+                new Thread(() -> purchaseClient.getExportedCsv(this, uri)).start();
+            }
+        }
     }
 }

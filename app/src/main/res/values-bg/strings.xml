@@ -192,4 +192,18 @@
     <string name="purchase_created_title">Фактурата е създадена успешно</string>
     <string name="submit_new_payment">Изпратете ново плащане</string>
     <string name="notification_toggleButton">Превключване на известията</string>
+    <string name="title_edit_activity_profile">Редактиране на профил</string>
+    <string name="download_data">Изтеглете вашите данни</string>
+    <string name="delete_account">Изтриване на акаунт</string>
+    <string name="share_token">Споделете токен за достъп</string>
+    <string name="share_token_description">Споделете линк с вашия финансов консултант, за да видите вашата статистика</string>
+    <string name="delete_account_description">Сигурни ли сте, че искате да изтриете акаунта си? Това е необратимо действие</string>
+    <string name="success">Успех!</string>
+    <string name="success_icon">Икона за успех</string>
+    <string name="ok">ОК</string>
+    <string name="invalid_purchase_title">Покупката не е приета</string>
+    <string name="error_name_empty">Моля, въведете име</string>
+    <string name="error_color_empty">Моля, въведете цвят</string>
+    <string name="error_color_invalid">Цветът трябва да бъде валидна шестнадесетична стойност (например, #FFFFFF)</string>
+    <string name="error_color_length">Шестнадесетичната стойност трябва да бъде с дължина 6 символа</string>
 </resources>

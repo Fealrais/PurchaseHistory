@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.model.Category;
 import com.angelp.purchasehistory.databinding.CategoryDialogBinding;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
@@ -71,24 +70,20 @@ public class CreateCategoryDialog extends DialogFragment {
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Creating a new category");
-        builder.setView(binding.getRoot())
-                .setPositiveButton(R.string.create_category, (dialog, id) -> {
-                    String name = binding.categoryNameInput.getText().toString();
-                    String color = binding.categoryColorInput.getText().toString();
-                    try {
-                        validateValues(name, color);
-                        binding.categoryErrorText.setError("");
-                        new Thread(() -> {
-                            Category category = purchaseClient.createCategory(new CategoryDTO(name, color));
-                            consumer.accept(category);
-                            dialog.dismiss();
-                        }).start();
-                    } catch (RuntimeException e) {
-                        binding.categoryErrorText.setText(e.getMessage());
-                        Log.i(TAG, "onCreateDialog: Validation failed: " + e.getMessage());
-                    }
-                })
-                .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
+        builder.setView(binding.getRoot());
+        binding.saveButton.setOnClickListener(v -> {
+            String name = binding.categoryNameInput.getText().toString();
+            String color = binding.categoryColorInput.getText().toString();
+            boolean isValid = AndroidUtils.validateCategoryValues(binding.categoryNameInput, binding.categoryColorInput);
+            if (isValid) {
+                new Thread(() -> {
+                    Category category = purchaseClient.createCategory(new CategoryDTO(name, color));
+                    consumer.accept(category);
+                    dismiss();
+                }).start();
+            }
+        });
+        binding.cancelButton.setOnClickListener(v -> dismiss());
         return builder.create();
     }
 
@@ -113,16 +108,6 @@ public class CreateCategoryDialog extends DialogFragment {
             ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_list_item_1, colorList);
             new Handler(Looper.getMainLooper()).post(() -> binding.categoryColorInput.setAdapter(colorAdapter));
         }).start();
-    }
-
-
-    private void validateValues(String name, String color) {
-        if (name.trim().isEmpty())
-            throw new RuntimeException("Name cannot be empty");
-        if (color.trim().isEmpty())
-            throw new RuntimeException("Color cannot be empty");
-        if (!color.startsWith("#"))
-            throw new RuntimeException("Color should be a hex value");
     }
 
     @Override

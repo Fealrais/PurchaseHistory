@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.model.Category;
 import com.angelp.purchasehistory.databinding.CategoryDialogBinding;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
@@ -78,25 +77,22 @@ public class EditCategoryDialog extends DialogFragment {
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Editing category#" + purchaseId);
-        builder.setView(binding.getRoot()).setPositiveButton(R.string.edit_text, (dialog, id) -> {
+        builder.setView(binding.getRoot());
+        binding.saveButton.setOnClickListener(v -> {
             String name = binding.categoryNameInput.getText().toString();
             String color = binding.categoryColorInput.getText().toString();
-            try {
-                validateValues(name, color);
-                binding.categoryErrorText.setError("");
+            boolean isValid = AndroidUtils.validateCategoryValues( binding.categoryNameInput, binding.categoryColorInput);
+            if (isValid) {
                 new Thread(() -> {
                     Category category = purchaseClient.editCategory(purchaseId.intValue(), new CategoryDTO(name, color));
                     defaultValue.setColor(category.getColor());
                     defaultValue.setName(category.getName());
                     consumer.accept(category);
-                    dialog.dismiss();
+                    dismiss();
                 }).start();
-            } catch (RuntimeException e) {
-                binding.categoryErrorText.setText(e.getMessage());
-                Log.i(TAG, "onCreateDialog: Validation failed: " + e.getMessage());
             }
-        }).setNegativeButton(R.string.cancel, (dialog, id) -> dialog.dismiss());
-
+        });
+        binding.cancelButton.setOnClickListener(v -> dismiss());
         updateUI(defaultValue);
         return builder.create();
     }
@@ -131,12 +127,6 @@ public class EditCategoryDialog extends DialogFragment {
         }).start();
     }
 
-
-    private void validateValues(String name, String color) {
-        if (name.trim().isEmpty()) throw new RuntimeException("Name cannot be empty");
-        if (color.trim().isEmpty()) throw new RuntimeException("Color cannot be empty");
-        if (!color.startsWith("#")) throw new RuntimeException("Color should be a hex value");
-    }
 
     @Override
     public void show(@NonNull @NotNull FragmentManager manager, @Nullable String tag) {

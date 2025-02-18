@@ -53,8 +53,14 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         if (purchaseView.getCategory() != null) {
             binding.purchaseCategoryText.setVisibility(View.VISIBLE);
             binding.purchaseCategoryText.setText(purchaseView.getCategory().getName().toUpperCase());
-            int color = Color.parseColor(purchaseView.getCategory().getColor().toUpperCase());
+            int color;
+            try {
+                color = Color.parseColor(purchaseView.getCategory().getColor().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                color = Color.GRAY;
+            }
             int textColor = AndroidUtils.getTextColor(color);
+
             binding.purchaseCategoryText.setBackgroundColor(color);
             binding.purchaseCategoryText.setTextColor(textColor);
         } else {

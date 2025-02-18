@@ -41,6 +41,15 @@ public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
                     editCategoryDialog.show(getParentFragmentManager(), "Edit_category");
                     return false;
                 });
+                Preference deletePreference = new Preference(getContext());
+                deletePreference.setTitle("Delete");
+                deletePreference.setOnPreferenceClickListener((p) -> {
+                    new Thread(() -> {
+//                        purchaseClient.deleteCategory(categoryView.getId());
+                        new Handler(Looper.getMainLooper()).post(() -> category.removePreference(categoryPreference));
+                    }).start();
+                    return false;
+                });
                 category.addPreference(categoryPreference);
             }
         }).start();

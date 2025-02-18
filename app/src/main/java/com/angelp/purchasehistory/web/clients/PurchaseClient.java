@@ -1,11 +1,8 @@
 package com.angelp.purchasehistory.web.clients;
 
-import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
-import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.model.Category;
@@ -214,14 +211,11 @@ public class PurchaseClient extends HttpClient {
         }
         return null;
     }
-
-    public Uri getExportedCsv() throws IOException {
+    public void getExportedCsv(Context context, Uri saveLocation) {
         try (Response res = get(BACKEND_URL + "/purchase/export")) {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
-                String header = res.header("Content-Disposition");
-                String filename = header == null ? "unknown" : header.substring(header.indexOf("=") + 1);
-                return createFile(filename, body.bytes());
+                createFile(context, body.bytes(), saveLocation);
             } else {
                 if (body != null) {
                     ErrorResponse errorResponse = gson.fromJson(body.string(), ErrorResponse.class);
@@ -230,27 +224,26 @@ public class PurchaseClient extends HttpClient {
                 }
                 throw new WebException(R.string.could_not_download_file);
             }
+        } catch (IOException e) {
+            Log.e(TAG, "Error downloading CSV: " + e.getMessage());
         }
     }
 
-    private Uri createFile(String name, byte[] bytes) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Downloads.DISPLAY_NAME, name);
-        contentValues.put(MediaStore.Downloads.MIME_TYPE, "text/csv");
-        contentValues.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
-
-        Uri uri = PurchaseHistoryApplication.getContext().getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-
-        if (uri != null) {
-            try (OutputStream outputStream = PurchaseHistoryApplication.getContext().getContentResolver().openOutputStream(uri)) {
+    private void createFile(Context context, byte[] bytes, Uri location) {
+        if (location != null) {
+            try (OutputStream outputStream = context.getContentResolver().openOutputStream(location)) {
                 if (outputStream != null) {
                     outputStream.write(bytes);
+                    Log.i(TAG, "CSV file saved successfully: " + location.getPath());
+                } else {
+                    Log.e(TAG, "OutputStream is null");
                 }
             } catch (IOException e) {
-                Log.e(TAG, "createFile: " + e.getMessage());
+                Log.e(TAG, "Error writing CSV file: " + e.getMessage());
             }
+        } else {
+            Log.e(TAG, "Failed to create file URI");
         }
-        return uri;
     }
 
     public CategoryAnalyticsReport getCategoryAnalyticsReport(PurchaseFilter filter) {

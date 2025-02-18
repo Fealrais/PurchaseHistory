@@ -81,48 +81,54 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:dividerPadding="18dp"
+            style="?android:attr/buttonBarStyle"
             android:orientation="horizontal">
-
             <Button
                 android:id="@+id/filter_week"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/this_week" />
+                android:text="@string/this_week"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/filter_month"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/this_month" />
+                android:text="@string/this_month"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/filter_3month"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/three_months" />
+                android:text="@string/three_months"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/filter_6month"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/six_months" />
+                android:text="@string/six_months"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/filter_year"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/this_year" />
+                android:text="@string/this_year"
+                style="?android:attr/buttonBarButtonStyle" />
+
             <Button
                 android:id="@+id/filter_last_year"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/last_year" />
+                android:text="@string/last_year"
+                style="?android:attr/buttonBarButtonStyle" />
         </LinearLayout>
     </HorizontalScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

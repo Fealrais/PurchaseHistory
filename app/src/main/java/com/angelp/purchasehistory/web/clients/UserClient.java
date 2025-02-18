@@ -1,9 +1,10 @@
 package com.angelp.purchasehistory.web.clients;
 
 import android.util.Log;
+import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistorybackend.models.views.incoming.UpdatePasswordDTO;
 import com.angelp.purchasehistorybackend.models.views.incoming.UserDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
-import com.angelp.purchasehistory.R;
 import okhttp3.Response;
 
 import javax.inject.Inject;
@@ -16,6 +17,7 @@ public class UserClient extends HttpClient {
     @Inject
     public UserClient() {
     }
+
     public Optional<String> getReferralToken() {
         try (Response res = get(BACKEND_URL + "/users/self/referral-link")) {
             if (res.isSuccessful() && res.body() != null) {
@@ -40,5 +42,21 @@ public class UserClient extends HttpClient {
             throw new WebException(R.string.server_connection_failed_500);
         }
         return null;
+    }
+
+    public boolean deleteAccount() {
+        try (Response res = delete(BACKEND_URL + "/users/self")) {
+            return res.isSuccessful();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public UserView updatePassword(UpdatePasswordDTO updatePasswordDTO) {
+        try (Response res = put(BACKEND_URL + "/users/self/password", updatePasswordDTO)) {
+            return utils.getBody(res, UserView.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -120,6 +120,8 @@
         android:id="@+id/purchaseEdit_clearButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+
         android:text="@string/reset_text"
         app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_deleteButton"
         app:layout_constraintStart_toEndOf="@+id/purchaseEdit_saveButton"
@@ -130,6 +132,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:padding="10dp"
+
         android:text="@string/save"
         app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_clearButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -146,8 +150,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/purchaseEdit_clearButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/purchaseEdit_clearButton"
-        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_clearButton"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_clearButton" />
 
     <EditText
         android:id="@+id/purchaseEdit_noteInput"

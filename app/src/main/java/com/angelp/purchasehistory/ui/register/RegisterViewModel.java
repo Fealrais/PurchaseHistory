@@ -61,13 +61,15 @@ public class RegisterViewModel extends ViewModel {
         };
     }
 
-    public void registerDataChanged(String username, String password, String email) {
+    public void registerDataChanged(String username, String password,String confirmPassword, String email) {
         if (!AndroidUtils.isUserNameValid(username)) {
             registerFormState.setValue(new RegisterFormState(R.string.invalid_username, null, null));
         } else if (!AndroidUtils.isPasswordValid(password)) {
             registerFormState.setValue(new RegisterFormState(null, R.string.invalid_password, null));
         } else if (!AndroidUtils.isEmailValid(email)) {
             registerFormState.setValue(new RegisterFormState(null, null, R.string.invalid_email));
+        }if (!password.equals(confirmPassword)) {
+            registerFormState.setValue(new RegisterFormState(null, R.string.invalid_password_match, null));
         } else {
             registerFormState.setValue(new RegisterFormState(true));
         }

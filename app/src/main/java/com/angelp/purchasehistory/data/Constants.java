@@ -19,7 +19,7 @@ public final class Constants {
     public static final String DASHBOARD_FILTER = "dashboard_filter";
 
     public static PurchaseFilter getDefaultFilter() {
-        return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now(), null, null);
+        return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now(), null, null, null);
     }
 
     static {
@@ -38,16 +38,17 @@ public final class Constants {
     }
     public static HashMap<String, Integer> errorsMap= new HashMap<>();
     static {
-        errorsMap.put("err1001", R.string.err1001);
-        errorsMap.put("err1002", R.string.err1002);
-        errorsMap.put("err1003", R.string.err1003);
-        errorsMap.put("err1004", R.string.err1004);
-        errorsMap.put("err1005", R.string.err1005);
-        errorsMap.put("err1006", R.string.err1006);
-        errorsMap.put("err1007", R.string.err1007);
-        errorsMap.put("err1008", R.string.err1008);
-        errorsMap.put("err1009", R.string.err1009);
-        errorsMap.put("err1010", R.string.err1010);
+        errorsMap.put("1001", R.string.err1001);
+        errorsMap.put("1002", R.string.err1002);
+        errorsMap.put("1003", R.string.err1003);
+        errorsMap.put("1004", R.string.err1004);
+        errorsMap.put("1005", R.string.err1005);
+        errorsMap.put("1006", R.string.err1006);
+        errorsMap.put("1007", R.string.err1007);
+        errorsMap.put("1008", R.string.err1008);
+        errorsMap.put("1009", R.string.err1009);
+        errorsMap.put("1010", R.string.err1010);
+        errorsMap.put("1011", R.string.err1011);
     }
 
     public interface Preferences {

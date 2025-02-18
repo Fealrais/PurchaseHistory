@@ -202,4 +202,26 @@
     <string name="submit_new_payment">Submit new payment</string>
     <string name="notification_toggleButton">Toggle notifications</string>
     <string name="currency_total">Total: <big>%.2f</big></string>
+    <string name="invalid_purchase_title">Purchase Not Accepted</string>
+    <string name="title_edit_activity_profile">Edit profile</string>
+    <string name="download_data">Download your data</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="share_token">Share access token</string>
+    <string name="share_token_description">Share a link with your financial consultant to view your statistics</string>
+    <string name="delete_account_description">Are you sure you want to delete your account? This is an inreversable action</string>
+    <string name="success">Success!</string>
+    <string name="success_icon">Success icon</string>
+    <string name="ok">OK</string>
+    <string name="error_name_empty">Please enter a name</string>
+    <string name="error_color_empty">Please enter a color</string>
+    <string name="error_color_invalid">Color should be a valid hex value (e.g., #FFFFFF)</string>
+    <string name="error_color_length">Hex value should be 6 characters long</string>
+    <string name="notification_required_warning">Notification permission is required to add scheduled expenses.</string>
+    <string name="prompt_repeat_password">Type your password again</string>
+    <string name="username_param">Username: %s</string>
+    <string name="email_param">Email: %s</string>
+    <string name="prompt_current_password">Your current password</string>
+    <string name="failed_to_update_profile">Failed to update profile</string>
+    <string name="profile_updated_successfully">Profile updated successfully</string>
+    <string name="err1011">Invalid password</string>
 </resources>

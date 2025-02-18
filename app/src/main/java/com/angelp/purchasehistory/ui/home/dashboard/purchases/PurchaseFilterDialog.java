@@ -153,12 +153,12 @@ public class PurchaseFilterDialog extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 CategoryView categoryView = categoryOptions.get(position);
-                filter.setCategoryId(categoryView.getId());
+                filter.setCategory(categoryView);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                filter.setCategoryId(null);
+                filter.setCategory(null);
             }
         });
     }

@@ -10,7 +10,5 @@
     <string name="err1008">Категорията не съществува.</string>
     <string name="err1009">Няма покупки за показване.</string>
     <string name="err1010">Неуспешно извличане на потребителски данни.</string>
-
     <string name="error_web_response">Възникна грешка. Моля, опитайте отново по-късно.</string>
-    <string name="invalid_purchase_title">Покупката не е приета</string>
 </resources>

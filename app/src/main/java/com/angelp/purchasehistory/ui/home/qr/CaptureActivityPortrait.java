@@ -28,14 +28,19 @@ public class CaptureActivityPortrait extends Activity implements CompoundBarcode
         barcodeScannerView = findViewById(R.id.zxing_barcode_scanner);
         barcodeScannerView.setTorchListener(this);
         switchFlashlightButton = findViewById(R.id.switch_flashlight);
+        switchFlashlightButton.setText(R.string.turn_off_flashlight);
         viewfinderView = findViewById(R.id.zxing_viewfinder_view);
         if (!hasFlash()) {
             switchFlashlightButton.setVisibility(View.GONE);
         }
-        switchFlashlightButton.setOnClickListener(v -> {
-            if (getString(R.string.turn_on_flashlight).contentEquals(switchFlashlightButton.getText())) {
+        switchFlashlightButton.setOnCheckedChangeListener((v, value) -> {
+            if (value) {
+                switchFlashlightButton.setText(R.string.turn_on_flashlight);
+                barcodeScannerView.setTorchOn();
+            } else {
+                switchFlashlightButton.setText(R.string.turn_off_flashlight);
                 barcodeScannerView.setTorchOff();
-            } else barcodeScannerView.setTorchOn();
+            }
         });
         capture = new CaptureManager(this, barcodeScannerView);
         capture.initializeFromIntent(getIntent(), savedInstanceState);

@@ -11,5 +11,4 @@
     <string name="err1009">There are no purchases to display.</string>
     <string name="err1010">Failed to retrieve user data.</string>
     <string name="error_web_response">An error occurred. Please try again later.</string>
-    <string name="invalid_purchase_title">Purchase Not Accepted</string>
 </resources>

@@ -38,6 +38,7 @@ import static com.angelp.purchasehistory.data.Constants.Arguments.NOTIFICATION_E
 @AndroidEntryPoint
 public class ScheduledExpensesFragment extends Fragment {
 
+    public static final String CREATE_SCHEDULED_EXPENSE_DIALOG = "createScheduledExpenseDialog";
     private FragmentScheduledExpensesBinding binding;
     @Inject
     ScheduledExpenseClient scheduledExpenseClient;
@@ -75,11 +76,7 @@ public class ScheduledExpensesFragment extends Fragment {
                         if (context == null) return;
                         SharedPreferences preferences = context.getSharedPreferences(Constants.Preferences.SILENCED_NOTIFICATIONS, MODE_PRIVATE);
                         preferences.edit().putBoolean(item.getId().toString(), silenced).apply();
-                        Intent intent = new Intent(context, InitiateNotificationReceiver.class);
-                        ArrayList<ScheduledNotification> list = new ArrayList<>();
-                        list.add(new ScheduledNotification(item));
-                        intent.putParcelableArrayListExtra(Constants.Arguments.NOTIFICATION_EXTRA_ARG, list);
-                        context.sendBroadcast(intent);
+                        addNotificationAlarm(context, item);
                     }).start();
                 }
 
@@ -170,11 +167,8 @@ public class ScheduledExpensesFragment extends Fragment {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
             } else {
-                CreateScheduledExpenseDialog createDialog = new CreateScheduledExpenseDialog(newExpense -> {
-                    adapter.getScheduledExpenses().add(newExpense);
-                    adapter.notifyItemInserted(adapter.getItemCount() - 1);
-                });
-                createDialog.show(getParentFragmentManager(), "createScheduledExpenseDialog");
+                CreateScheduledExpenseDialog createDialog = new CreateScheduledExpenseDialog(this::acceptCreateScheduledExpenseResult);
+                createDialog.show(getParentFragmentManager(), CREATE_SCHEDULED_EXPENSE_DIALOG);
             }
         });
     }
@@ -184,14 +178,28 @@ public class ScheduledExpensesFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                CreateScheduledExpenseDialog createDialog = new CreateScheduledExpenseDialog(newExpense -> {
-                    adapter.getScheduledExpenses().add(newExpense);
-                    adapter.notifyItemInserted(adapter.getItemCount() - 1);
-                });
-                createDialog.show(getParentFragmentManager(), "createScheduledExpenseDialog");
+                CreateScheduledExpenseDialog createDialog = new CreateScheduledExpenseDialog(this::acceptCreateScheduledExpenseResult);
+                createDialog.show(getParentFragmentManager(), CREATE_SCHEDULED_EXPENSE_DIALOG);
             } else {
-                PurchaseHistoryApplication.getInstance().alert("Notification permission is required to add scheduled expenses.");
+                PurchaseHistoryApplication.getInstance().alert(R.string.notification_required_warning);
             }
         }
+    }
+
+    private void addNotificationAlarm(Context context, ScheduledExpenseView newExpense) {
+        if(context == null) return;
+        ScheduledNotification scheduledNotification = new ScheduledNotification(newExpense);
+        Intent intent = new Intent(context, InitiateNotificationReceiver.class);
+        ArrayList<ScheduledNotification> list = new ArrayList<>();
+        list.add(scheduledNotification);
+        intent.putParcelableArrayListExtra(Constants.Arguments.NOTIFICATION_EXTRA_ARG, list);
+        context.sendBroadcast(intent);
+
+    }
+
+    private void acceptCreateScheduledExpenseResult(ScheduledExpenseView newExpense) {
+        addNotificationAlarm(getContext(), newExpense);
+        adapter.getScheduledExpenses().add(newExpense);
+        adapter.notifyItemInserted(adapter.getItemCount() - 1);
     }
 }

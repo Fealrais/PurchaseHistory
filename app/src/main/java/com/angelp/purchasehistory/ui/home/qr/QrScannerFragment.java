@@ -212,6 +212,8 @@ public class QrScannerFragment extends Fragment {
         binding.qrPriceInput.setText(AndroidUtils.formatCurrency(BigDecimal.ZERO));
         binding.qrDateInput.setText(R.string.date);
         binding.qrTimeInput.setText(R.string.time);
+        datePicker.setValue(LocalDate.now());
+        timePicker.setValue(LocalTime.now());
         binding.qrBillIdValue.setText("-");
         binding.qrStoreIdValue.setText("-");
         binding.qrNoteInput.setText("");
@@ -240,8 +242,10 @@ public class QrScannerFragment extends Fragment {
         new Thread(() -> {
             PurchaseView purchaseView = qrScannerViewModel.createPurchaseView(data);
             if (purchaseView != null) {
-                PurchaseHistoryApplication.getInstance().alert("Created purchase" + (purchaseView.getBillId() == null ? "" : " #" + purchaseView.getBillId()) + ". Cost:" + purchaseView.getPrice());
-                new Handler(Looper.getMainLooper()).post(this::resetForm);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    AndroidUtils.showSuccessAnimation(getView());
+                    resetForm();
+                });
             }
             setSubmitLoading(false);
         }).start();

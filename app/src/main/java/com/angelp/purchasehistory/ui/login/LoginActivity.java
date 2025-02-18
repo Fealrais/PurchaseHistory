@@ -71,8 +71,8 @@ public class LoginActivity extends AppCompatActivity {
         TextWatcher afterTextChangedListener = new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginViewModel.loginDataChanged(usernameEditText.getText().toString().trim(),
+                        passwordEditText.getText().toString().trim());
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
@@ -101,8 +101,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attemptLogin(EditText usernameEditText, EditText passwordEditText) {
-        new Thread(loginViewModel.login(usernameEditText.getText().toString(),
-                passwordEditText.getText().toString()), "Login").start();
+        new Thread(loginViewModel.login(usernameEditText.getText().toString().trim(),
+                passwordEditText.getText().toString().trim()), "Login").start();
     }
 
     private void updateUiWithUser(String username) {

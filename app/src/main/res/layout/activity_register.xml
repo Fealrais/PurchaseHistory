@@ -47,7 +47,7 @@
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/repeat_password" />
 
     <EditText
         android:id="@+id/password"
@@ -63,8 +63,22 @@
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
-
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+<EditText
+    android:id="@+id/confirm_password"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:autofillHints="@string/prompt_password"
+    android:hint="@string/confirm_password"
+    android:imeActionLabel="@string/action_log_in"
+    android:imeOptions="actionDone"
+    android:inputType="textPassword"
+    android:minHeight="48dp"
+    android:selectAllOnFocus="true"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/password" />
     <Button
         android:id="@+id/register_registerButton"
         android:layout_width="wrap_content"
