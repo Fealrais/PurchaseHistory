@@ -3,6 +3,7 @@ package com.angelp.purchasehistory.web.clients;
 
 import android.util.Log;
 import com.angelp.purchasehistorybackend.models.views.incoming.ScheduledExpenseDTO;
+import com.angelp.purchasehistorybackend.models.views.incoming.TriggerPurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import okhttp3.Response;
@@ -35,8 +36,8 @@ public class ScheduledExpenseClient extends HttpClient {
         return null;
     }
 
-    public PurchaseView triggerScheduledPurchase(Long id) {
-        try (Response res = post(BACKEND_URL + "/scheduled-expense/trigger?id=" + id, null)) {
+    public PurchaseView triggerScheduledPurchase(TriggerPurchaseDTO body) {
+        try (Response res = post(BACKEND_URL + "/scheduled-expense/trigger", body)) {
             ResponseBody responseBody = res.body();
             if (res.isSuccessful() && responseBody != null) {
                 String json = responseBody.string();

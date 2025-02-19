@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.databinding.FragmentProfileBinding;
 import com.angelp.purchasehistory.ui.home.settings.SettingsActivity;
@@ -21,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
 import java.util.Optional;
-import java.util.UUID;
 
 @AndroidEntryPoint
 public class ProfileFragment extends Fragment {
@@ -38,9 +38,11 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
 
         // Set up user info preview
-        UserView user = getUserInfo(); // Assume this method fetches the user info
-        binding.username.setText(getString(R.string.username_param, user.getUsername()));
-        binding.email.setText(getString(R.string.email_param, user.getEmail()));
+        UserView user = PurchaseHistoryApplication.getInstance().getLoggedUser().getValue(); // Assume this method fetches the user info
+        if(user!=null) {
+            binding.username.setText(getString(R.string.username_param, user.getUsername()));
+            binding.email.setText(getString(R.string.email_param, user.getEmail()));
+        }
 
         // Set up button click listeners
         binding.editButton.setOnClickListener(v ->
@@ -98,10 +100,5 @@ public class ProfileFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    private UserView getUserInfo() {
-        // Mock user info for demonstration
-        return new UserView(UUID.randomUUID(), "john_doe", "john.doe@example.com", "USER");
     }
 }

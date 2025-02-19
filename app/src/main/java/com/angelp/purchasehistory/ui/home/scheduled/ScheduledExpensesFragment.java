@@ -24,11 +24,13 @@ import com.angelp.purchasehistory.data.model.ScheduledNotification;
 import com.angelp.purchasehistory.databinding.FragmentScheduledExpensesBinding;
 import com.angelp.purchasehistory.receivers.scheduled.InitiateNotificationReceiver;
 import com.angelp.purchasehistory.web.clients.ScheduledExpenseClient;
+import com.angelp.purchasehistorybackend.models.views.incoming.TriggerPurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import com.google.gson.Gson;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +86,7 @@ public class ScheduledExpensesFragment extends Fragment {
                 public void onTriggerClick(ScheduledExpenseView item) {
                     new Thread(() -> {
                         try {
-                            scheduledExpenseClient.triggerScheduledPurchase(item.getId());
+                            scheduledExpenseClient.triggerScheduledPurchase(new TriggerPurchaseDTO(item.getId(), LocalDateTime.now()));
                             PurchaseHistoryApplication.getInstance().alert(R.string.purchase_created_title);
                         } catch (Exception e) {
                             PurchaseHistoryApplication.getInstance().alert("Error deleting scheduled expense: " + e.getMessage());

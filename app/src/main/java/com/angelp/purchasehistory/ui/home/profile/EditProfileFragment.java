@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.databinding.FragmentEditProfileBinding;
 import com.angelp.purchasehistory.util.AndroidUtils;
@@ -48,6 +49,12 @@ public class EditProfileFragment extends Fragment {
         etPassword = binding.passwordEdit;
         btnSave = binding.saveButton;
         tvFeedback = new TextView(getContext()); // Add this to your layout if needed
+
+        UserView user = PurchaseHistoryApplication.getInstance().getLoggedUser().getValue(); // Assume this method fetches the user info
+        if(user!= null){
+            etEmail.setText(user.getEmail());
+            etUsername.setText(user.getUsername());
+        }
 
         // Button click listener
         btnSave.setOnClickListener(v -> {

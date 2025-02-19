@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.util.Log;
 import com.angelp.purchasehistory.data.model.ScheduledNotification;
 import com.angelp.purchasehistory.web.clients.ScheduledExpenseClient;
+import com.angelp.purchasehistorybackend.models.views.incoming.TriggerPurchaseDTO;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -33,7 +35,7 @@ public class TriggerScheduledExpenseReceiver extends BroadcastReceiver {
         if (intent.getAction().equals("trigger")) {
             NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
             new Thread(()->{
-                scheduledExpenseClient.triggerScheduledPurchase(notification.getId());
+                scheduledExpenseClient.triggerScheduledPurchase(new TriggerPurchaseDTO(notification.getId(), LocalDateTime.now()));
                 manager.cancel(notification.getId().intValue());
             }).start();
         } else {
