@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -155,6 +156,19 @@ public final class AndroidUtils {
     @NotNull
     public static String formatCurrency(BigDecimal price) {
         return String.format(Locale.getDefault(), "%.2f", price.floatValue());
+    }
+    @NotNull
+    public static String formatCurrency(BigDecimal price, Context context) {
+        return formatCurrency(price.floatValue(), context);
+    }
+    @NotNull
+    public static String formatCurrency(float price, Context context) {
+        return String.format(Locale.getDefault(), "%.2f %s", price, getCurrencySymbol(context));
+    }
+
+    public static String getCurrencySymbol(Context context) {
+        SharedPreferences appPreferences = context.getSharedPreferences(Constants.Preferences.APP_PREFERENCES, Context.MODE_PRIVATE);
+        return appPreferences.getString(Constants.Preferences.PREFERRED_CURRENCY, "");
     }
 
     public static void initChart(BarLineChartBase<?> chart, AppColorCollection colors, String format, Typeface tf) {

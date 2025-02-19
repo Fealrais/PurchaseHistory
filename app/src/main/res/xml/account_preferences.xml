@@ -4,12 +4,13 @@
     <Preference
         android:key="edit_category_preference"
         android:title="Edit Categories" />
-    <EditTextPreference
-        android:defaultValue=""
+    <ListPreference
         android:key="currency_preference"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="Edit preferred currency"
-        android:summary="The shown currency" />
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/currency_list"
+        android:entryValues="@array/currency_list_values"
+        android:defaultValue="1"
+        android:title="@string/edit_currency"
+        android:summary="@string/edit_currency_summary" />
 </PreferenceScreen>

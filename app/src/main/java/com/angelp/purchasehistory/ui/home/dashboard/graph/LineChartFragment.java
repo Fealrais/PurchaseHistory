@@ -79,6 +79,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
         tf = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_regular);
         return binding.getRoot();
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -98,7 +99,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     }
 
     private void initGraph(LineChart chart) {
-        AndroidUtils.initChart(chart, appColorCollection, "dd",tf);
+        AndroidUtils.initChart(chart, appColorCollection, "dd", tf);
         if (showFilter) {
             chart.setOnChartValueSelectedListener(this);
         }
@@ -117,6 +118,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
 //                lineDataSet.setDrawIcons(false);
                 lineDataSet.setDrawCircleHole(false);
                 lineDataSet.setValueTypeface(Typeface.DEFAULT);
+                lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
                 if (i < colors.size()) {
                     int color = colors.get(i++);
                     lineDataSet.setColor(color);
@@ -126,6 +128,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
                 data.addDataSet(lineDataSet);
             }
             data.setValueTextColor(appColorCollection.getForegroundColor());
+            data.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(getContext())));
             notifyDataChanged(data);
         }).start();
     }
@@ -185,7 +188,6 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     private void openFilter() {
         filterDialog.show(getParentFragmentManager(), "purchasesFilterDialog");
     }
-
 
 
     private void applyFilter(PurchaseFilter newFilter) {

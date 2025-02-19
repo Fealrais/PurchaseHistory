@@ -19,6 +19,7 @@ import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentPieChartBinding;
 import com.angelp.purchasehistory.ui.home.dashboard.DashboardViewModel;
+import com.angelp.purchasehistory.ui.home.dashboard.graph.CurrencyValueFormatter;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.util.CommonUtils;
@@ -31,7 +32,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
@@ -134,12 +134,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         dataSet.setValueTextColors(categoryColors.stream().map(AndroidUtils::getTextColor).collect(Collectors.toList()));
         dataSet.setValueTextSize(12f);
         dataSet.setValueTypeface(tf);
-        dataSet.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return String.format(Locale.ENGLISH, "%.2f", value);
-            }
-        });
+        dataSet.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(getContext())));
 
         PieData newData = new PieData(dataSet);
 
@@ -152,7 +147,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     }
 
     private void setPiechartCenterText(BigDecimal sum) {
-        String centerText = (sum == null) ? getString(R.string.no_data) : sum.toString();
+        String centerText = (sum == null) ? getString(R.string.no_data) : AndroidUtils.formatCurrency(sum, getContext());
         binding.pieChart.setCenterText(centerText);
         binding.pieChart.setCenterTextColor(R.color.primaryColor);
         binding.pieChart.setCenterTextSize(24);
@@ -162,9 +157,8 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     private void setPiechartCenterText(String centerText, float secondValue, CategoryView category) {
         String name = category.getName();
         name = CommonUtils.limitString(name,12);
-        binding.pieChart.setCenterText(name + "\n" + centerText + "\n" + secondValue);
-        binding.pieChart.setCenterTextColor(AndroidUtils.getColor(category));
-        binding.pieChart.setCenterTextSize(20);
+        binding.pieChart.setCenterText(name + "\n" + centerText + "\n" + AndroidUtils.formatCurrency(secondValue, getContext()));
+        binding.pieChart.setCenterTextSize(16);
         binding.pieChart.setCenterTextTypeface(tf);
     }
 

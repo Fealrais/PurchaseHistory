@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 import static com.angelp.purchasehistory.data.Constants.Arguments.PURCHASE_EDIT_DIALOG_ID_KEY;
 
@@ -39,7 +38,7 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
         editDialog = new PurchaseEditDialog();
         this.fragmentManager = fragmentManager;
         if (purchaseView.getPrice() != null)
-            binding.purchasePriceText.setText(String.format(Locale.ENGLISH, "%.2f", purchaseView.getPrice().doubleValue()));
+            binding.purchasePriceText.setText(AndroidUtils.formatCurrency(purchaseView.getPrice(), itemView.getContext()));
         else binding.purchasePriceText.setText("-");
         if (purchaseView.getNote() != null) {
             binding.purchaseNoteText.setText(purchaseView.getNote());

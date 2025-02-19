@@ -102,7 +102,7 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
 
             viewCategoryBorder.setBackgroundColor(AndroidUtils.getColor(scheduledExpense.getCategory()));
             textViewName.setText(scheduledExpense.getNote());
-            textViewPrice.setText(String.valueOf(scheduledExpense.getPrice()));
+            textViewPrice.setText(AndroidUtils.formatCurrency(scheduledExpense.getPrice(), itemView.getContext()));
             setNextTimestampString(textViewNextDate, scheduledExpense);
             silenceButton.setChecked(!isSilenced);
             setSilencedState(isSilenced);
