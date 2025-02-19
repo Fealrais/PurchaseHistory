@@ -64,6 +64,11 @@ public class PurchaseFilter implements Parcelable {
     }
 
     public void setCategory(CategoryView category) {
+        if (category == null) {
+            this.categoryId = null;
+            this.categoryName = null;
+            return;
+        }
         this.categoryId = category.getId();
         this.categoryName = category.getName();
     }
