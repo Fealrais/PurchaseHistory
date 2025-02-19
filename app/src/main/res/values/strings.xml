@@ -223,5 +223,5 @@
     <string name="prompt_current_password">Your current password</string>
     <string name="failed_to_update_profile">Failed to update profile</string>
     <string name="profile_updated_successfully">Profile updated successfully</string>
-    <string name="err1011">Invalid password</string>
+
 </resources>

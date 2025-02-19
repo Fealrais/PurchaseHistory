@@ -206,4 +206,11 @@
     <string name="error_color_empty">Моля, въведете цвят</string>
     <string name="error_color_invalid">Цветът трябва да бъде валидна шестнадесетична стойност (например, #FFFFFF)</string>
     <string name="error_color_length">Шестнадесетичната стойност трябва да бъде с дължина 6 символа</string>
+    <string name="notification_required_warning">Изисква се разрешение за известия, за да добавите планирани разходи.</string>
+    <string name="prompt_repeat_password">Въведете паролата отново</string>
+    <string name="username_param">Потребителско име: %s</string>
+    <string name="email_param">Имейл: %s</string>
+    <string name="prompt_current_password">Сегашната ви парола</string>
+    <string name="failed_to_update_profile">Неуспешно актуализиране на профила</string>
+    <string name="profile_updated_successfully">Профилът е актуализиран успешно</string>
 </resources>

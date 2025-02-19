@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         PurchaseHistoryApplication root = PurchaseHistoryApplication.getInstance();
 
         String token = root.getUserToken().getValue();
-        Log.i("jwtoken", token != null && !token.isEmpty() ? token : "no JWT in phone");
+        Log.i("jwtoken", token != null && !token.isEmpty() ? "Found JWT" : "No JWT in phone");
         if (token != null && !token.isEmpty()) {
             binding.loadingMain.setVisibility(View.VISIBLE);
             new Thread(() -> {
