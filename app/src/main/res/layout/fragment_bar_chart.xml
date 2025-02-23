@@ -6,6 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.dashboard.graph.BarChartFragment">
+
+    <FrameLayout
+        android:id="@+id/loading_bar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/loading_dimmed"
+        android:elevation="1dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
     <Button
         android:id="@+id/graph_filterButton"
 
@@ -15,8 +35,8 @@
         android:layout_marginTop="8dp"
         android:background="@color/design_default_color_secondary"
         android:contentDescription="@string/filterButton"
-        android:text="@string/filterButton"
         android:elevation="10dp"
+        android:text="@string/filterButton"
 
         app:icon="@drawable/ic_menu_filter"
         app:layout_constraintStart_toStartOf="@+id/barChart_view"

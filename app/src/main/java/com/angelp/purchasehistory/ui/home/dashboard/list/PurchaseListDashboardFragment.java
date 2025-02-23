@@ -32,10 +32,10 @@ import java.util.List;
 public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
-    private FragmentPurchasesListCardBinding binding;
-    private PurchasesAdapter purchasesAdapter;
     @Inject
     PurchaseClient purchaseClient;
+    private FragmentPurchasesListCardBinding binding;
+    private PurchasesAdapter purchasesAdapter;
     private boolean showFilter;
     private int maxSize;
 
@@ -47,17 +47,19 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        maxSize = -1;
-        if (getArguments() != null) {
-            showFilter = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
-            maxSize = getArguments().getInt(Constants.Arguments.ARG_MAX_SIZE);
-        }
+
 
         initializePurchasesRecyclerView(maxSize, filterViewModel.getFilterValue());
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPurchasesListCardBinding.inflate(inflater, container, false);
+        maxSize = -1;
+        if (getArguments() != null) {
+            showFilter = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
+            maxSize = getArguments().getInt(Constants.Arguments.ARG_MAX_SIZE);
+        }
+        super.setLoadingScreen(binding.loadingBar);
         return binding.getRoot();
     }
 
@@ -110,15 +112,17 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
             Log.w(TAG, "refresh: Purchases adapter is missing. Skipping refresh");
             return;
         }
+        isRefreshing.postValue(true);
         new Thread(() -> {
             List<PurchaseView> allPurchases = purchaseClient.getAllPurchases(filter);
             Log.i(TAG, "Received purchases list with size of " + allPurchases.size());
             updateAdapter(allPurchases);
+            isRefreshing.postValue(false);
         }).start();
     }
 
     private void updateAdapter(List<PurchaseView> allPurchases) {
-        new Handler(Looper.getMainLooper()).post(()->{
+        new Handler(Looper.getMainLooper()).post(() -> {
             purchasesAdapter.setPurchaseViews(allPurchases);
             updateSeeAllButton(allPurchases.size(), maxSize);
         });

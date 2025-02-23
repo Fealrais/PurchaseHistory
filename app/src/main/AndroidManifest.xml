@@ -29,6 +29,9 @@
         android:windowSoftInputMode="adjustPan"
         tools:targetApi="34">
         <activity
+            android:name=".ErrorFallbackActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.FullscreenGraphActivity"
             android:exported="false" />
         <activity

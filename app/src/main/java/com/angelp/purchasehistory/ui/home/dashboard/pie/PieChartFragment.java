@@ -79,6 +79,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         appColorCollection = new AppColorCollection(inflater.getContext());
         tf = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_regular);
         tfBold = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_bold);
+        super.setLoadingScreen(binding.loadingBar);
 
         return binding.getRoot();
     }
@@ -156,7 +157,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
     private void setPiechartCenterText(String centerText, float secondValue, CategoryView category) {
         String name = category.getName();
-        name = CommonUtils.limitString(name,12);
+        name = CommonUtils.limitString(name, 12);
         binding.pieChart.setCenterText(name + "\n" + centerText + "\n" + AndroidUtils.formatCurrency(secondValue, getContext()));
         binding.pieChart.setCenterTextSize(16);
         binding.pieChart.setCenterTextTypeface(tf);
@@ -238,7 +239,11 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
     public void refresh(PurchaseFilter filter) {
         if (isSameFilter(filter)) return;
-        new Thread(() -> setData(filter)).start();
+        isRefreshing.postValue(true);
+        new Thread(() -> {
+            setData(filter);
+            isRefreshing.postValue(false);
+        }).start();
     }
 
     private boolean isSameFilter(PurchaseFilter filter) {

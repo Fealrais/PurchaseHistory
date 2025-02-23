@@ -61,6 +61,30 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
         this.setArguments(args);
     }
 
+    private static Map<LocalDate, List<CalendarReportEntry>> prepareContent(PurchaseFilter filter, CalendarReport calendarReport, List<CategoryView> categories) {
+        Map<LocalDate, List<CalendarReportEntry>> content = new HashMap<>();
+        LocalDate dateIterator = filter.getFrom();
+        for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
+            List<CalendarReportEntry> list = content.computeIfAbsent(dateIterator, (key) -> new ArrayList<>());
+
+            for (CategoryView category : categories) {
+                boolean added = false;
+                for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
+                    if (calendarReportEntry.getLocalDate().equals(dateIterator) && calendarReportEntry.getCategory().getId().equals(category.getId())) {
+                        list.add(calendarReportEntry);
+                        added = true;
+                        break;
+                    }
+                }
+                if (!added) {
+                    list.add(new CalendarReportEntry(dateIterator.format(DateTimeFormatter.ISO_LOCAL_DATE), BigDecimal.ZERO, 0L, new CategoryView()));
+                }
+            }
+            content.put(dateIterator, list);
+        }
+        return content;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +106,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
         binding = FragmentBarChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
         tf = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_regular);
+        super.setLoadingScreen(binding.loadingBar);
         return binding.getRoot();
     }
 
@@ -112,6 +137,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
 
     private void setData(PurchaseFilter filter) {
         new Thread(() -> {
+            isRefreshing.postValue(true);
             CalendarReport calendarReport = purchaseClient.getCategorizedCalendarReport(filter);
             List<CategoryView> allCategories = purchaseClient.getAllCategories();
 
@@ -139,6 +165,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
             data.setValueTextColor(appColorCollection.getForegroundColor());
             data.setBarWidth(0.95f);
             notifyDataChanged(data);
+            isRefreshing.postValue(false);
         }).start();
     }
 
@@ -167,8 +194,6 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
         filterDialog.show(getParentFragmentManager(), "barchartFilterDialog");
     }
 
-
-
     private void applyFilter(PurchaseFilter newFilter) {
         binding.graphFilterButton.setText(R.string.filterButton);
         binding.textView.setText(newFilter.getReadableString());
@@ -176,7 +201,9 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
 
     public void refresh(PurchaseFilter filter) {
         applyFilter(filter);
-        new Thread(() -> setData(filter)).start();
+        new Thread(() -> {
+            setData(filter);
+        }).start();
     }
 
     @Override
@@ -196,29 +223,5 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
     @Override
     public void onNothingSelected() {
         if (dialog != null && dialog.isAdded()) dialog.dismiss();
-    }
-
-    private static Map<LocalDate, List<CalendarReportEntry>> prepareContent(PurchaseFilter filter, CalendarReport calendarReport, List<CategoryView> categories) {
-        Map<LocalDate, List<CalendarReportEntry>> content = new HashMap<>();
-        LocalDate dateIterator = filter.getFrom();
-        for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
-            List<CalendarReportEntry> list = content.computeIfAbsent(dateIterator, (key) -> new ArrayList<>());
-
-            for (CategoryView category : categories) {
-                boolean added = false;
-                for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
-                    if (calendarReportEntry.getLocalDate().equals(dateIterator) && calendarReportEntry.getCategory().getId().equals(category.getId())) {
-                        list.add(calendarReportEntry);
-                        added = true;
-                        break;
-                    }
-                }
-                if (!added) {
-                    list.add(new CalendarReportEntry(dateIterator.format(DateTimeFormatter.ISO_LOCAL_DATE), BigDecimal.ZERO, 0L, new CategoryView()));
-                }
-            }
-            content.put(dateIterator, list);
-        }
-        return content;
     }
 }

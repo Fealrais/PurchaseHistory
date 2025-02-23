@@ -10,8 +10,9 @@
         <item>reply_all</item>
     </string-array>
     <string-array name="currency_list">
-        <item>USD - $</item>
+        <item>None</item>
         <item>BGN - лв</item>
+        <item>USD - $</item>
         <item>EUR - €</item>
         <item>JPY - ¥</item>
         <item>GBP - £</item>
@@ -23,6 +24,7 @@
         <item>NZD - NZ$</item>
     </string-array>
     <string-array name="currency_list_values">
+        <item />
         <item>$</item>
         <item>лв</item>
         <item>€</item>

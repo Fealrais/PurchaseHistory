@@ -12,10 +12,10 @@
 
         <LinearLayout
             android:id="@+id/filterRow"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -24,12 +24,12 @@
                 android:id="@+id/filterButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@string/filterButton"
-                android:text="@string/filterButton"
 
+                android:text="@string/filterButton"
                 app:icon="@drawable/ic_menu_filter"
-                android:layout_marginHorizontal="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,23 +55,42 @@
 
         <ImageView
             android:id="@+id/see_all_backdrop"
-            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:src="@drawable/gradient"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            app:icon="@drawable/baseline_keyboard_arrow_right_24"
-            android:visibility="gone"
             android:id="@+id/see_all_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:icon="@drawable/baseline_keyboard_arrow_right_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/loading_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/loading_dimmed"
+            android:elevation="1dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center" />
+        </FrameLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

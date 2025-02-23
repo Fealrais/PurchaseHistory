@@ -213,4 +213,11 @@
     <string name="prompt_current_password">Сегашната ви парола</string>
     <string name="failed_to_update_profile">Неуспешно актуализиране на профила</string>
     <string name="profile_updated_successfully">Профилът е актуализиран успешно</string>
+    <string name="edit_currency">Редактиране на предпочитаната валута</string>
+    <string name="edit_currency_summary">Показаната валута</string>
+    <string name="server_something_went_wrong">Нещо се обърка, моля опитайте отново по-късно</string>
+    <string name="close">Затвори</string>
+    <string name="send_feedback">Изпрати обратна връзка</string>
+    <string name="error_handler_content">Приложението срещна грешка и се извиняваме за всяко неудобство, което това може да е причинило. Ще бъдем благодарни, ако ни изпратите обратна връзка, за да ни помогнете да подобрим приложението. Вашето мнение е ценно за нас и оценяваме вашето разбиране и търпение.\nБлагодарим ви за съдействието.</string>
+
 </resources>

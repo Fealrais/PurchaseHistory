@@ -13,6 +13,7 @@ import okhttp3.Response;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class AuthClient extends HttpClient {
                     case 501:
                     case 502:
                     case 503:
-                        throw new WebException(R.string.server_connection_failed_500);
+                        throw new WebException(R.string.server_something_went_wrong);
                     case 401:
                         throw new WebException(R.string.login_failed_401);
                     default:
@@ -59,6 +60,10 @@ public class AuthClient extends HttpClient {
             }
         } catch (IOException e) {
             Log.e("loginResult", "login:" + e.getMessage());
+            if(e instanceof UnknownHostException hostException){
+                Log.e("Login",hostException.getMessage());
+                throw new WebException(R.string.error_hostException);
+            }
             throw new WebException(R.string.server_connection_failed_500);
         }
         return Optional.ofNullable(result);

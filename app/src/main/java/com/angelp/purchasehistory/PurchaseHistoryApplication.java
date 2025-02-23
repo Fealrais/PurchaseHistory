@@ -27,6 +27,7 @@ public class PurchaseHistoryApplication extends Application {
         instance = this;
         super.onCreate();
         initializeJWT();
+        Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler(this));
     }
 
     private void initializeJWT() {
@@ -39,6 +40,7 @@ public class PurchaseHistoryApplication extends Application {
                 () -> Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show());
 
     }
+
     public void alert(int resource) {
         instance.getApplicationContext().getMainExecutor().execute(
                 () -> Toast.makeText(getContext(), resource, Toast.LENGTH_SHORT).show());

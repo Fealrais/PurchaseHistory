@@ -77,6 +77,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
         binding = FragmentLineChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
         tf = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_regular);
+        super.setLoadingScreen(binding.loadingBar);
         return binding.getRoot();
     }
 
@@ -107,6 +108,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
 
     private void setData(PurchaseFilter filter) {
         new Thread(() -> {
+            isRefreshing.postValue(true);
             CalendarReport calendarReport = purchaseClient.getCalendarReport(filter);
             Map<LocalDate, List<Entry>> entriesMap = getEntries(calendarReport);
             ArrayList<Integer> colors = getColors();
@@ -130,6 +132,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
             data.setValueTextColor(appColorCollection.getForegroundColor());
             data.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(getContext())));
             notifyDataChanged(data);
+            isRefreshing.postValue(false);
         }).start();
     }
 
