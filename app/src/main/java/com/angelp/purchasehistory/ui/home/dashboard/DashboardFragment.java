@@ -106,6 +106,7 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
     }
 
     public void refresh(PurchaseFilter filter) {
+        if (binding == null) return;
         applyFilter(filter);
     }
 

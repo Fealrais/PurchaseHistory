@@ -21,7 +21,6 @@ import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.tour.TourStep;
 import com.angelp.purchasehistory.databinding.ActivityHomeBinding;
-import com.angelp.purchasehistory.receivers.AppBootReceiver;
 import com.angelp.purchasehistory.ui.home.settings.SettingsActivity;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.AuthClient;
@@ -71,9 +70,6 @@ public class HomeActivity extends AppCompatActivity {
         if (isFirstTimeOpen()) {
             showTourPrompt();
         }
-        Intent intent = new Intent(this, AppBootReceiver.class);
-        intent.setAction(Constants.APP_BOOT_RECEIVER);
-        sendBroadcast(intent);
     }
 
     private void showTourPrompt() {

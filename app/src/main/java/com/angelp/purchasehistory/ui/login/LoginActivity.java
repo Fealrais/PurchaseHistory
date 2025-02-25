@@ -15,7 +15,9 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.databinding.ActivityLoginBinding;
+import com.angelp.purchasehistory.receivers.AppBootReceiver;
 import com.angelp.purchasehistory.ui.forgotpassword.ForgotPasswordEmailActivity;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -62,6 +64,9 @@ public class LoginActivity extends AppCompatActivity {
             if (loginResult.getSuccess() == null) {
                 showLoginFailed(loginResult.getError());
             } else {
+                Intent intent = new Intent(this, AppBootReceiver.class);
+                intent.setAction(Constants.APP_BOOT_RECEIVER);
+                sendBroadcast(intent);
                 updateUiWithUser(loginResult.getSuccess().getUsername());
                 setResult(Activity.RESULT_OK);
                 finish();

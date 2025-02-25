@@ -56,7 +56,7 @@ public class DashboardCardFragment extends Fragment {
             fragment.getArguments().putInt(Constants.Arguments.ARG_MAX_SIZE, 10);
             fragment.getArguments().putBoolean(Constants.Arguments.ARG_SHOW_FILTER, false);
         }
-        getParentFragmentManager().beginTransaction()
+        getChildFragmentManager().beginTransaction()
                 .replace(binding.fragmentContainerView.getId(), fragment)
                 .commit();
         return binding.getRoot();
@@ -70,6 +70,6 @@ public class DashboardCardFragment extends Fragment {
         super.onDetach();
         RefreshablePurchaseFragment fragment = component.getFragment();
         if (fragment != null)
-            getParentFragmentManager().beginTransaction().remove(fragment);
+            getChildFragmentManager().beginTransaction().remove(fragment);
     }
 }

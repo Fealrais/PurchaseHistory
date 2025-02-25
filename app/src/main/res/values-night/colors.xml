@@ -4,6 +4,7 @@
     <color name="primaryColor">#42d3cc</color>
     <color name="secondaryColor">#a0d9d4</color>
     <color name="accentColor">#77bbc9</color>
-    <color name="background_color">#071e1c</color>
+    <color name="background_color">#0F0F0F</color>
+    <color name="background_color_accent">#071e1c</color>
     <color name="foreground_color">#f4fcfb</color>
 </resources>

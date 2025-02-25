@@ -113,6 +113,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(binding == null) return;
         this.applyFilter(filterViewModel.getFilterValue());
         initFilterRow();
         initGraph(binding.barChartView);
@@ -200,6 +201,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
     }
 
     public void refresh(PurchaseFilter filter) {
+        if (binding == null) return;
         applyFilter(filter);
         new Thread(() -> {
             setData(filter);

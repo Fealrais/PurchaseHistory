@@ -84,6 +84,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(binding == null) return;
         this.applyFilter(filterViewModel.getFilterValue());
         initFilterRow();
         initGraph(binding.lineChartView);
@@ -199,6 +200,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     }
 
     public void refresh(PurchaseFilter filter) {
+        if (binding == null) return;
         new Thread(() -> setData(filter)).start();
     }
 

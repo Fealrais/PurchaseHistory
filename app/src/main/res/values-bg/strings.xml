@@ -219,5 +219,8 @@
     <string name="close">Затвори</string>
     <string name="send_feedback">Изпрати обратна връзка</string>
     <string name="error_handler_content">Приложението срещна грешка и се извиняваме за всяко неудобство, което това може да е причинило. Ще бъдем благодарни, ако ни изпратите обратна връзка, за да ни помогнете да подобрим приложението. Вашето мнение е ценно за нас и оценяваме вашето разбиране и търпение.\nБлагодарим ви за съдействието.</string>
-
+    <string name="error_hostException">SSL грешка. Няма адрес, свързан с името на сървъра</string>
+    <string name="copy_btn_text">Копирай съдържанието</string>
+    <string name="content_copied">Копирано успешно</string>
+    <string name="title_error_fallback">Обратна връзка за грешка</string>
 </resources>

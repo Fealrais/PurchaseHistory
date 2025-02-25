@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -45,10 +47,11 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
+        if (binding == null) return;
+        initFilterRow();
+        this.applyFilter(filterViewModel.getFilterValue());
         initializePurchasesRecyclerView(maxSize, filterViewModel.getFilterValue());
     }
 
@@ -71,11 +74,10 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
 
     private void initializePurchasesRecyclerView(int maxSize, PurchaseFilter filter) {
         new Thread(() -> {
+            if (binding == null) return;
             List<PurchaseView> purchases = purchaseClient.getAllPurchases(filter);
             purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
-            initFilterRow();
             setupShowMoreButton(purchases.size(), maxSize);
-            applyFilter(filter);
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             new Handler(Looper.getMainLooper()).post(() -> {
@@ -108,7 +110,7 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     }
 
     public void refresh(PurchaseFilter filter) {
-        if (purchasesAdapter == null) {
+        if (purchasesAdapter == null || binding == null) {
             Log.w(TAG, "refresh: Purchases adapter is missing. Skipping refresh");
             return;
         }
@@ -129,19 +131,22 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     }
 
     private void initFilterRow() {
-        binding.filterButton.setOnClickListener((v) -> openFilter());
+        Button filterButton = binding.filterButton;
+        TextView filterDateText = binding.filterDateText;
+        filterButton.setOnClickListener((v) -> openFilter());
+        filterDateText.setTextColor(getContext().getColor(R.color.foreground_color));
         new Handler(Looper.getMainLooper()).post(() -> {
-            binding.filterDateText.setTextColor(getContext().getColor(R.color.foreground_color));
-            binding.filterRow.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+            filterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+            filterDateText.setVisibility(showFilter ? View.VISIBLE : View.GONE);
         });
     }
 
     private void applyFilter(PurchaseFilter newFilter) {
-        filterViewModel.updateFilter(newFilter);
         new Handler(Looper.getMainLooper()).post(() -> {
-            binding.filterButton.setText(R.string.filterButton);
-            binding.filterDateText.setText(newFilter.getReadableString());
-        });
+                    if (binding == null) return;
+                    binding.filterDateText.setText(newFilter.getReadableString());
+                }
+        );
     }
 
     private void openFilter() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="black">#320500</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Gray">#c4c4c4</color>
     <color name="danger">#FC3C3C</color>
@@ -15,6 +15,7 @@
     <color name="secondaryColor">#a0d9d4</color>
     <color name="accentColor">#77bbc9</color>
     <color name="background_color">#f4fcfb</color>
+    <color name="background_color_accent">#FFFFFF</color>
     <color name="foreground_color">#071e1c</color>
     <!--###################################################-->
 

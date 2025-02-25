@@ -27,13 +27,20 @@ public abstract class RefreshablePurchaseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.configureLoadingRow();
-        filterViewModel.getFilter().observe(getViewLifecycleOwner(), this::refresh);
+        filterViewModel.getFilter().observe(getViewLifecycleOwner(), this::beforeRefresh);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        filterViewModel.getFilter().removeObserver(this::refresh);
+        filterViewModel.getFilter().removeObserver(this::beforeRefresh);
+    }
+
+    public void beforeRefresh(PurchaseFilter filter) {
+        Boolean refreshing = isRefreshing.getValue();
+        if (refreshing == null || !refreshing) {
+            refresh(filter);
+        }
     }
 
     public abstract void refresh(PurchaseFilter filter);

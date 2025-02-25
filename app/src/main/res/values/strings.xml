@@ -227,8 +227,11 @@
     <string name="edit_currency_summary">The shown currency</string>
     <string name="server_something_went_wrong">Something went wrong, please try again later</string>
     <string name="close">Close</string>
-    <string name="send_feedback">Send Feedback</string>
+    <string name="send_feedback">Send Feedback and close</string>
     <string name="error_handler_content">The app ran into an error, and we apologize for any inconvenience this may have caused. We would be grateful if you could send us feedback to help us improve the application. Your input is valuable to us, and we appreciate your understanding and patience.\nThank you for your cooperation.</string>
     <string name="error_hostException">SSL Error. No address associated with server hostname</string>
+    <string name="copy_btn_text">Copy contents</string>
+    <string name="content_copied">Copied successfully</string>
+    <string name="title_error_fallback">Error feedback</string>
 
 </resources>

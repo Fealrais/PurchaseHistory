@@ -120,7 +120,7 @@ public class PurchasesPerDayDialog extends DialogFragment {
     }
 
     public void refresh(PurchaseFilter filter) {
-        if (purchasesAdapter == null) {
+        if (purchasesAdapter == null || binding == null) {
             Log.w(TAG, "refresh: Purchases adapter is missing. Skipping refresh");
             return;
         }
