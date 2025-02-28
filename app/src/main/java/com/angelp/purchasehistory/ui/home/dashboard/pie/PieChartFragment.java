@@ -39,6 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -56,6 +57,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     private Typeface tfBold;
     private PurchaseFilter previousFilter;
     private BigDecimal sum;
+    private List<PieEntry> entries = new ArrayList<>();
 
     public PieChartFragment() {
         Bundle args = new Bundle();
@@ -87,10 +89,11 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(binding == null) return;
+        if (binding == null) return;
         applyFilter(filterViewModel.getFilterValue());
         initFilterRow();
         initPieChart(binding.pieChart);
+        filterViewModel.getFilter().observe(getViewLifecycleOwner(), this::highlightPieChartOnFilterChange);
         new Thread(() -> setData(filterViewModel.getFilterValue())).start();
     }
 
@@ -119,7 +122,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
             binding.pieChart.setCenterText("Failed to load data.\nTry again later.");
             return;
         }
-        List<PieEntry> entries = report.getContent().stream().map(this::parsePieEntries).collect(Collectors.toList());
+        entries = report.getContent().stream().map(this::parsePieEntries).collect(Collectors.toList());
         PieDataSet dataSet = new PieDataSet(entries, "Category");
 
         List<Integer> categoryColors = report.getContent().stream().map(entry -> AndroidUtils.getColor(entry.getCategory())
@@ -173,7 +176,6 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         chart.setUsePercentValues(false);
         chart.getDescription().setEnabled(false);
         chart.setExtraOffsets(5, 10, 5, 5);
-
         chart.setDragDecelerationFrictionCoef(0.95f);
         chart.setDrawEntryLabels(true);
 
@@ -252,5 +254,21 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         if (previousFilter == null) return false;
         previousFilter.setCategoryId(filter.getCategoryId());
         return filter.equals(previousFilter);
+    }
+
+    private void highlightPieChartOnFilterChange(PurchaseFilter filter) {
+        if (binding.pieChart.isEmpty() || entries.isEmpty()) return;
+        if (filter.getCategoryId() == null) {
+            binding.pieChart.highlightValue(0, -1, false);
+            return;
+        }
+        for (int i = 0; i < entries.size(); i++) {
+            PieEntry entry = entries.get(i);
+            if (entry.getData() != null && ((CategoryView) entry.getData()).getId().equals(filter.getCategoryId())) {
+                if (!binding.pieChart.needsHighlight(i)) return;
+                binding.pieChart.highlightValue(i, 0, false);
+                return;
+            }
+        }
     }
 }

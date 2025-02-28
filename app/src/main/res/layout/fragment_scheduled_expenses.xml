@@ -5,24 +5,42 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.scheduled.ScheduledExpensesFragment">
 
-   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-       android:id="@+id/swiperefreshScheduledExpenses"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
-      <androidx.recyclerview.widget.RecyclerView
-          android:id="@+id/recyclerViewScheduledExpenses"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          tools:listitem="@layout/recycler_view_scheduled_expense" />
-   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefreshScheduledExpenses"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewScheduledExpenses"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/recycler_view_scheduled_expense" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-   <com.google.android.material.floatingactionbutton.FloatingActionButton
-       android:id="@+id/fabAddScheduledExpense"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_gravity="end|bottom"
-       android:layout_margin="16dp"
-       android:src="@drawable/baseline_add_alarm_24"
-       android:contentDescription="@string/add_scheduled_expense" />
+    <FrameLayout
+        android:id="@+id/empty_scheduledExpenses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="16dp"
+        android:layout_margin="10dp"
+        android:elevation="6dp"
+        android:background="@drawable/card_background">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_scheduled_expenses"
+            android:textSize="18sp"
+            android:gravity="center" />
+    </FrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddScheduledExpense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/baseline_add_alarm_24"
+        android:contentDescription="@string/add_scheduled_expense" />
 </FrameLayout>

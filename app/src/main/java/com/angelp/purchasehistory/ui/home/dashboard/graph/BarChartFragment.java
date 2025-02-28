@@ -217,10 +217,16 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
             return;
 
         if (dialog != null && dialog.isAdded()) dialog.dismiss();
+        BigDecimal sum = BigDecimal.ZERO;
+        for (CalendarReportEntry datum : data) {
+            sum = sum.add(datum.getSum());
+        }
+        if (!sum.equals(BigDecimal.ZERO)){
+            dialog = new PurchasesPerDayDialog(data.get(0));
+            dialog.show(getParentFragmentManager().beginTransaction(), "DialogFragment");
+        }
 
-        dialog = new PurchasesPerDayDialog(data.get(0));
-        dialog.show(getParentFragmentManager().beginTransaction(), "DialogFragment");
-    }
+}
 
     @Override
     public void onNothingSelected() {

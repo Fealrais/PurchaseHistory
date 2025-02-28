@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.components.CurrencyInputChangeWatcher;
 import com.angelp.purchasehistory.components.form.CreateCategoryDialog;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.components.form.TimePickerFragment;
@@ -159,7 +160,7 @@ public class QrScannerFragment extends Fragment {
             qrScannerViewModel.getPurchaseDTO().setDate(v);
             binding.qrDateInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
         });
-        binding.qrPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
+        binding.qrPriceInput.addTextChangedListener(new CurrencyInputChangeWatcher(binding.qrPriceInput) {
             @Override
             public void afterTextChanged(Editable s) {
                 if (binding.qrPriceInput.hasFocus()) {

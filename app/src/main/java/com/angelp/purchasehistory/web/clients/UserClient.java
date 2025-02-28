@@ -2,9 +2,11 @@ package com.angelp.purchasehistory.web.clients;
 
 import android.util.Log;
 import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistorybackend.models.views.incoming.ErrorFeedback;
 import com.angelp.purchasehistorybackend.models.views.incoming.UpdatePasswordDTO;
 import com.angelp.purchasehistorybackend.models.views.incoming.UserDTO;
+import com.angelp.purchasehistorybackend.models.views.outgoing.UserAnalytics;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import okhttp3.Response;
 
@@ -63,6 +65,13 @@ public class UserClient extends HttpClient {
 
     public void sendFeedback(ErrorFeedback errorFeedback) {
         try (Response res = post(BACKEND_URL + "/feedback/error", errorFeedback)) {
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public UserAnalytics getUserAnalytics(PurchaseFilter filter) {
+        try (Response res = get(BACKEND_URL + "/users/self/analytics?" + filter)) {
+            return utils.getBody(res,UserAnalytics.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

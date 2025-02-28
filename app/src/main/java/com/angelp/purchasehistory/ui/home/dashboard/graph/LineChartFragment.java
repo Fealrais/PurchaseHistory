@@ -35,6 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -121,7 +122,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
 //                lineDataSet.setDrawIcons(false);
                 lineDataSet.setDrawCircleHole(false);
                 lineDataSet.setValueTypeface(Typeface.DEFAULT);
-                lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
                 if (i < colors.size()) {
                     int color = colors.get(i++);
                     lineDataSet.setColor(color);
@@ -211,8 +212,11 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
         if (dialog != null && dialog.isAdded()) dialog.dismiss();
 
         CalendarReportEntry data = (CalendarReportEntry) e.getData();
-        dialog = new PurchasesPerDayDialog(data);
-        dialog.show(getParentFragmentManager().beginTransaction(), "DialogFragment");
+        if (!data.getSum().equals(BigDecimal.ZERO)){
+            dialog = new PurchasesPerDayDialog(data);
+            dialog.show(getParentFragmentManager().beginTransaction(), "DialogFragment");
+        }
+
     }
 
     @Override

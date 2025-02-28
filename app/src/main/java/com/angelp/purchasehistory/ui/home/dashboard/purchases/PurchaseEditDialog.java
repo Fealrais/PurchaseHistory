@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistory.components.CurrencyInputChangeWatcher;
 import com.angelp.purchasehistory.components.form.CreateCategoryDialog;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.components.form.TimePickerFragment;
@@ -114,7 +115,7 @@ public class PurchaseEditDialog extends DialogFragment {
                     binding.purchaseEditCategorySpinner.setSelection(index);
             });
         }).start();
-        binding.purchaseEditPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
+        binding.purchaseEditPriceInput.addTextChangedListener(new CurrencyInputChangeWatcher(binding.purchaseEditPriceInput) {
             @Override
             public void afterTextChanged(Editable s) {
                 String str = binding.purchaseEditPriceInput.getText().toString();

@@ -68,6 +68,7 @@ public class ScheduledExpensesFragment extends Fragment {
     private void setupRecycleView() {
         new Thread(() -> {
             List<ScheduledExpenseView> scheduledExpenses = scheduledExpenseClient.findAllForUser();
+            if(scheduledExpenses.isEmpty()) binding.emptyScheduledExpenses.setVisibility(View.VISIBLE);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 

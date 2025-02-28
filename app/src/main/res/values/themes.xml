@@ -10,14 +10,18 @@
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorAccent">@color/accentColor</item>
 
+
         <!-- Text colors -->
         <item name="android:textColor">@color/foreground_color</item>
         <item name="titleTextColor">@color/foreground_color</item>
         <!-- Background color -->
         <item name="android:colorBackground">@color/background_color</item>
+        <item name="android:navigationBarColor">@color/background_color_accent</item>
+        <item name="colorSurface">@color/background_color_accent</item>
+
         <item name="fontFamily">@font/ibmplexmono_regular</item>
         <item name="fontWeight">400</item>
-
+        <item name="buttonTint">@color/primaryColor</item>
     </style>
 
     <style name="Theme.PurchaseHistory.NoActionBar">

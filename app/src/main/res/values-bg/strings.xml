@@ -223,4 +223,12 @@
     <string name="copy_btn_text">Копирай съдържанието</string>
     <string name="content_copied">Копирано успешно</string>
     <string name="title_error_fallback">Обратна връзка за грешка</string>
+    <string name="average_spending_per_purchase">Средни разходи на покупка: <b>%s</b></string>
+    <string name="total_spending">Общо разходи: <b>%s</b></string>
+    <string name="total_number_of_purchases">Общ брой покупки: <b>%s</b></string>
+    <string name="most_frequently_purchased_category">Най-често използваната категория:</string>
+    <string name="most_frequently_purchased_category_count">Брой покупки: <b>%s</b></string>
+    <string name="most_frequently_purchased_category_sum">Общо : <b>%s</b></string>
+    <string name="no_scheduled_expenses">Няма планирани разходи</string>
+    <string name="none">Няма</string>
 </resources>

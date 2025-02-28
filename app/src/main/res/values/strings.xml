@@ -233,5 +233,13 @@
     <string name="copy_btn_text">Copy contents</string>
     <string name="content_copied">Copied successfully</string>
     <string name="title_error_fallback">Error feedback</string>
+    <string name="average_spending_per_purchase">Average Spending Per Purchase: <b>%s</b></string>
+    <string name="total_spending">Total Spending: <b>%s</b></string>
+    <string name="total_number_of_purchases">Total Number of Purchases: <b>%s</b></string>
+    <string name="most_frequently_purchased_category">Most Used Category:</string>
+    <string name="most_frequently_purchased_category_count">Purchases made: <b>%s</b></string>
+    <string name="most_frequently_purchased_category_sum">Total sum: <b>%s</b></string>
+    <string name="no_scheduled_expenses">There are no scheduled expenses</string>
+    <string name="none">None</string>
 
 </resources>

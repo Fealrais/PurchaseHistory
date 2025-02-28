@@ -22,6 +22,10 @@ public final class Constants {
         return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now(), null, null, null);
     }
 
+    public static PurchaseFilter getFilter30Days() {
+        return new PurchaseFilter(LocalDate.now().minusDays(30), LocalDate.now(), null, null, null);
+    }
+
     static {
         DEFAULT_COMPONENTS.add(new DashboardComponent("PieChartFragment"));
         DEFAULT_COMPONENTS.add(new DashboardComponent("LineChartFragment"));

@@ -72,9 +72,9 @@ public class PurchaseFilterDialog extends DialogFragment {
             filterViewModel.updateFilter(filter);
             this.dismiss();
         });
-
         return binding.getRoot();
     }
+
 
     private void setupDatePickers() {
         datePickerFrom = new DatePickerFragment();
@@ -93,36 +93,37 @@ public class PurchaseFilterDialog extends DialogFragment {
         });
         binding.purchaseFilterFromDate.setOnClickListener((v) -> datePickerFrom.show(getParentFragmentManager(), "datePickerFrom"));
         binding.purchaseFilterToDate.setOnClickListener((v) -> datePickerTo.show(getParentFragmentManager(), "datePickerTo"));
-        binding.filterWeek.setOnClickListener((v)->{
+        binding.filterWeek.setOnClickListener((v) -> {
             LocalDate from = LocalDate.now().minusDays(7);
             quickUpdateFilter(from);
         });
-        binding.filterMonth.setOnClickListener((v)->{
+        binding.filterMonth.setOnClickListener((v) -> {
             LocalDate from = LocalDate.now().withDayOfMonth(1);
             quickUpdateFilter(from);
         });
-        binding.filter3month.setOnClickListener((v)->{
+        binding.filter3month.setOnClickListener((v) -> {
             LocalDate from = LocalDate.now().minusMonths(3).withDayOfMonth(1);
             quickUpdateFilter(from);
         });
-        binding.filter6month.setOnClickListener((v)->{
+        binding.filter6month.setOnClickListener((v) -> {
             LocalDate from = LocalDate.now().minusMonths(6).withDayOfMonth(1);
             quickUpdateFilter(from);
         });
-        binding.filterYear.setOnClickListener((v)->{
+        binding.filterYear.setOnClickListener((v) -> {
             LocalDate from = LocalDate.now().withMonth(1).withDayOfMonth(1);
             quickUpdateFilter(from);
         });
-        binding.filterLastYear.setOnClickListener((v)->{
+        binding.filterLastYear.setOnClickListener((v) -> {
             LocalDate from = LocalDate.now().minusYears(1).withMonth(1).withDayOfMonth(1);
             LocalDate to = LocalDate.now().minusYears(1).withMonth(12).withDayOfMonth(31);
-            quickUpdateFilter(from,to);
+            quickUpdateFilter(from, to);
         });
     }
 
     private void quickUpdateFilter(LocalDate from) {
         quickUpdateFilter(from, LocalDate.now());
     }
+
     private void quickUpdateFilter(LocalDate from, LocalDate to) {
         boolean toHasChanged = !filter.getTo().equals(to);
         boolean fromHasChanged = !filter.getFrom().equals(from);
@@ -137,7 +138,7 @@ public class PurchaseFilterDialog extends DialogFragment {
     }
 
     private void setupCategorySpinner(boolean containCategory) {
-        if(!containCategory){
+        if (!containCategory) {
             binding.purchaseFilterCategorySpinner.setVisibility(View.GONE);
             return;
         }
@@ -147,6 +148,7 @@ public class PurchaseFilterDialog extends DialogFragment {
             categoryAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, categoryOptions);
             new Handler(Looper.getMainLooper()).post(() -> {
                 binding.purchaseFilterCategorySpinner.setAdapter(categoryAdapter);
+                updateFilter(filterViewModel.getFilterValue());
             });
         }).start();
         binding.purchaseFilterCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -207,5 +209,15 @@ public class PurchaseFilterDialog extends DialogFragment {
 
     private void updateFilter(PurchaseFilter observedFilter) {
         filter = observedFilter;
+        if (filter.getCategoryId() == null || categoryAdapter == null) {
+            return;
+        }
+        for (int i = 0; i < categoryAdapter.getCount(); i++) {
+            CategoryView entry = categoryAdapter.getItem(i);
+            if (entry.getId() != null && entry.getId().equals(filter.getCategoryId())) {
+                binding.purchaseFilterCategorySpinner.setSelection(i);
+                return;
+            }
+        }
     }
 }
