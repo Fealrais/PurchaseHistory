@@ -30,6 +30,7 @@ public final class Constants {
         DEFAULT_COMPONENTS.add(new DashboardComponent("PieChartFragment"));
         DEFAULT_COMPONENTS.add(new DashboardComponent("LineChartFragment"));
         DEFAULT_COMPONENTS.add(new DashboardComponent("BarChartFragment"));
+        DEFAULT_COMPONENTS.add(new DashboardComponent("AccumulativeChartFragment"));
         DEFAULT_COMPONENTS.add(new DashboardComponent("PurchaseListPurchaseFragment"));
     }
 
@@ -61,6 +62,8 @@ public final class Constants {
         String APP_PREFERENCES = "app_preferences";
         String SILENCED_NOTIFICATIONS = "silenced_notifications";
         String PREFERRED_CURRENCY = "preferred_currency";
+        String MONTHLY_LIMIT_VALUE = "monthly_limit_value";
+        String MONTHLY_LIMIT_LABEL = "monthly_limit_label";
     }
 
     public interface Arguments {
@@ -69,5 +72,6 @@ public final class Constants {
         String NOTIFICATION_EXTRA_ARG = "scheduledNotifications";
         String ARG_MAX_SIZE = "max_size";
         String ARG_FILTER = "purchases_filter";
+        String OPEN_CAMERA = "open_camera";
     }
 }

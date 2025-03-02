@@ -168,7 +168,7 @@
     <string name="no_period_selected">No period selected</string>
     <string name="add_purchase_action">Add as a purchase</string>
     <string name="scheduled_notification_content">A scheduled payment is due. Price: %.2f \nShould we add it to the purchases?</string>
-    <string name="scheduled_notification_title">A payment is due (%s)</string>
+    <string name="scheduled_notification_title">A payment is due `%s`</string>
     <string name="error_must_not_be_empty">Field should not be empty</string>
     <string name="error_price_empty">Enter a valid price</string>
     <string name="turn_on_flashlight">Torch ON</string>
@@ -236,10 +236,24 @@
     <string name="average_spending_per_purchase">Average Spending Per Purchase: <b>%s</b></string>
     <string name="total_spending">Total Spending: <b>%s</b></string>
     <string name="total_number_of_purchases">Total Number of Purchases: <b>%s</b></string>
-    <string name="most_frequently_purchased_category">Most Used Category:</string>
+    <string name="most_frequently_purchased_category">Most-used category in the last 15 days:</string>
     <string name="most_frequently_purchased_category_count">Purchases made: <b>%s</b></string>
     <string name="most_frequently_purchased_category_sum">Total sum: <b>%s</b></string>
     <string name="no_scheduled_expenses">There are no scheduled expenses</string>
     <string name="none">None</string>
-
+    <string name="notification_silenced">"`%s` has been turned off "</string>
+    <string name="notification_un_silenced">Notification `%s` was turned on</string>
+    <string name="help_info_accumulative_line_chart">This chart shows the cumulative total of your spending over time, separated by months. It helps you track your spending habits, identify trends, and manage your budget more effectively. By visualizing your cumulative spending, you can see how close you are to reaching your financial limits and make informed decisions to stay within your budget.</string>
+    <string name="title_accumulative_line_chart">Cumulative Spending</string>
+    <string name="description_accumulative_line_chart">Shows the cumulative total of all purchases over a period, separated by months.</string>
+    <string name="credits">Credits</string>
+    <string name="questions_and_answers">Frequently asked questions</string>
+    <string name="more_info">More information</string>
+    <string name="monthly_limit">Monthly limit</string>
+    <string name="edit_limit">Edit monthly limit</string>
+    <string name="value">Value</string>
+    <string name="label">Label</string>
+    <string name="monthly_limit_summary">Shows the monthly limit in some charts.</string>
+    <string name="monthly_limit_value_summary">To hide the limit, set to -1</string>
+    <string name="invalid_input_repeat">Invalid input, try again</string>
 </resources>

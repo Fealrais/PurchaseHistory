@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.Nullable;
@@ -21,8 +18,6 @@ import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.tour.TourStep;
 import com.angelp.purchasehistory.databinding.ActivityHomeBinding;
-import com.angelp.purchasehistory.ui.home.settings.SettingsActivity;
-import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.AuthClient;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -94,6 +89,7 @@ public class HomeActivity extends AppCompatActivity {
         });
         dialog.show();
     }
+
     private boolean isFirstTimeOpen() {
         SharedPreferences preferences = getSharedPreferences("app_preferences", MODE_PRIVATE);
         return preferences.getBoolean(Constants.Preferences.IS_FIRST_TIME_OPEN, true);
@@ -122,27 +118,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.home_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_item_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-        } else if (itemId == R.id.menu_item_logout) {
-            new Thread(() -> {
-                authClient.logout();
-                AndroidUtils.logout(this);
-            }).start();
-        }
-        return false;
-    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

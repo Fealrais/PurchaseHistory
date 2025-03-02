@@ -1,16 +1,60 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory app:title="@string/application_settings"/>
-    <Preference
-        android:key="edit_category_preference"
-        android:title="Edit Categories" />
-    <ListPreference
-        android:key="currency_preference"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:entries="@array/currency_list"
-        android:entryValues="@array/currency_list_values"
-        android:defaultValue="1"
-        android:title="@string/edit_currency"
-        android:summary="@string/edit_currency_summary" />
+    <PreferenceCategory app:title="@string/application_settings">
+        <Preference
+            android:key="edit_category_preference"
+            android:icon="@drawable/baseline_edit_24"
+            app:iconTint="@color/primaryColor"
+            android:title="@string/edit_categories" />
+        <ListPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="1"
+            android:entries="@array/currency_list"
+            android:entryValues="@array/currency_list_values"
+            android:key="currency_preference"
+            app:iconTint="@color/primaryColor"
+            android:icon="@drawable/baseline_currency_exchange_24"
+            android:summary="@string/edit_currency_summary"
+            android:title="@string/edit_currency" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/monthly_limit"
+        android:summary="@string/monthly_limit_summary"
+        app:iconTint="@color/primaryColor"
+        android:icon="@drawable/baseline_money_off_24" >
+        <EditTextPreference
+            android:id="@+id/monthly_limit_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="monthly_limit_label"
+            android:title="@string/label"
+            app:defaultValue="@string/monthly_limit"/>
+        <EditTextPreference
+            android:id="@+id/monthly_limit_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="monthly_limit_value"
+            android:summary="@string/monthly_limit_value_summary"
+            android:title="@string/value"
+            app:defaultValue="-1" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/more_info">
+        <Preference
+            android:enabled="false"
+            android:id="@+id/credits_preference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="credits_preference"
+            android:title="@string/credits" />
+        <Preference
+            android:enabled="false"
+            android:id="@+id/help_preference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="help_preference"
+            android:iconTint="@color/primaryColor"
+
+            android:icon="@drawable/baseline_help_outline_24"
+            android:title="@string/questions_and_answers" />
+    </PreferenceCategory>
 </PreferenceScreen>

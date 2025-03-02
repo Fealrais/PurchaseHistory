@@ -28,7 +28,7 @@ public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.application_preferences, rootKey);
+        setPreferencesFromResource(R.xml.account_preferences, rootKey);
         PreferenceCategory category = findPreference("categories_preference_category");
         new Thread(() -> {
             List<CategoryView> allCategories = purchaseClient.getAllCategories();

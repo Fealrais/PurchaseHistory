@@ -1,9 +1,0 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory
-        android:key="categories_preference_category"
-        app:title="@string/edit_categories">
-
-    </PreferenceCategory>
-
-</PreferenceScreen>

@@ -36,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="80dp"
+            android:layout_marginStart="40dp"
             android:layout_gravity="center|end"
             android:textAlignment="textEnd"
             android:textAppearance="?attr/textAppearanceListItem" />

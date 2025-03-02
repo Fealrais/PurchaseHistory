@@ -80,6 +80,7 @@ public class FullscreenGraphActivity extends AppCompatActivity {
         int info = switch (dashboardComponent.getFragmentName()){
             case "PieChartFragment" -> R.string.help_info_pie_chart;
             case "LineChartFragment" -> R.string.help_info_line_chart;
+            case "AccumulativeChartFragment" -> R.string.help_info_accumulative_line_chart;
             case "BarChartFragment" -> R.string.help_info_stacked_bar_chart;
             case "PurchaseListPurchaseFragment" -> R.string.help_info_purchases_list;
             default -> throw new IllegalStateException("Unexpected value: " + dashboardComponent.getFragmentName());

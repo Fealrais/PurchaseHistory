@@ -25,5 +25,7 @@
         <item name="fontWeight">400</item>
         <!-- Status bar color -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="preferenceTheme">@style/AngelPStyle.Preference.v1</item>
+
     </style>
 </resources>

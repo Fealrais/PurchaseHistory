@@ -113,7 +113,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(binding == null) return;
+        if (binding == null) return;
         this.applyFilter(filterViewModel.getFilterValue());
         initFilterRow();
         initGraph(binding.barChartView);
@@ -131,9 +131,9 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
 
     private void initGraph(BarChart chart) {
         AndroidUtils.initChart(chart, appColorCollection, "dd MMM", tf);
-        if (showFilter) {
-            chart.setOnChartValueSelectedListener(this);
-        }
+        chart.setOnChartValueSelectedListener(this);
+        chart.setNoDataText(getString(R.string.no_data));
+
     }
 
     private void setData(PurchaseFilter filter) {
@@ -141,36 +141,43 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
             isRefreshing.postValue(true);
             CalendarReport calendarReport = purchaseClient.getCategorizedCalendarReport(filter);
             List<CategoryView> allCategories = purchaseClient.getAllCategories();
-
-            Map<LocalDate, List<CalendarReportEntry>> content = prepareContent(filter, calendarReport, allCategories);
-            List<String> labels = new ArrayList<>();
-            List<Integer> colors = new ArrayList<>();
-            List<BarEntry> entries = new ArrayList<>();
-
-            for (CategoryView allCategory : allCategories) {
-                labels.add(allCategory.getName());
-                int color = AndroidUtils.getColor(allCategory);
-                colors.add(color);
+            if (!calendarReport.getContent().isEmpty()) {
+                updateChart(filter, calendarReport, allCategories);
             }
-            LocalDate dateIterator = filter.getFrom();
-            for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
-                entries.add(parseBarEntries(dateIterator, content.get(dateIterator)));
-            }
-            BarDataSet barDataSet = new BarDataSet(entries, "Purchases");
-            barDataSet.setValueTypeface(tf);
-            barDataSet.setDrawIcons(false);
-            if (!colors.isEmpty())
-                barDataSet.setColors(colors);
-            barDataSet.setStackLabels(labels.toArray(new String[0]));
-            BarData data = new BarData(barDataSet);
-            data.setValueTextColor(appColorCollection.getForegroundColor());
-            data.setBarWidth(0.95f);
-            notifyDataChanged(data);
             isRefreshing.postValue(false);
         }).start();
     }
 
+    private void updateChart(PurchaseFilter filter, CalendarReport calendarReport, List<CategoryView> allCategories) {
+        Map<LocalDate, List<CalendarReportEntry>> content = prepareContent(filter, calendarReport, allCategories);
+        List<String> labels = new ArrayList<>();
+        List<Integer> colors = new ArrayList<>();
+        List<BarEntry> entries = new ArrayList<>();
+
+        for (CategoryView allCategory : allCategories) {
+            labels.add(allCategory.getName());
+            int color = AndroidUtils.getColor(allCategory);
+            colors.add(color);
+        }
+        LocalDate dateIterator = filter.getFrom();
+        for (; dateIterator.isBefore(filter.getTo().plusDays(1)); dateIterator = dateIterator.plusDays(1L)) {
+            entries.add(parseBarEntries(dateIterator, content.get(dateIterator)));
+        }
+        BarDataSet barDataSet = new BarDataSet(entries, "Purchases");
+        barDataSet.setValueTypeface(tf);
+        barDataSet.setDrawIcons(false);
+        if (!colors.isEmpty())
+            barDataSet.setColors(colors);
+        barDataSet.setStackLabels(labels.toArray(new String[0]));
+        BarData data = new BarData(barDataSet);
+        data.setValueTextColor(appColorCollection.getForegroundColor());
+        data.setBarWidth(0.95f);
+        notifyDataChanged(data);
+    }
+
     private void notifyDataChanged(BarData data) {
+        if(data == null || data.getDataSetCount() == 0) return;
+
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.barChartView.setData(data);
             binding.barChartView.getData().notifyDataChanged();
@@ -221,12 +228,12 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
         for (CalendarReportEntry datum : data) {
             sum = sum.add(datum.getSum());
         }
-        if (!sum.equals(BigDecimal.ZERO)){
+        if (!sum.equals(BigDecimal.ZERO)) {
             dialog = new PurchasesPerDayDialog(data.get(0));
             dialog.show(getParentFragmentManager().beginTransaction(), "DialogFragment");
         }
 
-}
+    }
 
     @Override
     public void onNothingSelected() {

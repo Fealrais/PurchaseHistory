@@ -160,7 +160,7 @@
     <string name="no_period_selected">Не е избран период</string>
     <string name="add_purchase_action">Добави като бележка</string>
     <string name="scheduled_notification_content">Предстоящо плащане. Цена: %.2f \nДа го добавим ли към покупките?</string>
-    <string name="scheduled_notification_title">Дължимо плащане (%s)</string>
+    <string name="scheduled_notification_title">Дължимо плащане `%s`</string>
     <string name="error_must_not_be_empty">Попълнете полето, моля</string>
     <string name="error_price_empty">Моля въведете правилна сума</string>
     <string name="turn_on_flashlight">Включване на фенерчето</string>
@@ -226,9 +226,25 @@
     <string name="average_spending_per_purchase">Средни разходи на покупка: <b>%s</b></string>
     <string name="total_spending">Общо разходи: <b>%s</b></string>
     <string name="total_number_of_purchases">Общ брой покупки: <b>%s</b></string>
-    <string name="most_frequently_purchased_category">Най-често използваната категория:</string>
+    <string name="most_frequently_purchased_category">Най-често използваната категория в последните 15 дни:</string>
     <string name="most_frequently_purchased_category_count">Брой покупки: <b>%s</b></string>
     <string name="most_frequently_purchased_category_sum">Общо : <b>%s</b></string>
     <string name="no_scheduled_expenses">Няма планирани разходи</string>
     <string name="none">Няма</string>
+    <string name="notification_silenced">Известието `%s` е изключено</string>
+    <string name="notification_un_silenced">Включихте известията за `%s`</string>
+    <string name="help_info_accumulative_line_chart">Тази диаграма показва кумулативната сума на вашите разходи във времето, разделена по месеци. Тя ви помага да следите навиците си за разходи, да идентифицирате тенденции и да управлявате бюджета си по-ефективно. Чрез визуализиране на кумулативните си разходи, можете да видите колко близо сте до достигане на финансовите си лимити и да вземате информирани решения, за да останете в рамките на бюджета си.</string>
+    <string name="title_accumulative_line_chart">Кумулативни разходи</string>
+    <string name="description_accumulative_line_chart">Показва кумулативната сума на всички покупки за период, разделена по месеци.</string>
+    <string name="credits">Кредити</string>
+    <string name="questions_and_answers">Често задавани въпроси</string>
+    <string name="more_info">Повече информация</string>
+    <string name="monthly_limit">Месечен лимит</string>
+    <string name="edit_limit">Редактиране на месечния лимит</string>
+    <string name="value">Стойност</string>
+    <string name="label">Етикет</string>
+    <string name="monthly_limit_summary">Показва месечния лимит в някои диаграми.</string>
+    <string name="monthly_limit_value_summary">За да скриете лимита, задайте -1</string>
+    <string name="invalid_input_repeat">Грешно попълнени данни, опитайте отново</string>
+
 </resources>

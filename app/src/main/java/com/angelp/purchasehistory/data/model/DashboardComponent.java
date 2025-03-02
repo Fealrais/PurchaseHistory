@@ -52,6 +52,12 @@ public class DashboardComponent implements Parcelable {
                     infoDescription = R.string.help_info_line_chart;
                     description = R.string.description_line_chart;
                 }
+                case "AccumulativeChartFragment" -> {
+                    title = R.string.title_accumulative_line_chart;
+                    cardIconId =  R.mipmap.linechart;
+                    infoDescription = R.string.help_info_accumulative_line_chart;
+                    description = R.string.description_accumulative_line_chart;
+                }
                 case "BarChartFragment" -> {
                     title = R.string.title_stacked_bar_chart;
                     cardIconId =  R.mipmap.barchart;

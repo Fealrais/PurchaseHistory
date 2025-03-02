@@ -11,11 +11,13 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
@@ -47,6 +49,7 @@ public class ScheduledExpensesFragment extends Fragment {
     private final Gson gson = new Gson();
     private ScheduledExpenseAdapter adapter;
     private EditScheduledExpenseDialog editScheduledExpenseDialog;
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -58,17 +61,21 @@ public class ScheduledExpensesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(binding == null) return;
+        if (binding == null) return;
         ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
-
+        isLoading.observe(getViewLifecycleOwner(), loading -> {
+            binding.loadingBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+            binding.recyclerViewScheduledExpenses.setVisibility(loading ? View.GONE : View.VISIBLE);
+        });
         setupRecycleView();
         setupAddButton();
     }
 
     private void setupRecycleView() {
         new Thread(() -> {
+            isLoading.postValue(true);
             List<ScheduledExpenseView> scheduledExpenses = scheduledExpenseClient.findAllForUser();
-            if(scheduledExpenses.isEmpty()) binding.emptyScheduledExpenses.setVisibility(View.VISIBLE);
+
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -81,6 +88,8 @@ public class ScheduledExpensesFragment extends Fragment {
                         SharedPreferences preferences = context.getSharedPreferences(Constants.Preferences.SILENCED_NOTIFICATIONS, MODE_PRIVATE);
                         preferences.edit().putBoolean(item.getId().toString(), silenced).apply();
                         addNotificationAlarm(context, item);
+                        String message = getString(silenced ? R.string.notification_silenced : R.string.notification_un_silenced, item.getNote());
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                     }).start();
                 }
 
@@ -119,6 +128,7 @@ public class ScheduledExpensesFragment extends Fragment {
                                     int index = adapter.getScheduledExpenses().indexOf(item);
                                     adapter.getScheduledExpenses().remove(index);
                                     adapter.notifyItemRemoved(index);
+                                    binding.emptyScheduledExpenses.setVisibility(adapter.getScheduledExpenses().isEmpty() ? View.VISIBLE : View.GONE);
                                     resetAlarms(adapter.getScheduledExpenses());
                                 } else {
                                     PurchaseHistoryApplication.getInstance().alert("Error deleting scheduled expense.");
@@ -135,6 +145,8 @@ public class ScheduledExpensesFragment extends Fragment {
             new Handler(Looper.getMainLooper()).post(() -> {
                 binding.recyclerViewScheduledExpenses.setLayoutManager(linearLayoutManager);
                 binding.recyclerViewScheduledExpenses.setAdapter(adapter);
+                binding.emptyScheduledExpenses.setVisibility(scheduledExpenses.isEmpty() ? View.VISIBLE : View.GONE);
+                isLoading.setValue(false);
             });
         }).start();
         binding.swiperefreshScheduledExpenses.setOnRefreshListener(() -> {
@@ -145,11 +157,16 @@ public class ScheduledExpensesFragment extends Fragment {
 
     private void refresh() {
         new Thread(() -> {
+            isLoading.postValue(true);
             adapter.getScheduledExpenses().clear();
             List<ScheduledExpenseView> allForUser = scheduledExpenseClient.findAllForUser();
             ScheduledExpenseAdapter.sort(allForUser);
             adapter.getScheduledExpenses().addAll(allForUser);
-            new Handler(Looper.getMainLooper()).post(() -> adapter.notifyDataSetChanged());
+            new Handler(Looper.getMainLooper()).post(() -> {
+                adapter.notifyDataSetChanged();
+                binding.emptyScheduledExpenses.setVisibility(allForUser.isEmpty() ? View.VISIBLE : View.GONE);
+                isLoading.postValue(false);
+            });
         }).start();
     }
 
@@ -191,7 +208,7 @@ public class ScheduledExpensesFragment extends Fragment {
     }
 
     private void addNotificationAlarm(Context context, ScheduledExpenseView newExpense) {
-        if(context == null) return;
+        if (context == null) return;
         ScheduledNotification scheduledNotification = new ScheduledNotification(newExpense);
         Intent intent = new Intent(context, InitiateNotificationReceiver.class);
         ArrayList<ScheduledNotification> list = new ArrayList<>();

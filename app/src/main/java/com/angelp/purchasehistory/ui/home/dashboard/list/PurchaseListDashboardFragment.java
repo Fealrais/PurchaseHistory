@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -82,11 +80,17 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (binding != null) {
+                    setShowEmptyView(purchases.isEmpty());
+
                     binding.purchaseList.setLayoutManager(llm);
                     binding.purchaseList.setAdapter(purchasesAdapter);
                 }
             });
         }).start();
+    }
+
+    private void setShowEmptyView(boolean empty) {
+        binding.emptyView.setVisibility(empty? View.VISIBLE : View.GONE);
     }
 
     private void setupShowMoreButton(int purchaseSize, int maxSize) {
@@ -125,20 +129,16 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
 
     private void updateAdapter(List<PurchaseView> allPurchases) {
         new Handler(Looper.getMainLooper()).post(() -> {
+            setShowEmptyView(allPurchases.isEmpty());
             purchasesAdapter.setPurchaseViews(allPurchases);
             updateSeeAllButton(allPurchases.size(), maxSize);
         });
     }
 
     private void initFilterRow() {
-        Button filterButton = binding.filterButton;
-        TextView filterDateText = binding.filterDateText;
-        filterButton.setOnClickListener((v) -> openFilter());
-        filterDateText.setTextColor(getContext().getColor(R.color.foreground_color));
-        new Handler(Looper.getMainLooper()).post(() -> {
-            filterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-            filterDateText.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-        });
+        binding.filterButton.setOnClickListener((v) -> openFilter());
+        binding.filterDateText.setTextColor(getContext().getColor(R.color.foreground_color));
+        new Handler(Looper.getMainLooper()).post(() -> binding.filterRow.setVisibility(showFilter ? View.VISIBLE : View.GONE));
     }
 
     private void applyFilter(PurchaseFilter newFilter) {

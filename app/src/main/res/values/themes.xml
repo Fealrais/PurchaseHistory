@@ -22,11 +22,16 @@
         <item name="fontFamily">@font/ibmplexmono_regular</item>
         <item name="fontWeight">400</item>
         <item name="buttonTint">@color/primaryColor</item>
+        <item name="preferenceTheme">@style/AngelPStyle.Preference.v1</item>
+
     </style>
 
     <style name="Theme.PurchaseHistory.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AngelPStyle.Preference.v1" parent="@style/PreferenceThemeOverlay.v14.Material">
+        <item name="android:tint">@color/foreground_color</item>
     </style>
 
     <style name="Theme.PurchaseHistory.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

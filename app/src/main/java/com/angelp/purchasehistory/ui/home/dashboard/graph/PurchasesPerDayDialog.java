@@ -20,6 +20,7 @@ import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.DialogGraphDetailsBinding;
 import com.angelp.purchasehistory.ui.FullscreenGraphActivity;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchasesAdapter;
+import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
@@ -28,7 +29,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 
 @AndroidEntryPoint
@@ -37,12 +40,16 @@ public class PurchasesPerDayDialog extends DialogFragment {
     public static final String TOTAL_SUM = "total_sum";
     public static final String TITLE = "title";
     private final String TAG = PurchasesPerDayDialog.class.getSimpleName();
+    private final DateTimeFormatter dtf_short = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+    private final DateTimeFormatter dtf_long = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+
     private DialogGraphDetailsBinding binding;
     private PurchasesAdapter purchasesAdapter;
     @Inject
     PurchaseClient purchaseClient;
     private final int maxSize = 10;
     private AlertDialog dialog;
+    private PurchaseFilter filter;
 
     public PurchasesPerDayDialog() {
         Bundle bundle = new Bundle();
@@ -53,8 +60,8 @@ public class PurchasesPerDayDialog extends DialogFragment {
         Bundle bundle = new Bundle();
         PurchaseFilter purchaseFilter = new PurchaseFilter(calendarReportEntry.getLocalDate());
         bundle.putParcelable(Constants.Arguments.ARG_FILTER, purchaseFilter);
-        bundle.putString(TITLE, calendarReportEntry.getLocalDate().format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-        bundle.putString(TOTAL_SUM, calendarReportEntry.getSum().toString());
+        bundle.putString(TITLE, calendarReportEntry.getLocalDate().format(dtf_long));
+        bundle.putFloat(TOTAL_SUM, calendarReportEntry.getSum().floatValue());
         setArguments(bundle);
     }
 
@@ -66,12 +73,27 @@ public class PurchasesPerDayDialog extends DialogFragment {
         LayoutInflater layoutInflater = getLayoutInflater();
         binding = DialogGraphDetailsBinding.inflate(layoutInflater, null, false);
         builder.setTitle(getArguments().getString(TITLE));
-        builder.setMessage(getArguments().getString(TOTAL_SUM));
+        builder.setMessage(AndroidUtils.formatCurrency(getArguments().getFloat(TOTAL_SUM), getContext()));
         builder.setView(binding.getRoot());
-        PurchaseFilter filter = getArguments().getParcelable(Constants.Arguments.ARG_FILTER);
+        filter = getArguments().getParcelable(Constants.Arguments.ARG_FILTER);
         initializePurchasesRecyclerView(maxSize, filter);
+        updateFilterButtons(filter.getFrom());
+        binding.nextDayButton.setOnClickListener((v) -> updateFilter(filter.getFrom().plusDays(1)));
+        binding.previousDayButton.setOnClickListener((v) -> updateFilter(filter.getFrom().minusDays(1)));
         dialog = builder.create();
         return dialog;
+    }
+
+    private void updateFilter(LocalDate localDate) {
+        filter.setFrom(localDate);
+        filter.setTo(localDate);
+        updateFilterButtons(localDate);
+        refresh(filter);
+    }
+
+    private void updateFilterButtons(LocalDate localDate) {
+        binding.nextDayButton.setText(localDate.plusDays(1).format(dtf_short));
+        binding.previousDayButton.setText(localDate.minusDays(1).format(dtf_short));
     }
 
     @Override
@@ -125,15 +147,19 @@ public class PurchasesPerDayDialog extends DialogFragment {
             return;
         }
         new Thread(() -> {
-            purchasesAdapter.getPurchaseViews().clear();
             List<PurchaseView> allPurchases = purchaseClient.getAllPurchases(filter);
+            purchasesAdapter.getPurchaseViews().clear();
             Log.i(TAG, "Received purchases list with size of " + allPurchases.size());
-            updateAdapter(allPurchases);
+            updateUI(allPurchases);
         }).start();
     }
 
-    private void updateAdapter(List<PurchaseView> allPurchases) {
+    private void updateUI(List<PurchaseView> allPurchases) {
+        BigDecimal sum = allPurchases.stream().reduce(BigDecimal.ZERO, (bigDecimal, view) -> bigDecimal.add(view.getPrice()), BigDecimal::add);
+
         new Handler(Looper.getMainLooper()).post(() -> {
+            dialog.setTitle(filter.getFrom().format(dtf_long));
+            dialog.setMessage(AndroidUtils.formatCurrency(sum, getContext()));
             purchasesAdapter.setPurchaseViews(allPurchases);
             updateSeeAllButton(allPurchases.size(), maxSize);
         });

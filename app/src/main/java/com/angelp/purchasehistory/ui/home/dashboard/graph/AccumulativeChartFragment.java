@@ -2,6 +2,8 @@ package com.angelp.purchasehistory.ui.home.dashboard.graph;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -19,13 +21,16 @@ import com.angelp.purchasehistory.data.AppColorCollection;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
-import com.angelp.purchasehistory.databinding.FragmentLineChartBinding;
+import com.angelp.purchasehistory.data.model.MonthlyLimit;
+import com.angelp.purchasehistory.databinding.FragmentAccumulativeChartBinding;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
+import com.angelp.purchasehistory.ui.home.settings.SettingsActivity;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReport;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -45,20 +50,20 @@ import java.util.List;
 import java.util.Map;
 
 @AndroidEntryPoint
-public class LineChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
+public class AccumulativeChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MMM yy");
     private final String TAG = this.getClass().getSimpleName();
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
     PurchaseClient purchaseClient;
     AlertDialog.Builder alertBuilder;
-    private FragmentLineChartBinding binding;
+    private FragmentAccumulativeChartBinding binding;
     private boolean showFilter;
     private AppColorCollection appColorCollection;
     private Typeface tf;
     private PurchasesPerDayDialog dialog;
 
-    public LineChartFragment() {
+    public AccumulativeChartFragment() {
         Bundle args = new Bundle();
         this.setArguments(args);
     }
@@ -75,7 +80,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: View created");
-        binding = FragmentLineChartBinding.inflate(inflater, container, false);
+        binding = FragmentAccumulativeChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
         tf = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_regular);
         super.setLoadingScreen(binding.loadingBar);
@@ -89,6 +94,10 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
         this.applyFilter(filterViewModel.getFilterValue());
         initFilterRow();
         initGraph(binding.lineChartView);
+        if (!showFilter) {
+            binding.editLimitButton.setVisibility(View.GONE);
+        }
+        binding.editLimitButton.setOnClickListener((v) -> startActivity(new Intent(getContext(), SettingsActivity.class)));
         setData(filterViewModel.getFilterValue());
     }
 
@@ -105,6 +114,16 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
         AndroidUtils.initChart(chart, appColorCollection, "dd", tf);
         chart.setOnChartValueSelectedListener(this);
         chart.setNoDataText(getString(R.string.no_data));
+
+        MonthlyLimit monthlyLimit = getMonthlyLimit();
+        if (monthlyLimit != null) {
+            LimitLine l = new LimitLine(monthlyLimit.getValue());
+            l.setLineWidth(2);
+            l.setLabel(monthlyLimit.getLabel());
+            l.setTextColor(appColorCollection.getForegroundColor());
+            l.setTypeface(tf);
+            chart.getAxisLeft().addLimitLine(l);
+        }
 
     }
 
@@ -123,9 +142,11 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
                 lineDataSet.setDrawCircleHole(false);
                 lineDataSet.setValueTypeface(tf);
                 lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                lineDataSet.setDrawFilled(true);
                 if (i < colors.size()) {
                     int color = colors.get(i++);
                     lineDataSet.setColor(color);
+                    lineDataSet.setFillColor(color);
                     lineDataSet.setCircleColor(color);
                 }
                 lineDataSet.setLabel(entry.getKey().format(DATE_TIME_FORMATTER));
@@ -164,7 +185,8 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
         for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
             LocalDate key = calendarReportEntry.getLocalDate().withDayOfMonth(1);
             List<Entry> entries = map.computeIfAbsent(key, (k) -> new ArrayList<>());
-            Entry entry = parseEntries(calendarReportEntry);
+            float sum = !entries.isEmpty() ? entries.get(entries.size() - 1).getY() : 0f;
+            Entry entry = parseEntries(calendarReportEntry, sum);
             entries.add(entry);
             map.put(key, entries);
         }
@@ -183,13 +205,13 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
         });
     }
 
-    private Entry parseEntries(CalendarReportEntry entry) {
+    private Entry parseEntries(CalendarReportEntry entry, float sum) {
         float x = ((Long) entry.getLocalDate()
                 .withYear(LocalDate.now().getYear())
                 .with(Month.JANUARY)
                 .toEpochDay()).floatValue();
 
-        return new Entry(x, entry.getSum().floatValue(), entry);
+        return new Entry(x, entry.getSum().floatValue() + sum, entry);
     }
 
     private void openFilter() {
@@ -223,6 +245,21 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
 
     @Override
     public void onNothingSelected() {
+
+    }
+
+    @Nullable
+    private MonthlyLimit getMonthlyLimit() {
+        try {
+            SharedPreferences prefs = getContext().getSharedPreferences(Constants.Preferences.APP_PREFERENCES, Context.MODE_PRIVATE);
+            String label = prefs.getString(Constants.Preferences.MONTHLY_LIMIT_LABEL, getString(R.string.monthly_limit));
+            float value = prefs.getFloat(Constants.Preferences.MONTHLY_LIMIT_VALUE, -1);
+            if (value <= 0) return null;
+            return new MonthlyLimit(label, value);
+        } catch (Exception e) {
+            Log.e(TAG, "getMonthlyLimit: ", e);
+            return null;
+        }
 
     }
 }
