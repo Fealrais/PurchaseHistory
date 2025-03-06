@@ -133,7 +133,6 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
         AndroidUtils.initChart(chart, appColorCollection, "dd MMM", tf);
         chart.setOnChartValueSelectedListener(this);
         chart.setNoDataText(getString(R.string.no_data));
-
     }
 
     private void setData(PurchaseFilter filter) {

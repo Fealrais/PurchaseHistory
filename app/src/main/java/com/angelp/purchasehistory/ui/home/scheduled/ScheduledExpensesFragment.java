@@ -11,7 +11,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -89,7 +88,7 @@ public class ScheduledExpensesFragment extends Fragment {
                         preferences.edit().putBoolean(item.getId().toString(), silenced).apply();
                         addNotificationAlarm(context, item);
                         String message = getString(silenced ? R.string.notification_silenced : R.string.notification_un_silenced, item.getNote());
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                        PurchaseHistoryApplication.getInstance().alert(message);
                     }).start();
                 }
 

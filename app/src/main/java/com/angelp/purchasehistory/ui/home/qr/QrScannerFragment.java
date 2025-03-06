@@ -173,6 +173,8 @@ public class QrScannerFragment extends Fragment {
             qrScannerViewModel.getPurchaseDTO().setDate(v);
             binding.qrDateInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
         });
+        binding.qrPriceInput.setCursorVisible(false);
+        binding.qrPriceInput.setOnClickListener(v -> binding.qrPriceInput.setSelection(binding.qrPriceInput.getText().length()));
         binding.qrPriceInput.addTextChangedListener(new CurrencyInputChangeWatcher(binding.qrPriceInput) {
             @Override
             public void afterTextChanged(Editable s) {

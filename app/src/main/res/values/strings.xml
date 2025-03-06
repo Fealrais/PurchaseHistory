@@ -256,4 +256,14 @@
     <string name="monthly_limit_summary">Shows the monthly limit in some charts.</string>
     <string name="monthly_limit_value_summary">To hide the limit, set to -1</string>
     <string name="invalid_input_repeat">Invalid input, try again</string>
+    <string name="monthly_limit_value_hint" translatable="false">E.g. 3000</string>
+    <string name="add_new_limit">Add a new limit</string>
+    <string name="add_monthly_limit">Add new Monthly Limit</string>
+    <string name="edit_limits">Edit monthly limits</string>
+    <string name="invalid_number">Please enter a number above 0</string>
+    <string name="report_problem">Provide feedback or report a problem</string>
+    <string name="instruction_text">Please provide your feedback or report any issues you encountered.</string>
+    <string name="title_hint">Enter Title…</string>
+    <string name="feedback_hint">Describe the issue you encountered or explain your idea…</string>
+    <string name="error_required_field">Required field</string>
 </resources>

@@ -246,5 +246,13 @@
     <string name="monthly_limit_summary">Показва месечния лимит в някои диаграми.</string>
     <string name="monthly_limit_value_summary">За да скриете лимита, задайте -1</string>
     <string name="invalid_input_repeat">Грешно попълнени данни, опитайте отново</string>
-
+    <string name="add_new_limit">Добави нов лимит</string>
+    <string name="add_monthly_limit">Добави нов месечен лимит</string>
+    <string name="edit_limits">Редактирай месечните лимити</string>
+    <string name="invalid_number">Моля, въведете число над 0</string>
+    <string name="report_problem">Предоставете обратна връзка или докладвайте проблем</string>
+    <string name="instruction_text">Моля, предоставете вашата обратна връзка или докладвайте за проблеми, с които сте се сблъскали.</string>
+    <string name="title_hint">Въведете заглавие…</string>
+    <string name="feedback_hint">Опишете проблема, с който сте се сблъскали, или обяснете вашата идея…</string>
+    <string name="error_required_field">Моля попълнете задължително поле</string>
 </resources>

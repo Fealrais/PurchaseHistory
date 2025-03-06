@@ -66,7 +66,6 @@ public class PurchaseEditDialog extends DialogFragment {
     private Long purchaseId;
 
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i(getTag(), "onCreateView: View created");
@@ -115,6 +114,8 @@ public class PurchaseEditDialog extends DialogFragment {
                     binding.purchaseEditCategorySpinner.setSelection(index);
             });
         }).start();
+        binding.purchaseEditPriceInput.setCursorVisible(false);
+        binding.purchaseEditPriceInput.setOnClickListener(v -> binding.purchaseEditPriceInput.setSelection(binding.purchaseEditPriceInput.getText().length()));
         binding.purchaseEditPriceInput.addTextChangedListener(new CurrencyInputChangeWatcher(binding.purchaseEditPriceInput) {
             @Override
             public void afterTextChanged(Editable s) {
@@ -202,7 +203,8 @@ public class PurchaseEditDialog extends DialogFragment {
                             resetForm();
                             if (onSuccess != null) {
                                 filterViewModel.refresh();
-                            };
+                            }
+                            ;
                         });
                     }
                     dismiss();

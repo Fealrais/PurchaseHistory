@@ -27,11 +27,20 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setIcon(R.drawable.baseline_arrow_back_24);
         }
+        if (savedInstanceState == null) {
+            String fragmentName = getIntent().getStringExtra("fragment_name");
+            if ("MonthlyLimitSettingsFragment".equals(fragmentName)) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(binding.settingsContainer.getId(), new MonthlyLimitSettingsFragment())
+                        .commit();
+            } else {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(binding.settingsContainer.getId(), SettingsFragment.class, null)
+                        .commit();
+            }
+        }
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(binding.settingsContainer.getId(), SettingsFragment.class, null)
-                .commit();
     }
 
     @Override

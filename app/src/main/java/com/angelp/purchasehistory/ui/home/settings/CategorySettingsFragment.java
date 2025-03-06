@@ -20,7 +20,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 @AndroidEntryPoint
-public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
+public class CategorySettingsFragment extends PreferenceFragmentCompat {
 
     @Inject
     PurchaseClient purchaseClient;
@@ -28,8 +28,12 @@ public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.account_preferences, rootKey);
+        setPreferencesFromResource(R.xml.category_preferences, rootKey);
         PreferenceCategory category = findPreference("categories_preference_category");
+        setupCategoryEdit(category);
+    }
+
+    private void setupCategoryEdit(PreferenceCategory category) {
         new Thread(() -> {
             List<CategoryView> allCategories = purchaseClient.getAllCategories();
             for (CategoryView categoryView : allCategories) {

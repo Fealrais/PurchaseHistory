@@ -3,7 +3,6 @@ package com.angelp.purchasehistory.ui.home.dashboard.graph;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -21,12 +20,13 @@ import com.angelp.purchasehistory.data.AppColorCollection;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
-import com.angelp.purchasehistory.data.model.MonthlyLimit;
 import com.angelp.purchasehistory.databinding.FragmentAccumulativeChartBinding;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.ui.home.settings.SettingsActivity;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
+import com.angelp.purchasehistory.web.clients.SettingsClient;
+import com.angelp.purchasehistorybackend.models.views.outgoing.MonthlyLimitView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReport;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
 import com.github.mikephil.charting.charts.LineChart;
@@ -56,6 +56,8 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
     PurchaseClient purchaseClient;
+    @Inject
+    SettingsClient settingsClient;
     AlertDialog.Builder alertBuilder;
     private FragmentAccumulativeChartBinding binding;
     private boolean showFilter;
@@ -97,7 +99,11 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
         if (!showFilter) {
             binding.editLimitButton.setVisibility(View.GONE);
         }
-        binding.editLimitButton.setOnClickListener((v) -> startActivity(new Intent(getContext(), SettingsActivity.class)));
+        binding.editLimitButton.setOnClickListener((v) -> {
+            Intent intent = new Intent(getContext(), SettingsActivity.class);
+            intent.putExtra("fragment_name", "MonthlyLimitSettingsFragment");
+            startActivity(intent);
+        });
         setData(filterViewModel.getFilterValue());
     }
 
@@ -114,18 +120,9 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
         AndroidUtils.initChart(chart, appColorCollection, "dd", tf);
         chart.setOnChartValueSelectedListener(this);
         chart.setNoDataText(getString(R.string.no_data));
-
-        MonthlyLimit monthlyLimit = getMonthlyLimit();
-        if (monthlyLimit != null) {
-            LimitLine l = new LimitLine(monthlyLimit.getValue());
-            l.setLineWidth(2);
-            l.setLabel(monthlyLimit.getLabel());
-            l.setTextColor(appColorCollection.getForegroundColor());
-            l.setTypeface(tf);
-            chart.getAxisLeft().addLimitLine(l);
-        }
-
+        setupMonthlyLimits(chart);
     }
+
 
     private void setData(PurchaseFilter filter) {
         new Thread(() -> {
@@ -248,18 +245,19 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
 
     }
 
-    @Nullable
-    private MonthlyLimit getMonthlyLimit() {
-        try {
-            SharedPreferences prefs = getContext().getSharedPreferences(Constants.Preferences.APP_PREFERENCES, Context.MODE_PRIVATE);
-            String label = prefs.getString(Constants.Preferences.MONTHLY_LIMIT_LABEL, getString(R.string.monthly_limit));
-            float value = prefs.getFloat(Constants.Preferences.MONTHLY_LIMIT_VALUE, -1);
-            if (value <= 0) return null;
-            return new MonthlyLimit(label, value);
-        } catch (Exception e) {
-            Log.e(TAG, "getMonthlyLimit: ", e);
-            return null;
-        }
-
+    private void setupMonthlyLimits(LineChart chart) {
+        new Thread(()->{
+            List<MonthlyLimitView> monthlyLimitList = settingsClient.getMonthlyLimits();
+            if (monthlyLimitList != null && !monthlyLimitList.isEmpty()) {
+                for (MonthlyLimitView monthlyLimit : monthlyLimitList) {
+                    LimitLine l = new LimitLine(monthlyLimit.getValue().floatValue());
+                    l.setLineWidth(2);
+                    l.setLabel(monthlyLimit.getLabel());
+                    l.setTextColor(appColorCollection.getForegroundColor());
+                    l.setTypeface(tf);
+                    chart.getAxisLeft().addLimitLine(l);
+                }
+            }
+        }).start();
     }
 }

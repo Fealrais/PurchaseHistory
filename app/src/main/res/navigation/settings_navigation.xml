@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_application_settings"
-        android:name="com.angelp.purchasehistory.ui.home.settings.ApplicationSettingsFragment"
+        android:name="com.angelp.purchasehistory.ui.home.settings.CategorySettingsFragment"
         android:label="@string/application_settings" />
 
 </navigation>

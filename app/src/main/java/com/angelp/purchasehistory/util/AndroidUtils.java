@@ -252,4 +252,15 @@ public final class AndroidUtils {
         } else colorView.setError(null);
         return true;
     }
+
+    public static void validateNumber(String string) {
+        try {
+            BigDecimal bigDecimal = new BigDecimal(string);
+            if (bigDecimal.floatValue() <= 0) {
+                throw new IllegalArgumentException("Invalid number: " + string);
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid number: " + string);
+        }
+    }
 }

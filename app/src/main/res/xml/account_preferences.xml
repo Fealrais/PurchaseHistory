@@ -18,26 +18,11 @@
             android:summary="@string/edit_currency_summary"
             android:title="@string/edit_currency" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/monthly_limit"
+    <Preference android:title="@string/edit_limits"
+        android:key="monthly_limit_preference"
         android:summary="@string/monthly_limit_summary"
         app:iconTint="@color/primaryColor"
-        android:icon="@drawable/baseline_money_off_24" >
-        <EditTextPreference
-            android:id="@+id/monthly_limit_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:key="monthly_limit_label"
-            android:title="@string/label"
-            app:defaultValue="@string/monthly_limit"/>
-        <EditTextPreference
-            android:id="@+id/monthly_limit_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:key="monthly_limit_value"
-            android:summary="@string/monthly_limit_value_summary"
-            android:title="@string/value"
-            app:defaultValue="-1" />
-    </PreferenceCategory>
+        android:icon="@drawable/baseline_money_off_24" />
     <PreferenceCategory android:title="@string/more_info">
         <Preference
             android:enabled="false"
@@ -46,6 +31,13 @@
             android:layout_height="wrap_content"
             android:key="credits_preference"
             android:title="@string/credits" />
+        <Preference
+            android:id="@+id/report_problem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="report_problem"
+            android:title="@string/report_problem"
+            android:icon="@drawable/baseline_bug_report_24" />
         <Preference
             android:enabled="false"
             android:id="@+id/help_preference"
