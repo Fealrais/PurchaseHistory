@@ -172,7 +172,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     }
 
     private void notifyDataChanged(LineData data) {
-        if(data == null || data.getDataSetCount() == 0) return;
+        if (data == null || data.getDataSetCount() == 0) return;
 
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.lineChartView.setData(data);

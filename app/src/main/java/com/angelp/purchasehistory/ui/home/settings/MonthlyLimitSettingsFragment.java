@@ -29,7 +29,7 @@ public class MonthlyLimitSettingsFragment extends PreferenceFragmentCompat {
         PreferenceCategory monthlyLimitCategory = findPreference("monthly_limit_preference_category");
         setupMonthlyLimitEdit(monthlyLimitCategory);
 
-        addLimitPreference.setOnPreferenceClickListener((v)->{
+        addLimitPreference.setOnPreferenceClickListener((v) -> {
             addMonthlyLimitDialog = new AddMonthlyLimitDialog((newMonthlyLimit) -> {
                 Preference monthlyLimitPreference = new Preference(getContext());
                 setupMonthlyLimit(newMonthlyLimit, monthlyLimitPreference);

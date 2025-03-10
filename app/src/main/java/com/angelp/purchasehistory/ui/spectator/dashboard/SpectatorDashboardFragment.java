@@ -10,13 +10,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import androidx.fragment.app.Fragment;
 import com.angelp.purchasehistory.data.Constants;
-import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentSpectatorDashboardBinding;
 import com.angelp.purchasehistory.ui.EmptyFragment;
 import com.angelp.purchasehistory.ui.home.dashboard.DashboardFragment;
 import com.angelp.purchasehistory.web.clients.ObserverClient;
+import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 

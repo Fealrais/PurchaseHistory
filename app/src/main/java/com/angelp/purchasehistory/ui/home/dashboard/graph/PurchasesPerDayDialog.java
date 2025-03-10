@@ -42,12 +42,11 @@ public class PurchasesPerDayDialog extends DialogFragment {
     private final String TAG = PurchasesPerDayDialog.class.getSimpleName();
     private final DateTimeFormatter dtf_short = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
     private final DateTimeFormatter dtf_long = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
-
-    private DialogGraphDetailsBinding binding;
-    private PurchasesAdapter purchasesAdapter;
+    private final int maxSize = 10;
     @Inject
     PurchaseClient purchaseClient;
-    private final int maxSize = 10;
+    private DialogGraphDetailsBinding binding;
+    private PurchasesAdapter purchasesAdapter;
     private AlertDialog dialog;
     private PurchaseFilter filter;
 

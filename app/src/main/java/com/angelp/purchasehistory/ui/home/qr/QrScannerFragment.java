@@ -59,6 +59,9 @@ public class QrScannerFragment extends Fragment {
 
     private QrScannerViewModel qrScannerViewModel;
     private FragmentQrBinding binding;
+    private List<CategoryView> allCategories = new ArrayList<>();
+    private TimePickerFragment timePicker;
+    private DatePickerFragment datePicker;
     private final ActivityResultLauncher<Intent> getQRResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -82,9 +85,6 @@ public class QrScannerFragment extends Fragment {
             PurchaseHistoryApplication.getInstance().getApplicationContext().getMainExecutor().execute(() -> Toast.makeText(getContext(), "The application cannot function without this", Toast.LENGTH_SHORT).show());
         }
     });
-    private List<CategoryView> allCategories = new ArrayList<>();
-    private TimePickerFragment timePicker;
-    private DatePickerFragment datePicker;
     private CreateCategoryDialog categoryDialog;
     private CategorySpinnerAdapter categoryAdapter;
 //    private AdView mAdView;
@@ -120,7 +120,7 @@ public class QrScannerFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
-        if(arguments!=null && arguments.getBoolean(Constants.Arguments.OPEN_CAMERA)) {
+        if (arguments != null && arguments.getBoolean(Constants.Arguments.OPEN_CAMERA)) {
             arguments.putBoolean(Constants.Arguments.OPEN_CAMERA, false);
             openCameraFlow(getLayoutInflater());
         }

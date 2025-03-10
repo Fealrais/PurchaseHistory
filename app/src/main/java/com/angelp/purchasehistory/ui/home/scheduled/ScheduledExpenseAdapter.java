@@ -30,13 +30,6 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
     private final List<ScheduledExpenseView> scheduledExpenses;
     private final OnItemClickListener listener;
 
-    public interface OnItemClickListener {
-        void onEditClick(ScheduledExpenseView item);
-        void onSilenceToggleTrigger(ScheduledExpenseView item, boolean silenced);
-        void onDeleteClick(ScheduledExpenseView item);
-        void onTriggerClick(ScheduledExpenseView scheduledExpense);
-    }
-
     public ScheduledExpenseAdapter(List<ScheduledExpenseView> scheduledExpenses, OnItemClickListener listener) {
         sort(scheduledExpenses);
         this.scheduledExpenses = scheduledExpenses;
@@ -68,6 +61,16 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
     @Override
     public int getItemCount() {
         return scheduledExpenses.size();
+    }
+
+    public interface OnItemClickListener {
+        void onEditClick(ScheduledExpenseView item);
+
+        void onSilenceToggleTrigger(ScheduledExpenseView item, boolean silenced);
+
+        void onDeleteClick(ScheduledExpenseView item);
+
+        void onTriggerClick(ScheduledExpenseView scheduledExpense);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -106,7 +109,7 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
             setNextTimestampString(textViewNextDate, scheduledExpense);
             silenceButton.setChecked(!isSilenced);
             setSilencedState(isSilenced);
-            silenceButton.setOnCheckedChangeListener((v,value)->{
+            silenceButton.setOnCheckedChangeListener((v, value) -> {
                 listener.onSilenceToggleTrigger(scheduledExpense, !value);
                 setSilencedState(!value);
             });
@@ -132,7 +135,7 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
         }
 
         private void setSilencedState(boolean isSilenced) {
-            if(isSilenced) {
+            if (isSilenced) {
                 silenceIcon.setImageResource(R.drawable.baseline_notifications_off_24);
             } else {
                 silenceIcon.setImageResource(R.drawable.ic_notifications_black_24dp);

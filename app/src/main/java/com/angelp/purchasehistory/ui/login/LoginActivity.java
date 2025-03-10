@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void loginWithGoogle(){
+    private void loginWithGoogle() {
 
 
     }

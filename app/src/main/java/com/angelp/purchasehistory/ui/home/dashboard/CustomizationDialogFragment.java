@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class CustomizationDialogFragment extends DialogFragment {
-    private List<DashboardComponent> selectedFragments;
-    private Consumer<List<DashboardComponent>> onSave;
+    private final List<DashboardComponent> selectedFragments;
+    private final Consumer<List<DashboardComponent>> onSave;
     private DialogCustomizationBinding binding;
 
     public CustomizationDialogFragment(List<DashboardComponent> selectedFragments, Consumer<List<DashboardComponent>> onSave) {

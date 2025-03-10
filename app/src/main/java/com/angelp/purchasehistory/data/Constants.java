@@ -17,14 +17,7 @@ public final class Constants {
     public static final String ARG_COMPONENT = "component";
     public static final List<TourStep> tourSteps = new ArrayList<>();
     public static final String DASHBOARD_FILTER = "dashboard_filter";
-
-    public static PurchaseFilter getDefaultFilter() {
-        return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now(), null, null, null);
-    }
-
-    public static PurchaseFilter getFilter30Days() {
-        return new PurchaseFilter(LocalDate.now().minusDays(30), LocalDate.now(), null, null, null);
-    }
+    public static HashMap<String, Integer> errorsMap = new HashMap<>();
 
     static {
         DEFAULT_COMPONENTS.add(new DashboardComponent("PieChartFragment"));
@@ -41,7 +34,7 @@ public final class Constants {
         tourSteps.add(new TourStep(R.id.navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses_secondary));
         tourSteps.add(new TourStep(R.id.navigation_profile, R.string.tour_navigation_profile, R.string.tour_navigation_profile_secondary));
     }
-    public static HashMap<String, Integer> errorsMap= new HashMap<>();
+
     static {
         errorsMap.put("1001", R.string.err1001);
         errorsMap.put("1002", R.string.err1002);
@@ -54,6 +47,14 @@ public final class Constants {
         errorsMap.put("1009", R.string.err1009);
         errorsMap.put("1010", R.string.err1010);
         errorsMap.put("1011", R.string.err1011);
+    }
+
+    public static PurchaseFilter getDefaultFilter() {
+        return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now(), null, null, null);
+    }
+
+    public static PurchaseFilter getFilter30Days() {
+        return new PurchaseFilter(LocalDate.now().minusDays(30), LocalDate.now(), null, null, null);
     }
 
     public interface Preferences {

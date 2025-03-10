@@ -157,10 +157,12 @@ public final class AndroidUtils {
     public static String formatCurrency(BigDecimal price) {
         return String.format(Locale.getDefault(), "%.2f", price.floatValue());
     }
+
     @NotNull
     public static String formatCurrency(BigDecimal price, Context context) {
         return formatCurrency(price.floatValue(), context);
     }
+
     @NotNull
     public static String formatCurrency(float price, Context context) {
         return String.format(Locale.getDefault(), "%.2f %s", price, getCurrencySymbol(context));

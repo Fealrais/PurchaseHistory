@@ -60,8 +60,8 @@ public class AuthClient extends HttpClient {
             }
         } catch (IOException e) {
             Log.e("loginResult", "login:" + e.getMessage());
-            if(e instanceof UnknownHostException hostException){
-                Log.e("Login",hostException.getMessage());
+            if (e instanceof UnknownHostException hostException) {
+                Log.e("Login", hostException.getMessage());
                 throw new WebException(R.string.error_hostException);
             }
             throw new WebException(R.string.server_connection_failed_500);
@@ -117,9 +117,10 @@ public class AuthClient extends HttpClient {
             String body = res.body() == null ? "" : res.body().string();
             Log.i("forgotPassword: ", "code: " + res.code() + " body:" + body);
             if (res.code() == 429) throw new WebException(R.string.tooManyRequest_429);
-            if(!res.isSuccessful() && !body.isEmpty()) {
+            if (!res.isSuccessful() && !body.isEmpty()) {
                 ErrorResponse errorResponse = gson.fromJson(body, ErrorResponse.class);
-                if("NO_EMAIL_FOUND".equals(errorResponse.getDetail())) throw new WebException(R.string.email_not_found_400);
+                if ("NO_EMAIL_FOUND".equals(errorResponse.getDetail()))
+                    throw new WebException(R.string.email_not_found_400);
             }
             return res.isSuccessful();
         } catch (IOException e) {

@@ -24,7 +24,7 @@
         android:id="@+id/navigation_profile"
         android:name="com.angelp.purchasehistory.ui.home.profile.ProfileFragment"
         android:label="@string/title_activity_profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_navigation_profile_to_navigation_edit_profile"
             app:destination="@id/navigation_edit_profile" />

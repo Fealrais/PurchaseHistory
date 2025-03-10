@@ -25,7 +25,7 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
         Log.i(TAG, "Received intent");
 
         ScheduledNotification scheduledNotification = intent.getParcelableExtra(SCHEDULED_NOTIFICATION_EXTRA);
-        if(scheduledNotification == null ) {
+        if (scheduledNotification == null) {
             Log.e(TAG, "Invalid list");
             return;
         }
@@ -38,12 +38,13 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
         PendingIntent triggerPendingIntent =
                 PendingIntent.getBroadcast(context, 0, triggerIntent, PendingIntent.FLAG_IMMUTABLE);
         NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        NotificationChannel channel = getChannel(manager);
+        NotificationChannel channel = getOrCreateChannel(manager);
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_scheduled_payment)
                 .setContentText(context.getString(R.string.scheduled_notification_content, scheduledNotification.getPrice()))
                 .addAction(R.drawable.baseline_attach_money_24, context.getString(R.string.add_purchase_action), triggerPendingIntent)
+                .addAction(R.drawable.baseline_money_off_24, context.getString(R.string.cancel), null)
                 .setContentTitle(context.getString(R.string.scheduled_notification_title, scheduledNotification.getNote()))
                 .setColor(scheduledNotification.getColor())
                 .build();
@@ -51,7 +52,9 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
         manager.notify(id.intValue(), notification);
     }
 
-    private NotificationChannel getChannel(NotificationManager manager) {
+    private NotificationChannel getOrCreateChannel(NotificationManager manager) {
+        NotificationChannel existing = manager.getNotificationChannel(CHANNEL_ID);
+        if (existing != null) return existing;
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Scheduled Expenses", NotificationManager.IMPORTANCE_DEFAULT);
         channel.setDescription("Scheduled expenses");
         manager.createNotificationChannel(channel);

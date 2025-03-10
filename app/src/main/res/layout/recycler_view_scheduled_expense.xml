@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal"
     android:padding="8dp">
@@ -19,20 +18,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
         android:background="@drawable/card_background"
         android:backgroundTint="@color/accentColor"
-        android:layout_marginStart="8dp"
         android:contentDescription="@string/notification_toggleButton"
         android:src="@drawable/ic_notifications_black_24dp" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:layout_marginEnd="8dp"
         android:id="@+id/silenceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
         android:contentDescription="@string/notification_toggleButton"
         android:src="@drawable/ic_notifications_black_24dp" />
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -66,8 +66,8 @@
         android:id="@+id/menuOptions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="10dp"
         android:layout_gravity="center_vertical"
+        android:paddingHorizontal="10dp"
         android:text="@string/menu_three_dots"
         android:textAppearance="?android:textAppearanceLarge" />
 </LinearLayout>

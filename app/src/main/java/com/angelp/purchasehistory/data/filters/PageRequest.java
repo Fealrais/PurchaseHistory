@@ -24,16 +24,16 @@ public class PageRequest {
 
     public PageRequest(PagingSource.LoadParams<Integer> params) {
         // Start refresh at page 0 if undefined.
-        this.pageNumber = params.getKey() == null? 0 : params.getKey();
+        this.pageNumber = params.getKey() == null ? 0 : params.getKey();
         this.pageSize = params.getLoadSize();
         this.sort = new Sort();
     }
 
     public HttpUrl buildURL(String url) {
         return HttpUrl.parse(url).newBuilder()
-                .addQueryParameter("pageNumber",pageNumber.toString())
-                .addQueryParameter("pageSize",pageSize.toString())
-                .addQueryParameter("sort",sort.asQueryParam()).build();
+                .addQueryParameter("pageNumber", pageNumber.toString())
+                .addQueryParameter("pageSize", pageSize.toString())
+                .addQueryParameter("sort", sort.asQueryParam()).build();
     }
 
     @Override

@@ -6,12 +6,6 @@ import androidx.annotation.NonNull;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 
 public class Category extends CategoryView implements Parcelable {
-    protected Category(Parcel in) {
-        setId(in.readLong());
-        setName(in.readString());
-        setColor(in.readString());
-    }
-
     public static final Creator<Category> CREATOR = new Creator<>() {
         @Override
         public Category createFromParcel(Parcel in) {
@@ -23,6 +17,12 @@ public class Category extends CategoryView implements Parcelable {
             return new Category[size];
         }
     };
+
+    protected Category(Parcel in) {
+        setId(in.readLong());
+        setName(in.readString());
+        setColor(in.readString());
+    }
 
     @Override
     public int describeContents() {

@@ -42,13 +42,13 @@ import static com.angelp.purchasehistory.data.Constants.Arguments.NOTIFICATION_E
 public class ScheduledExpensesFragment extends Fragment {
 
     public static final String CREATE_SCHEDULED_EXPENSE_DIALOG = "createScheduledExpenseDialog";
-    private FragmentScheduledExpensesBinding binding;
+    private final Gson gson = new Gson();
     @Inject
     ScheduledExpenseClient scheduledExpenseClient;
-    private final Gson gson = new Gson();
+    private FragmentScheduledExpensesBinding binding;
     private ScheduledExpenseAdapter adapter;
     private EditScheduledExpenseDialog editScheduledExpenseDialog;
-    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,

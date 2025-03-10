@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/windowBackground"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="?android:attr/windowBackground">
+    android:padding="16dp">
 
     <EditText
         android:id="@+id/edit_scheduled_expense_editTextName"
@@ -27,53 +27,53 @@
         android:minHeight="48dp" />
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="?android:attr/buttonBarStyle"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/edit_scheduled_expense_buttonShowDate"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/date"
-            style="@style/Widget.AppCompat.Button.Colored" />
+            android:text="@string/date" />
 
         <Button
             android:id="@+id/edit_scheduled_expense_buttonShowTime"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/time"
-            style="@style/Widget.AppCompat.Button.Colored" />
+            android:text="@string/time" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
 
         <Spinner
             android:id="@+id/edit_scheduled_expense_spinner_period"
             style="@style/Widget.AppCompat.Spinner"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:minWidth="150dp"
-            android:minHeight="48dp"
-            android:layout_width="wrap_content" />
+            android:minHeight="48dp" />
 
         <TextView
             android:id="@+id/edit_scheduled_expense_textViewNextDate"
+            style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="@string/next_date"
             android:layout_marginStart="16dp"
-            style="@style/TextAppearance.AppCompat.Body1" />
+            android:layout_weight="1"
+            android:text="@string/next_date" />
     </LinearLayout>
 
     <Spinner
@@ -88,31 +88,32 @@
         android:id="@+id/edit_scheduled_expense_toggleButtonEnabled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textOn="@string/enabled"
-        android:textOff="@string/disabled" />
+        android:textOff="@string/disabled"
+        android:textOn="@string/enabled" />
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="?android:attr/buttonBarStyle"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
 
 
         <Button
             android:id="@+id/edit_scheduled_expense_dismiss_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/cancel"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:text="@string/cancel" />
+
         <Button
             android:id="@+id/edit_scheduled_expense_save_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/save"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:text="@string/save" />
 
     </LinearLayout>
 

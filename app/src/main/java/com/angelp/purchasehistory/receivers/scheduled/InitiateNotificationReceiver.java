@@ -45,23 +45,25 @@ public class InitiateNotificationReceiver extends BroadcastReceiver {
             boolean isSilenced = preferences.getBoolean(notification.getId().toString(), false);
             Intent myIntent = new Intent(context, ScheduledNotificationReceiver.class);
             myIntent.putExtra(ScheduledNotificationReceiver.SCHEDULED_NOTIFICATION_EXTRA, notification);
+            myIntent.setIdentifier("Notification_" + notification.getId());
             scheduleNotification(notification, context, myIntent, alarmManager, notification.getEnabled() && !isSilenced);
         }
     }
 
     private void scheduleNotification(ScheduledNotification scheduledNotification, Context context, Intent myIntent, AlarmManager alarmManager, boolean isActive) {
         int requestId = Math.toIntExact(scheduledNotification.getId());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestId, myIntent, PendingIntent.FLAG_IMMUTABLE);
-        if (pendingIntent != null) {
-            alarmManager.cancel(pendingIntent);
-        }
         if (isActive) {
             Log.i(TAG, "scheduleNotification: " + scheduledNotification.getNote());
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestId, myIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
             if (scheduledNotification.isRepeating())
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, scheduledNotification.getTimestamp(), scheduledNotification.getPeriod(), pendingIntent);
             else alarmManager.set(AlarmManager.RTC_WAKEUP, scheduledNotification.getTimestamp(), pendingIntent);
         } else {
-            Log.i(TAG, "Canceled scheduled notification for " + scheduledNotification.getNote());
+            PendingIntent pendingIntent = PendingIntent.getService(context, requestId, myIntent, PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE);
+            if (pendingIntent != null) {
+                alarmManager.cancel(pendingIntent);
+                Log.i(TAG, "Canceled scheduled notification for " + scheduledNotification.getNote());
+            }
         }
 
     }

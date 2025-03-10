@@ -3,9 +3,9 @@ package com.angelp.purchasehistory.ui.home.dashboard.purchases;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
-import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.angelp.purchasehistory.data.interfaces.ViewHolder;
 import com.angelp.purchasehistory.databinding.RecyclerViewPurchaseHeaderBinding;
+import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 

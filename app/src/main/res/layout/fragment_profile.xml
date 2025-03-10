@@ -16,9 +16,9 @@
             android:id="@+id/user_info_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="16dp">
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,56 +51,56 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/accentColor"
-                    android:layout_marginVertical="16dp" />
+                    android:layout_marginVertical="16dp"
+                    android:background="@color/accentColor" />
 
                 <TextView
                     android:id="@+id/averageSpendingPerPurchase"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
                     android:padding="8dp"
                     android:text="@string/average_spending_per_purchase"
                     android:textColor="@color/foreground_color"
-                    android:fontFamily="sans-serif-medium" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/totalSpending"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
                     android:padding="8dp"
                     android:text="@string/total_spending"
                     android:textColor="@color/foreground_color"
-                    android:fontFamily="sans-serif-medium" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/totalNumberOfPurchases"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
                     android:padding="8dp"
                     android:text="@string/total_number_of_purchases"
                     android:textColor="@color/foreground_color"
-                    android:fontFamily="sans-serif-medium" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:id="@+id/categoryAnalytics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/card_background"
                     android:backgroundTintMode="screen"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/mostFrequentlyPurchasedCategoryLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium"
                         android:padding="8dp"
                         android:text="@string/most_frequently_purchased_category"
                         android:textColor="@color/foreground_color"
-                        android:fontFamily="sans-serif-medium"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -116,19 +116,19 @@
                         android:id="@+id/mostFrequentlyPurchasedCategoryCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium"
                         android:padding="8dp"
                         android:text="@string/most_frequently_purchased_category_count"
-                        android:fontFamily="sans-serif-medium" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/mostFrequentlyPurchasedCategorySum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium"
                         android:padding="8dp"
                         android:text="@string/most_frequently_purchased_category_sum"
-                        android:fontFamily="sans-serif-medium" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -136,15 +136,14 @@
 
         <ImageButton
             android:id="@+id/edit_button"
-            android:elevation="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/baseline_edit_24"
-            android:contentDescription="@string/edit_text"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_margin="16dp"
-            />
+            android:contentDescription="@string/edit_text"
+            android:elevation="5dp"
+            android:src="@drawable/baseline_edit_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/download_svg_button"
@@ -188,22 +187,22 @@
             android:layout_marginTop="128dp"
             android:text="@string/logout"
             app:icon="@drawable/baseline_logout_24"
-            app:layout_constraintTop_toBottomOf="@+id/settings_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/settings_button" />
 
         <Button
             android:id="@+id/delete_account_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/delete_account"
-            app:icon="@drawable/baseline_delete_24"
-            android:backgroundTint="@color/danger"
-            android:textColor="@color/white"
             android:layout_marginTop="16dp"
+            android:backgroundTint="@color/danger"
+            android:text="@string/delete_account"
+            android:textColor="@color/white"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/logout_button"
+            app:icon="@drawable/baseline_delete_24"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/logout_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

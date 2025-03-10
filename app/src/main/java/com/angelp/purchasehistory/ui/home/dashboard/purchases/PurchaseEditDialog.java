@@ -159,7 +159,6 @@ public class PurchaseEditDialog extends DialogFragment {
     private void sendDelete(Long purchaseId) {
         boolean isSuccess = purchaseClient.deletePurchase(purchaseId);
         if (isSuccess) {
-            onSuccess.accept(null);
             filterViewModel.refresh();
             dismiss();
         }
@@ -201,10 +200,8 @@ public class PurchaseEditDialog extends DialogFragment {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             resetForm();
-                            if (onSuccess != null) {
-                                filterViewModel.refresh();
-                            }
-                            ;
+                            if (onSuccess != null)
+                                onSuccess.accept(purchaseView);
                         });
                     }
                     dismiss();

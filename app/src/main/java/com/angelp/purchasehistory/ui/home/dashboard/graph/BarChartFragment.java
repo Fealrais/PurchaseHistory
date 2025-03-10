@@ -175,7 +175,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
     }
 
     private void notifyDataChanged(BarData data) {
-        if(data == null || data.getDataSetCount() == 0) return;
+        if (data == null || data.getDataSetCount() == 0) return;
 
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.barChartView.setData(data);

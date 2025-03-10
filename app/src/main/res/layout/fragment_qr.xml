@@ -56,9 +56,8 @@
 
     <EditText
         android:id="@+id/qr_priceInput"
-        android:layout_height="70dp"
         android:layout_width="match_parent"
-        android:textSize="35sp"
+        android:layout_height="70dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
@@ -67,13 +66,13 @@
         android:hint="@string/price"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
+        android:nextFocusDown="@id/qr_dateInput"
         android:text="@string/currency_zero"
+        android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qr_storeLabel"
-        android:nextFocusDown="@id/qr_dateInput"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/qr_storeLabel" />
 
     <Button
         android:id="@+id/qr_dateInput"
@@ -83,10 +82,10 @@
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/date"
+        android:nextFocusDown="@id/qr_timeInput"
         app:layout_constraintEnd_toStartOf="@+id/qr_timeInput"
         app:layout_constraintStart_toStartOf="@+id/qr_priceInput"
-        app:layout_constraintTop_toBottomOf="@+id/qr_priceInput"
-        android:nextFocusDown="@id/qr_timeInput"/>
+        app:layout_constraintTop_toBottomOf="@+id/qr_priceInput" />
 
     <Button
         android:id="@+id/qr_clearButton"
@@ -116,11 +115,10 @@
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/time"
+        android:nextFocusDown="@id/qr_categorySpinner"
         app:layout_constraintEnd_toEndOf="@+id/qr_priceInput"
         app:layout_constraintStart_toEndOf="@+id/qr_dateInput"
-        app:layout_constraintTop_toTopOf="@+id/qr_dateInput"
-        android:nextFocusDown="@id/qr_categorySpinner"
-         />
+        app:layout_constraintTop_toTopOf="@+id/qr_dateInput" />
 
     <Spinner
         android:id="@+id/qr_categorySpinner"
@@ -128,10 +126,10 @@
         android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="10dp"
+        android:nextFocusDown="@id/qr_noteInput"
         app:layout_constraintEnd_toStartOf="@+id/qr_categoryAddButton"
         app:layout_constraintStart_toStartOf="@+id/qr_dateInput"
-        app:layout_constraintTop_toBottomOf="@+id/qr_dateInput"
-        android:nextFocusDown="@id/qr_noteInput"/>
+        app:layout_constraintTop_toBottomOf="@+id/qr_dateInput" />
 
     <Button
         android:id="@+id/qr_submitButton"
@@ -155,30 +153,30 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-<!--    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-9339704833965519/5033206617"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />-->
+    <!--    <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-9339704833965519/5033206617"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />-->
 
     <EditText
         android:id="@+id/qr_noteInput"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="24dp"
+        android:autofillHints=""
         android:ems="10"
-        android:inputType="text"
         android:hint="@string/add_note"
+        android:inputType="text"
+        android:nextFocusDown="@id/qr_submitButton"
         app:layout_constraintEnd_toEndOf="@+id/qr_priceInput"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/qr_categorySpinner"
-        app:layout_constraintTop_toBottomOf="@+id/qr_categorySpinner"
-        android:autofillHints=""
-        android:nextFocusDown="@id/qr_submitButton"/>
+        app:layout_constraintTop_toBottomOf="@+id/qr_categorySpinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

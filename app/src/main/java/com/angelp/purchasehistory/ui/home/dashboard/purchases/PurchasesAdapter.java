@@ -22,9 +22,9 @@ import java.util.List;
 public class PurchasesAdapter extends RecyclerView.Adapter<ViewHolder<PurchaseView>> {
 
 
-    @Getter
-    private List<PurchaseView> purchaseViews;
     private final FragmentActivity fragmentActivity;
+    @Getter
+    private final List<PurchaseView> purchaseViews;
     @Setter
     private int limit = -1;
 

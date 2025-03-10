@@ -67,17 +67,17 @@ public class FullscreenGraphActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.action_icon) {
             // Show information about the activity
             new AlertDialog.Builder(this)
-                .setTitle(getString(dashboardComponent.getTitle()))
-                .setMessage(getComponentInfo(dashboardComponent))
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+                    .setTitle(getString(dashboardComponent.getTitle()))
+                    .setMessage(getComponentInfo(dashboardComponent))
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private String getComponentInfo(DashboardComponent dashboardComponent) {
-        int info = switch (dashboardComponent.getFragmentName()){
+        int info = switch (dashboardComponent.getFragmentName()) {
             case "PieChartFragment" -> R.string.help_info_pie_chart;
             case "LineChartFragment" -> R.string.help_info_line_chart;
             case "AccumulativeChartFragment" -> R.string.help_info_accumulative_line_chart;

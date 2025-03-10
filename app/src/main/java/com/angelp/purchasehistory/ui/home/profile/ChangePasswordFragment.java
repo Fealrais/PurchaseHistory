@@ -23,9 +23,9 @@ import javax.inject.Inject;
 
 @AndroidEntryPoint
 public class ChangePasswordFragment extends Fragment {
-    private FragmentChangePasswordBinding binding;
     @Inject
     UserClient userClient;
+    private FragmentChangePasswordBinding binding;
 
     @Nullable
     @Override

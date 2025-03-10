@@ -16,10 +16,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ScheduledExpenseClient extends HttpClient {
+    private static final String TAG = ScheduledExpenseClient.class.getSimpleName();
+
     @Inject
     public ScheduledExpenseClient() {
     }
-    private static final String TAG = ScheduledExpenseClient.class.getSimpleName();
+
     public ScheduledExpenseView createScheduledExpense(ScheduledExpenseDTO body) {
         try (Response res = post(BACKEND_URL + "/scheduled-expense", body)) {
             ResponseBody responseBody = res.body();

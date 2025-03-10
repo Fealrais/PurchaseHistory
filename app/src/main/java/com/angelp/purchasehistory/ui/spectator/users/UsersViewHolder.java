@@ -3,8 +3,8 @@ package com.angelp.purchasehistory.ui.spectator.users;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.angelp.purchasehistory.databinding.RecyclerViewUserBinding;
+import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 

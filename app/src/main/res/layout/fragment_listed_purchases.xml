@@ -6,17 +6,16 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:visibility="gone"
         android:id="@+id/filterDateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/filterButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/filterButton" />
 
     <Button
-        android:visibility="gone"
         android:id="@+id/filterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,6 +23,7 @@
         android:background="@color/design_default_color_secondary"
         android:contentDescription="@string/filterButton"
         android:text="@string/filterButton"
+        android:visibility="gone"
         app:icon="@drawable/ic_menu_filter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

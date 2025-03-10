@@ -78,57 +78,58 @@
         app:layout_constraintTop_toBottomOf="@+id/purchaseFilter_fromDate">
 
         <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:dividerPadding="18dp"
-            style="?android:attr/buttonBarStyle"
             android:orientation="horizontal">
+
             <Button
                 android:id="@+id/filter_week"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/this_week"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/this_week" />
 
             <Button
                 android:id="@+id/filter_month"
 
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/this_month"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/this_month" />
 
             <Button
                 android:id="@+id/filter_3month"
 
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/three_months"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/three_months" />
 
             <Button
                 android:id="@+id/filter_6month"
 
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/six_months"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/six_months" />
 
             <Button
                 android:id="@+id/filter_year"
 
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/this_year"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/this_year" />
 
             <Button
                 android:id="@+id/filter_last_year"
 
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/last_year"
-                style="?android:attr/buttonBarButtonStyle" />
+                android:text="@string/last_year" />
         </LinearLayout>
     </HorizontalScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,70 +13,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class DashboardComponent implements Parcelable {
-    private boolean visible;
-    private String fragmentName;
-
-    private transient int title;
-    private transient int cardIconId;
-    private transient int description;
-    private transient int infoDescription;
-    private transient RefreshablePurchaseFragment fragment;
-
-    public DashboardComponent(String fragment) {
-        this.fragmentName = fragment;
-        this.visible = true;
-        setupResources(fragment);
-    }
-    public DashboardComponent(Parcel in) {
-        this.fragmentName = in.readString();
-        this.visible = in.readBoolean();
-        setupResources(fragmentName);
-    }
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(this.fragmentName);
-        dest.writeBoolean(this.visible);
-    }
-
-    private void setupResources(String fragmentName) {
-        switch (fragmentName){
-                case "PieChartFragment" -> {
-                    title = R.string.title_pie_chart;
-                    cardIconId =  R.mipmap.piechart;
-                    infoDescription = R.string.help_info_pie_chart;
-                    description = R.string.description_pie_chart;
-                }
-                case "LineChartFragment" -> {
-                    title = R.string.title_line_chart;
-                    cardIconId =  R.mipmap.linechart;
-                    infoDescription = R.string.help_info_line_chart;
-                    description = R.string.description_line_chart;
-                }
-                case "AccumulativeChartFragment" -> {
-                    title = R.string.title_accumulative_line_chart;
-                    cardIconId =  R.mipmap.linechart;
-                    infoDescription = R.string.help_info_accumulative_line_chart;
-                    description = R.string.description_accumulative_line_chart;
-                }
-                case "BarChartFragment" -> {
-                    title = R.string.title_stacked_bar_chart;
-                    cardIconId =  R.mipmap.barchart;
-                    infoDescription = R.string.help_info_stacked_bar_chart;
-                    description = R.string.description_bar_chart;
-                }
-                case "PurchaseListPurchaseFragment" -> {
-                    title = R.string.title_purchases_list;
-                    cardIconId =  R.mipmap.list;
-                    infoDescription = R.string.help_info_purchases_list;
-                    description = R.string.description_purchases_list;
-                }
-                default -> throw new IllegalStateException("Unexpected dashboard fragment name: " + fragmentName);
-        }
-    }
-    @Override
-    public int describeContents() {
-        return this.fragmentName.hashCode();
-    }
     public static final Parcelable.Creator<DashboardComponent> CREATOR = new Parcelable.Creator<>() {
         @Override
         public DashboardComponent createFromParcel(Parcel in) {
@@ -88,6 +24,72 @@ public class DashboardComponent implements Parcelable {
             return new DashboardComponent[size];
         }
     };
+    private boolean visible;
+    private String fragmentName;
+    private transient int title;
+    private transient int cardIconId;
+    private transient int description;
+    private transient int infoDescription;
+    private transient RefreshablePurchaseFragment fragment;
+
+    public DashboardComponent(String fragment) {
+        this.fragmentName = fragment;
+        this.visible = true;
+        setupResources(fragment);
+    }
+
+    public DashboardComponent(Parcel in) {
+        this.fragmentName = in.readString();
+        this.visible = in.readBoolean();
+        setupResources(fragmentName);
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(this.fragmentName);
+        dest.writeBoolean(this.visible);
+    }
+
+    private void setupResources(String fragmentName) {
+        switch (fragmentName) {
+            case "PieChartFragment" -> {
+                title = R.string.title_pie_chart;
+                cardIconId = R.mipmap.piechart;
+                infoDescription = R.string.help_info_pie_chart;
+                description = R.string.description_pie_chart;
+            }
+            case "LineChartFragment" -> {
+                title = R.string.title_line_chart;
+                cardIconId = R.mipmap.linechart;
+                infoDescription = R.string.help_info_line_chart;
+                description = R.string.description_line_chart;
+            }
+            case "AccumulativeChartFragment" -> {
+                title = R.string.title_accumulative_line_chart;
+                cardIconId = R.mipmap.linechart;
+                infoDescription = R.string.help_info_accumulative_line_chart;
+                description = R.string.description_accumulative_line_chart;
+            }
+            case "BarChartFragment" -> {
+                title = R.string.title_stacked_bar_chart;
+                cardIconId = R.mipmap.barchart;
+                infoDescription = R.string.help_info_stacked_bar_chart;
+                description = R.string.description_bar_chart;
+            }
+            case "PurchaseListPurchaseFragment" -> {
+                title = R.string.title_purchases_list;
+                cardIconId = R.mipmap.list;
+                infoDescription = R.string.help_info_purchases_list;
+                description = R.string.description_purchases_list;
+            }
+            default -> throw new IllegalStateException("Unexpected dashboard fragment name: " + fragmentName);
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return this.fragmentName.hashCode();
+    }
 
     public DashboardComponent fillFromName() {
         setupResources(this.fragmentName);

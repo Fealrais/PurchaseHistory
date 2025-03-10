@@ -23,13 +23,12 @@ import java.util.function.Consumer;
 public class AddMonthlyLimitDialog extends DialogFragment {
 
     private final Consumer<MonthlyLimitView> monthlyLimitViewConsumer;
+    @Inject
+    SettingsClient settingsClient;
 
     public AddMonthlyLimitDialog(Consumer<MonthlyLimitView> consumer) {
         monthlyLimitViewConsumer = consumer;
     }
-
-    @Inject
-    SettingsClient settingsClient;
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

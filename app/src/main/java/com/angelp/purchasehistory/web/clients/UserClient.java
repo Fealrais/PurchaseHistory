@@ -69,9 +69,10 @@ public class UserClient extends HttpClient {
             throw new RuntimeException(e);
         }
     }
+
     public UserAnalytics getUserAnalytics(PurchaseFilter filter) {
         try (Response res = get(BACKEND_URL + "/users/self/analytics?" + filter)) {
-            return utils.getBody(res,UserAnalytics.class);
+            return utils.getBody(res, UserAnalytics.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

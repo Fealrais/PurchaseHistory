@@ -167,9 +167,11 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
         binding.editScheduledExpenseButtonShowDate.setOnClickListener(v -> datePicker.show(getParentFragmentManager(), "datePicker"));
         binding.editScheduledExpenseButtonShowTime.setOnClickListener(v -> timePicker.show(getParentFragmentManager(), "timePicker"));
     }
+
     private void setupSaveButton() {
-        binding.editScheduledExpenseSaveButton.setOnClickListener(v-> onSubmit(getDialog()));
+        binding.editScheduledExpenseSaveButton.setOnClickListener(v -> onSubmit(getDialog()));
     }
+
     private void setupCancelButton() {
         binding.editScheduledExpenseDismissButton.setOnClickListener(v -> this.dismiss());
     }
@@ -183,11 +185,11 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
     }
 
     private void onSubmit(DialogInterface dialog) {
-        if(scheduledExpense.getNote().isBlank() || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()){
+        if (scheduledExpense.getNote().isBlank() || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()) {
             binding.editScheduledExpenseEditTextPrice.setError(getText(R.string.error_price_empty));
             return;
         }
-        if(scheduledExpense.getPrice() == null || binding.editScheduledExpenseEditTextName.getText().toString().isBlank()){
+        if (scheduledExpense.getPrice() == null || binding.editScheduledExpenseEditTextName.getText().toString().isBlank()) {
             binding.editScheduledExpenseEditTextName.setError(getText(R.string.error_must_not_be_empty));
             return;
         }

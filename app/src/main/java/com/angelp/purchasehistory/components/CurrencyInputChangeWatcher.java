@@ -8,8 +8,8 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 public abstract class CurrencyInputChangeWatcher implements TextWatcher {
-    private String current = "";
     private final WeakReference<EditText> editTextWeakReference;
+    private String current = "";
 
     public CurrencyInputChangeWatcher(EditText editTextWeakReference) {
         this.editTextWeakReference = new WeakReference<>(editTextWeakReference);
@@ -26,8 +26,9 @@ public abstract class CurrencyInputChangeWatcher implements TextWatcher {
             editText.removeTextChangedListener(this);
 
             String cleanString = s.toString().replaceAll("[,.]", "");
-
-            double parsed = Double.parseDouble(cleanString);
+            double parsed;
+            if (cleanString.isBlank()) parsed = 0;
+            else parsed = Double.parseDouble(cleanString);
             String formatted = String.format(Locale.getDefault(), "%.2f", parsed / 100);
 
             current = formatted;

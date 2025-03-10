@@ -2,9 +2,9 @@ package com.angelp.purchasehistory.ui.home.dashboard.purchases;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistory.databinding.FragmentPurchaseEditDialogBinding;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
+import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import lombok.Getter;
 import lombok.Setter;

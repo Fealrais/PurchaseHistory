@@ -22,6 +22,7 @@ public final class CommonUtils {
         }
         return index;
     }
+
     public static boolean isInvalidCurrency(String str) {
         if (str == null || !str.matches("^[\\d.]+$")) return true;
         try {
@@ -35,7 +36,7 @@ public final class CommonUtils {
 
     @NotNull
     public static String limitString(String name, int limit) {
-        if(name.length() > limit) name = name.substring(0,limit) + "…";
+        if (name.length() > limit) name = name.substring(0, limit) + "…";
         return name;
     }
 }

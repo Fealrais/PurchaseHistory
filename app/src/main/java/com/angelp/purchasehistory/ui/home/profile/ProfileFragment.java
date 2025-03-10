@@ -32,12 +32,11 @@ import java.util.Optional;
 
 @AndroidEntryPoint
 public class ProfileFragment extends Fragment {
-    private FragmentProfileBinding binding;
-
     @Inject
     UserClient userClient;
     @Inject
     PurchaseClient purchaseClient;
+    private FragmentProfileBinding binding;
 
     @Nullable
     @Override

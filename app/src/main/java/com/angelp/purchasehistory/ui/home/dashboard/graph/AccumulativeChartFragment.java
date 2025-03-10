@@ -191,7 +191,7 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
     }
 
     private void notifyDataChanged(LineData data) {
-        if(data == null || data.getDataSetCount() == 0) return;
+        if (data == null || data.getDataSetCount() == 0) return;
 
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.lineChartView.setData(data);
@@ -246,7 +246,7 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
     }
 
     private void setupMonthlyLimits(LineChart chart) {
-        new Thread(()->{
+        new Thread(() -> {
             List<MonthlyLimitView> monthlyLimitList = settingsClient.getMonthlyLimits();
             if (monthlyLimitList != null && !monthlyLimitList.isEmpty()) {
                 for (MonthlyLimitView monthlyLimit : monthlyLimitList) {

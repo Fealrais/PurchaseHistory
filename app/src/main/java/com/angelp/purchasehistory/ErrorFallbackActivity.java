@@ -35,7 +35,7 @@ public class ErrorFallbackActivity extends AppCompatActivity {
 
     private void sendFeedback(String errorDetails) {
         UserClient userClient = new UserClient();
-        new Thread(()->{
+        new Thread(() -> {
             ErrorFeedback errorFeedback = new ErrorFeedback(errorDetails, "PurchaseHistory Error Feedback", "error");
             userClient.sendFeedback(errorFeedback);
             finishAndRemoveTask();

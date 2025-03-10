@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.home.scheduled.ScheduledExpensesFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -17,6 +17,7 @@
             android:layout_height="match_parent"
             tools:listitem="@layout/recycler_view_scheduled_expense" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <FrameLayout
         android:id="@+id/loading_bar"
         android:layout_width="match_parent"
@@ -51,6 +52,6 @@
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="40dp"
-        android:src="@drawable/baseline_add_alarm_24"
-        android:contentDescription="@string/add_scheduled_expense" />
+        android:contentDescription="@string/add_scheduled_expense"
+        android:src="@drawable/baseline_add_alarm_24" />
 </FrameLayout>

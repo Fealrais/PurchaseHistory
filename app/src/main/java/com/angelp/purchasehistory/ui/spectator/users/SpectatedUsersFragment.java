@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.angelp.purchasehistory.databinding.FragmentSpectatedUsersBinding;
 import com.angelp.purchasehistory.web.clients.ObserverClient;
+import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
@@ -18,11 +18,12 @@ import java.util.List;
 
 @AndroidEntryPoint
 public class SpectatedUsersFragment extends Fragment {
+    @Inject
+    ObserverClient observerClient;
     private FragmentSpectatedUsersBinding binding;
     private SpectatorAddUserDialog addUserDialog;
     private UsersAdapter usersAdapter;
-    @Inject
-    ObserverClient observerClient;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,13 +41,13 @@ public class SpectatedUsersFragment extends Fragment {
     private void init() {
         addUserDialog = new SpectatorAddUserDialog();
 
-        addUserDialog.setOnSuccess((user)-> {
+        addUserDialog.setOnSuccess((user) -> {
             int position = usersAdapter.getUserViews().size();
             usersAdapter.getUserViews().add(user);
             usersAdapter.notifyItemInserted(position);
         });
-        binding.spectatorAddUser.setOnClickListener((v)->addUserDialog.show(getParentFragmentManager(),"spectatorAddUser"));
-        new Thread(()->{
+        binding.spectatorAddUser.setOnClickListener((v) -> addUserDialog.show(getParentFragmentManager(), "spectatorAddUser"));
+        new Thread(() -> {
             List<UserView> users = observerClient.getObservedUsers();
             usersAdapter = new UsersAdapter(users);
             LinearLayoutManager llm = new LinearLayoutManager(getContext());

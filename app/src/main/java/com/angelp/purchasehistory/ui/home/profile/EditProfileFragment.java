@@ -26,11 +26,9 @@ import javax.inject.Inject;
 
 @AndroidEntryPoint
 public class EditProfileFragment extends Fragment {
-    private FragmentEditProfileBinding binding;
-
     @Inject
     UserClient userClient;
-
+    private FragmentEditProfileBinding binding;
     private EditText etUsername;
     private EditText etEmail;
     private EditText etPassword;
@@ -51,7 +49,7 @@ public class EditProfileFragment extends Fragment {
         tvFeedback = new TextView(getContext()); // Add this to your layout if needed
 
         UserView user = PurchaseHistoryApplication.getInstance().getLoggedUser().getValue(); // Assume this method fetches the user info
-        if(user!= null){
+        if (user != null) {
             etEmail.setText(user.getEmail());
             etUsername.setText(user.getUsername());
         }

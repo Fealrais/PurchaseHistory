@@ -3,16 +3,16 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:background="@color/transparent"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp">
 
     <ImageView
-        android:contentDescription="@string/success_icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@drawable/circle"
+        android:contentDescription="@string/success_icon"
         android:src="@drawable/ic_success" />
 
 </LinearLayout>

@@ -48,9 +48,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:duplicateParentState="false"
+            android:minWidth="45dp"
             android:outlineProvider="paddedBounds"
             android:paddingHorizontal="2dp"
-            android:minWidth="45dp"
             android:text="@string/lorem" />
 
         <TextView
@@ -59,10 +59,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:duplicateParentState="false"
-            android:outlineProvider="paddedBounds"
-            android:minWidth="45dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:minWidth="45dp"
+            android:outlineProvider="paddedBounds"
             android:text="@string/lorem" />
 
     </TableRow>

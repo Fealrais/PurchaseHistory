@@ -52,14 +52,14 @@ public class ForgotPasswordChangeActivity extends AppCompatActivity {
             String confirmPassword = etConfirmPassword.getText().toString().trim();
 
             if (validateInputs(code, newPassword, confirmPassword)) {
-                new Thread (()->attemptPasswordChange(code, newPassword)).start();
+                new Thread(() -> attemptPasswordChange(code, newPassword)).start();
             }
         });
     }
 
     private void attemptPasswordChange(String code, String newPassword) {
         boolean isSuccessful = authClient.changeForgotPassword(code, newPassword);
-        new Handler(Looper.getMainLooper()).post(()->{
+        new Handler(Looper.getMainLooper()).post(() -> {
             if (isSuccessful) {
                 tvFeedback.setText(R.string.password_changed_successfully);
                 tvFeedback.setTextColor(getColorResource(R.color.success_green));
@@ -75,6 +75,7 @@ public class ForgotPasswordChangeActivity extends AppCompatActivity {
             tvFeedback.setVisibility(View.VISIBLE);
         });
     }
+
     private int getColorResource(int color) {
         return getResources().getColor(color, getTheme());
     }
@@ -98,6 +99,7 @@ public class ForgotPasswordChangeActivity extends AppCompatActivity {
         }
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
@@ -107,6 +109,7 @@ public class ForgotPasswordChangeActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     private void showError(String message) {
         tvFeedback.setText(message);
         tvFeedback.setTextColor(getColorResource(R.color.error_red));

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.settings.SettingsActivity">
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/settings_container"
         android:layout_width="0dp"
@@ -13,5 +14,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/settings_navigation"  />
+        app:navGraph="@navigation/settings_navigation" />
 </androidx.constraintlayout.widget.ConstraintLayout>

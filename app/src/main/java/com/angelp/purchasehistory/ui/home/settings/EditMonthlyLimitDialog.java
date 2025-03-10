@@ -25,15 +25,14 @@ public class EditMonthlyLimitDialog extends DialogFragment {
     private final Long id;
     private final MonthlyLimitView monthlyLimitView;
     private final Consumer<MonthlyLimitView> monthlyLimitViewConsumer;
+    @Inject
+    SettingsClient settingsClient;
 
     public EditMonthlyLimitDialog(Long id, MonthlyLimitView monthlyLimit, Consumer<MonthlyLimitView> consumer) {
         this.id = id;
         monthlyLimitView = monthlyLimit;
         monthlyLimitViewConsumer = consumer;
     }
-
-    @Inject
-    SettingsClient settingsClient;
 
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

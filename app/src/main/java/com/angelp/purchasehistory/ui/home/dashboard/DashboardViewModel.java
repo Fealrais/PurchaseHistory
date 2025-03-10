@@ -1,11 +1,11 @@
 package com.angelp.purchasehistory.ui.home.dashboard;
 
 import androidx.lifecycle.ViewModel;
-import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
-import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
+import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
+import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 import javax.inject.Inject;

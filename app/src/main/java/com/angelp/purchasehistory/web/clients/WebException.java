@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @NoArgsConstructor
 @ToString
-public class WebException extends RuntimeException{
+public class WebException extends RuntimeException {
     Integer errorResource;
     String errorCode;
 
@@ -22,7 +22,7 @@ public class WebException extends RuntimeException{
     }
 
     public Integer getErrorResource() {
-        if(errorResource!=null)
+        if (errorResource != null)
             return errorResource;
         return Constants.errorsMap.get(errorCode);
     }

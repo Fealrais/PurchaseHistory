@@ -157,11 +157,11 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="20dp"
+        android:autofillHints=""
         android:ems="10"
-        android:inputType="text"
         android:hint="@string/add_note"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="@+id/purchaseEdit_priceInput"
         app:layout_constraintStart_toStartOf="@+id/purchaseEdit_categorySpinner"
-        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_categorySpinner"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_categorySpinner" />
 </androidx.constraintlayout.widget.ConstraintLayout>

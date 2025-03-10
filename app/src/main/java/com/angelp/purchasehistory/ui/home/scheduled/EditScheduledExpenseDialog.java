@@ -47,16 +47,17 @@ public class EditScheduledExpenseDialog extends DialogFragment {
 
     private final ScheduledExpenseView scheduledExpense;
     private final Consumer<ScheduledExpenseView> consumer;
-    private ArrayAdapter<String> periodAdapter;
     @Inject
     ScheduledExpenseClient scheduledExpenseClient;
     @Inject
     PurchaseClient purchaseClient;
+    private ArrayAdapter<String> periodAdapter;
     private DialogEditScheduledExpenseBinding binding;
     private DatePickerFragment datePicker;
     private TimePickerFragment timePicker;
     private ArrayAdapter<CategoryView> categoryAdapter;
     private List<CategoryView> categoryOptions;
+
     public EditScheduledExpenseDialog(ScheduledExpenseView scheduledExpense, Consumer<ScheduledExpenseView> consumer) {
         this.scheduledExpense = scheduledExpense;
         this.consumer = consumer;
@@ -78,6 +79,7 @@ public class EditScheduledExpenseDialog extends DialogFragment {
         setupSaveButton();
         return createDialog();
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -135,7 +137,7 @@ public class EditScheduledExpenseDialog extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
-                if(CommonUtils.isInvalidCurrency(str)){
+                if (CommonUtils.isInvalidCurrency(str)) {
                     scheduledExpense.setPrice(new BigDecimal(s.toString()));
                 }
                 if (CommonUtils.isInvalidCurrency(str)) {
@@ -162,7 +164,8 @@ public class EditScheduledExpenseDialog extends DialogFragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
         binding.editScheduledExpenseSpinnerPeriod.setAdapter(periodAdapter);
         int i = !SCHEDULED_PERIOD_LIST.contains(scheduledExpense.getPeriod().toString()) ? 0 : SCHEDULED_PERIOD_LIST.indexOf(scheduledExpense.getPeriod().toString());
@@ -195,9 +198,11 @@ public class EditScheduledExpenseDialog extends DialogFragment {
     private void setupTimeButton() {
         binding.editScheduledExpenseButtonShowTime.setOnClickListener(v -> timePicker.show(getParentFragmentManager(), "timePicker"));
     }
+
     private void setupSaveButton() {
-        binding.editScheduledExpenseSaveButton.setOnClickListener(v-> onSubmit(getDialog()));
+        binding.editScheduledExpenseSaveButton.setOnClickListener(v -> onSubmit(getDialog()));
     }
+
     private void setupCancelButton() {
         binding.editScheduledExpenseDismissButton.setOnClickListener(v -> this.dismiss());
     }
@@ -214,11 +219,11 @@ public class EditScheduledExpenseDialog extends DialogFragment {
     }
 
     private void onSubmit(DialogInterface dialog) {
-        if(scheduledExpense.getNote().isBlank() || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()){
+        if (scheduledExpense.getNote().isBlank() || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()) {
             binding.editScheduledExpenseEditTextPrice.setError(getText(R.string.error_price_empty));
             return;
         }
-        if(scheduledExpense.getPrice() == null || binding.editScheduledExpenseEditTextName.getText().toString().isBlank()){
+        if (scheduledExpense.getPrice() == null || binding.editScheduledExpenseEditTextName.getText().toString().isBlank()) {
             binding.editScheduledExpenseEditTextName.setError(getText(R.string.error_must_not_be_empty));
             return;
         }

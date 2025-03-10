@@ -13,9 +13,9 @@
         android:layout_margin="16dp"
         android:text="@string/instruction_text"
         android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/title_edit_text"
@@ -24,54 +24,54 @@
         android:layout_margin="16dp"
         android:hint="@string/title_hint"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/instruction_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/instruction_text_view" />
 
     <EditText
         android:id="@+id/large_multiline_text_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
-        android:padding="16dp"
-        android:textSize="16sp"
         android:background="@drawable/card_background"
-        android:hint="@string/feedback_hint"
-        android:scrollbars="vertical"
-        android:maxLines="10"
         android:gravity="start|top"
-        app:layout_constraintTop_toBottomOf="@id/title_edit_text"
+        android:hint="@string/feedback_hint"
+        android:maxLines="10"
+        android:padding="16dp"
+        android:scrollbars="vertical"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/button_container"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/title_edit_text" />
 
     <LinearLayout
         android:id="@+id/button_container"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_margin="16dp"
-        style="?android:attr/buttonBarStyle"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/send_feedback_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/send_feedback"
             android:layout_marginHorizontal="10dp"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:layout_weight="1"
+            android:text="@string/send_feedback" />
 
         <Button
             android:id="@+id/close_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/close"
             android:layout_marginHorizontal="10dp"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:layout_weight="1"
+            android:text="@string/close" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

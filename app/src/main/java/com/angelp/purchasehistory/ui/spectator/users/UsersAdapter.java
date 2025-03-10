@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.angelp.purchasehistory.R;
+import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,6 +45,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersViewHolder> {
         UserView userView = userViews.get(position);
         holder.bind(userView);
     }
+
     private void removeUser(int index) {
         this.userViews.remove(index);
         new Handler(Looper.getMainLooper()).post(() -> notifyItemRemoved(index));

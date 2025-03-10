@@ -25,10 +25,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:clickable="true"
+        android:contentDescription="@string/copy_btn_text"
         android:src="@drawable/baseline_copy"
         app:layout_constraintEnd_toEndOf="@+id/error_scroll_view"
-        app:layout_constraintTop_toTopOf="@+id/error_scroll_view"
-        android:contentDescription="@string/copy_btn_text" />
+        app:layout_constraintTop_toTopOf="@+id/error_scroll_view" />
 
     <ScrollView
         android:id="@+id/error_scroll_view"
@@ -36,10 +36,10 @@
         android:layout_height="0dp"
         android:layout_margin="16dp"
         android:background="@drawable/card_background"
-        app:layout_constraintTop_toBottomOf="@id/text_error_handler"
         app:layout_constraintBottom_toTopOf="@+id/button_container"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/text_error_handler">
 
         <TextView
             android:id="@+id/error_text_view"
@@ -51,31 +51,31 @@
 
     <LinearLayout
         android:id="@+id/button_container"
+        style="?android:attr/buttonBarStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_margin="16dp"
-        style="?android:attr/buttonBarStyle"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/send_feedback_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/send_feedback"
             android:layout_marginHorizontal="10dp"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:layout_weight="1"
+            android:text="@string/send_feedback" />
 
         <Button
             android:id="@+id/close_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/close"
             android:layout_marginHorizontal="10dp"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:layout_weight="1"
+            android:text="@string/close" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

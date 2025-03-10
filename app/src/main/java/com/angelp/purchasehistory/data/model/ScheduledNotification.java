@@ -20,6 +20,17 @@ import java.time.ZoneId;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduledNotification implements Parcelable {
+    public static final Creator<ScheduledNotification> CREATOR = new Creator<>() {
+        @Override
+        public ScheduledNotification createFromParcel(Parcel in) {
+            return new ScheduledNotification(in);
+        }
+
+        @Override
+        public ScheduledNotification[] newArray(int size) {
+            return new ScheduledNotification[size];
+        }
+    };
     private Long id;
     private long timestamp;
     private long period;
@@ -28,7 +39,6 @@ public class ScheduledNotification implements Parcelable {
     private int color;
     private Boolean enabled;
     private String note;
-
 
     public ScheduledNotification(ScheduledExpenseView expense) {
         this.id = expense.getId();
@@ -39,9 +49,6 @@ public class ScheduledNotification implements Parcelable {
         this.color = expense.getCategory() == null ? Color.GRAY : AndroidUtils.getColor(expense.getCategory());
         this.enabled = expense.isEnabled();
         this.note = expense.getNote();
-    }
-    public boolean isRepeating() {
-        return period != -1;
     }
 
     protected ScheduledNotification(Parcel in) {
@@ -54,6 +61,24 @@ public class ScheduledNotification implements Parcelable {
         period = in.readLong();
         id = in.readLong();
         enabled = in.readByte() != 0;
+    }
+
+    private static long getInterval(ScheduledPeriod period) {
+        return switch (period) {
+            case DAILY -> AlarmManager.INTERVAL_DAY;
+            case WEEKLY -> AlarmManager.INTERVAL_DAY * 7;
+            case MONTHLY -> AlarmManager.INTERVAL_DAY * 30;
+            case YEARLY -> AlarmManager.INTERVAL_DAY * 365;
+            case NEVER -> -1L;
+        };
+    }
+
+    private static long getEpochMilli(ScheduledExpenseView notification) {
+        return notification.getPeriod().getNextTimestamp(notification.getTimestamp()).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    public boolean isRepeating() {
+        return period != -1;
     }
 
     @Override
@@ -71,29 +96,5 @@ public class ScheduledNotification implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    public static final Creator<ScheduledNotification> CREATOR = new Creator<>() {
-        @Override
-        public ScheduledNotification createFromParcel(Parcel in) {
-            return new ScheduledNotification(in);
-        }
-
-        @Override
-        public ScheduledNotification[] newArray(int size) {
-            return new ScheduledNotification[size];
-        }
-    };
-    private static long getInterval(ScheduledPeriod period) {
-        return switch (period) {
-            case DAILY -> AlarmManager.INTERVAL_DAY;
-            case WEEKLY -> AlarmManager.INTERVAL_DAY * 7;
-            case MONTHLY -> AlarmManager.INTERVAL_DAY * 30;
-            case YEARLY -> AlarmManager.INTERVAL_DAY * 365;
-            case NEVER -> -1L;
-        };
-    }
-    private static long getEpochMilli(ScheduledExpenseView notification) {
-        return notification.getPeriod().getNextTimestamp(notification.getTimestamp()).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 }

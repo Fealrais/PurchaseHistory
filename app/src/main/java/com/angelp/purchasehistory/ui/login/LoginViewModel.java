@@ -4,12 +4,12 @@ import android.util.Patterns;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.model.LoginResult;
 import com.angelp.purchasehistory.web.clients.AuthClient;
 import com.angelp.purchasehistory.web.clients.WebException;
+import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 import javax.inject.Inject;

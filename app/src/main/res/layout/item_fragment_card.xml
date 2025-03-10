@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="8dp"
     android:background="@drawable/card_background"
     android:elevation="4dp"
@@ -15,12 +15,12 @@
         android:layout_marginEnd="120dp">
 
         <ImageView
-            android:alpha="70"
             android:id="@+id/fragmentIcon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
+            android:alpha="70"
             android:src="@mipmap/barchart" />
     </FrameLayout>
 
@@ -35,9 +35,9 @@
             android:id="@+id/fragmentName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="40dp"
             android:layout_gravity="center|end"
+            android:layout_marginStart="40dp"
+            android:layout_weight="1"
             android:textAlignment="textEnd"
             android:textAppearance="?attr/textAppearanceListItem" />
 

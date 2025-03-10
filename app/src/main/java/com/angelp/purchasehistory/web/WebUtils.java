@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class WebUtils {
     private final String TAG = WebUtils.class.getSimpleName();
-    private Gson gson;
+    private final Gson gson;
 
     public WebUtils(Gson gson) {
         this.gson = gson;
@@ -21,17 +21,18 @@ public class WebUtils {
 
     public <T> T getBody(Response response, Class<T> clazz) {
         ResponseBody body = response.body();
-        if(body == null) throw new WebException(R.string.error_web_response);
+        if (body == null) throw new WebException(R.string.error_web_response);
         try {
             String json = body.string();
-            if(!response.isSuccessful()) {
+            if (!response.isSuccessful()) {
                 getError(json);
             }
-            return getBody(json,clazz);
+            return getBody(json, clazz);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
     public <T> T getBody(String json, Class<T> clazz) {
         Log.i(TAG, "Received response " + json);
         try {

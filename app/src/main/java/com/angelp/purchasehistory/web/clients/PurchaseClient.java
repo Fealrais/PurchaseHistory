@@ -211,6 +211,7 @@ public class PurchaseClient extends HttpClient {
         }
         return null;
     }
+
     public void getExportedCsv(Context context, Uri saveLocation) {
         try (Response res = get(BACKEND_URL + "/purchase/export")) {
             ResponseBody body = res.body();

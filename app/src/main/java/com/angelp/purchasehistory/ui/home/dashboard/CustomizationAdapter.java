@@ -19,7 +19,7 @@ import java.util.List;
 @Getter
 public class CustomizationAdapter extends RecyclerView.Adapter<CustomizationAdapter.ViewHolder> {
 
-    private List<DashboardComponent> fragments;
+    private final List<DashboardComponent> fragments;
 
     public CustomizationAdapter(List<DashboardComponent> fragments) {
         this.fragments = new ArrayList<>(fragments);

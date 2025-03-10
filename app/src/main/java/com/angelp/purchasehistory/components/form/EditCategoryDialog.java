@@ -81,7 +81,7 @@ public class EditCategoryDialog extends DialogFragment {
         binding.saveButton.setOnClickListener(v -> {
             String name = binding.categoryNameInput.getText().toString();
             String color = binding.categoryColorInput.getText().toString();
-            boolean isValid = AndroidUtils.validateCategoryValues( binding.categoryNameInput, binding.categoryColorInput);
+            boolean isValid = AndroidUtils.validateCategoryValues(binding.categoryNameInput, binding.categoryColorInput);
             if (isValid) {
                 new Thread(() -> {
                     Category category = purchaseClient.editCategory(purchaseId.intValue(), new CategoryDTO(name, color));

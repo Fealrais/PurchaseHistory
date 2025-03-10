@@ -7,7 +7,6 @@
     tools:context=".ui.spectator.SpectatorHomeActivity">
 
 
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment_spectator_activity"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -25,8 +24,8 @@
         android:id="@+id/spectator_nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="?android:attr/windowBackground"
         app:menu="@menu/spectator_bottom_nav_menu" />
 </androidx.constraintlayout.widget.ConstraintLayout>

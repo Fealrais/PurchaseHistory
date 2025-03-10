@@ -90,7 +90,7 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     }
 
     private void setShowEmptyView(boolean empty) {
-        binding.emptyView.setVisibility(empty? View.VISIBLE : View.GONE);
+        binding.emptyView.setVisibility(empty ? View.VISIBLE : View.GONE);
     }
 
     private void setupShowMoreButton(int purchaseSize, int maxSize) {

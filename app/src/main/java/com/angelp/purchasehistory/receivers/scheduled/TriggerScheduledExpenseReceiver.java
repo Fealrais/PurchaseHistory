@@ -20,6 +20,7 @@ public class TriggerScheduledExpenseReceiver extends BroadcastReceiver {
     public static final String NOTIFICATION_EXTRA_ARG = "clickedNotificationTag";
     @Inject
     ScheduledExpenseClient scheduledExpenseClient;
+
     /**
      * @param context The Context in which the receiver is running.
      * @param intent  The Intent being received.
@@ -34,7 +35,7 @@ public class TriggerScheduledExpenseReceiver extends BroadcastReceiver {
         }
         if (intent.getAction().equals("trigger")) {
             NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-            new Thread(()->{
+            new Thread(() -> {
                 scheduledExpenseClient.triggerScheduledPurchase(new TriggerPurchaseDTO(notification.getId(), LocalDateTime.now()));
                 manager.cancel(notification.getId().intValue());
             }).start();

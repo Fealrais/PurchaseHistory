@@ -6,14 +6,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.angelp.purchasehistorybackend.models.enums.UserRole;
-import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import com.angelp.purchasehistory.databinding.ActivityMainBinding;
 import com.angelp.purchasehistory.ui.home.HomeActivity;
 import com.angelp.purchasehistory.ui.login.LoginActivity;
 import com.angelp.purchasehistory.ui.register.RegisterActivity;
 import com.angelp.purchasehistory.ui.spectator.SpectatorHomeActivity;
 import com.angelp.purchasehistory.web.clients.AuthClient;
+import com.angelp.purchasehistorybackend.models.enums.UserRole;
+import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;

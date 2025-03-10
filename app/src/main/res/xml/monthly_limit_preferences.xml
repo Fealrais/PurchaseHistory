@@ -1,8 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:title="@string/monthly_limit">
+    android:title="@string/monthly_limit">
     <Preference
-        android:key="add_new_monthly_limit_preference"
         android:icon="@android:drawable/ic_input_add"
+        android:key="add_new_monthly_limit_preference"
         android:title="@string/add_new_limit" />
     <PreferenceCategory android:key="monthly_limit_preference_category">
 

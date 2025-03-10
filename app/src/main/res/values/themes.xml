@@ -30,6 +30,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AngelPStyle.Preference.v1" parent="@style/PreferenceThemeOverlay.v14.Material">
         <item name="android:tint">@color/foreground_color</item>
     </style>
