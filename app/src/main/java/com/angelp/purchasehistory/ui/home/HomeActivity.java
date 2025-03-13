@@ -54,7 +54,19 @@ public class HomeActivity extends AppCompatActivity {
                 .findFragmentById(R.id.nav_host_fragment_user_activity);
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
+
             NavigationUI.setupWithNavController(binding.navView, navController);
+
+            Intent intent = getIntent();
+            if (Intent.ACTION_SEND.equals(intent.getAction()) && "text/plain".equals(intent.getType())) {
+                String qrContent = intent.getStringExtra(Intent.EXTRA_TEXT);
+                if (isQrContentValid(qrContent)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.Arguments.QR_CONTENT, qrContent);
+                    navController.navigate(R.id.navigation_qrscanner, bundle);
+                }
+            }
+
         }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -65,6 +77,12 @@ public class HomeActivity extends AppCompatActivity {
         if (isFirstTimeOpen()) {
             showTourPrompt();
         }
+
+
+    }
+
+    private static boolean isQrContentValid(String qrContent) {
+        return qrContent != null && qrContent.split("\\*").length == 5;
     }
 
     private void showTourPrompt() {

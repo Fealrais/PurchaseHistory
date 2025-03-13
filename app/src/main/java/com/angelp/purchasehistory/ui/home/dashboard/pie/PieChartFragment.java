@@ -235,7 +235,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     public void onNothingSelected() {
         Log.i(TAG, "nothing selected");
         PurchaseFilter filterValue = filterViewModel.getFilterValue();
-        filterValue.setCategory(null);
+        filterValue.clearCategories();
         filterViewModel.updateFilter(filterValue);
         setPiechartCenterText(sum);
     }
@@ -252,19 +252,19 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
     private boolean isSameFilter(PurchaseFilter filter) {
         if (previousFilter == null) return false;
-        previousFilter.setCategoryId(filter.getCategoryId());
+        previousFilter.setCategories(filter.getCategories());
         return filter.equals(previousFilter);
     }
 
     private void highlightPieChartOnFilterChange(PurchaseFilter filter) {
         if (binding.pieChart.isEmpty() || entries.isEmpty()) return;
-        if (filter.getCategoryId() == null) {
+        if (filter.getCategories().size() != 1) {
             binding.pieChart.highlightValue(0, -1, false);
             return;
         }
         for (int i = 0; i < entries.size(); i++) {
             PieEntry entry = entries.get(i);
-            if (entry.getData() != null && ((CategoryView) entry.getData()).getId().equals(filter.getCategoryId())) {
+            if (entry.getData() != null && entry.getData().equals(filter.getCategories().get(0))) {
                 if (!binding.pieChart.needsHighlight(i)) return;
                 binding.pieChart.highlightValue(i, 0, false);
                 return;

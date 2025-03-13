@@ -50,11 +50,11 @@ public final class Constants {
     }
 
     public static PurchaseFilter getDefaultFilter() {
-        return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now(), null, null, null);
+        return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now());
     }
 
     public static PurchaseFilter getFilter30Days() {
-        return new PurchaseFilter(LocalDate.now().minusDays(30), LocalDate.now(), null, null, null);
+        return new PurchaseFilter(LocalDate.now().minusDays(30), LocalDate.now());
     }
 
     public interface Preferences {
@@ -74,5 +74,6 @@ public final class Constants {
         String ARG_MAX_SIZE = "max_size";
         String ARG_FILTER = "purchases_filter";
         String OPEN_CAMERA = "open_camera";
+        String QR_CONTENT = "qr_content";
     }
 }

@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +16,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
+import com.angelp.purchasehistory.data.filters.CategoryFilter;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.filters.PurchaseFilterSingleton;
 import com.angelp.purchasehistory.databinding.FragmentPurchaseFilterDialogBinding;
@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
@@ -139,47 +140,30 @@ public class PurchaseFilterDialog extends DialogFragment {
 
     private void setupCategorySpinner(boolean containCategory) {
         if (!containCategory) {
-            binding.purchaseFilterCategorySpinner.setVisibility(View.GONE);
+            binding.purchaseFilterCategoryInput.setVisibility(View.GONE);
             return;
         }
         new Thread(() -> {
             categoryOptions = purchaseClient.getAllCategories();
             categoryOptions.add(0, new CategoryView(null, "None", "#fff"));
-            categoryAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, categoryOptions);
             new Handler(Looper.getMainLooper()).post(() -> {
-                binding.purchaseFilterCategorySpinner.setAdapter(categoryAdapter);
                 updateFilter(filterViewModel.getFilterValue());
             });
         }).start();
-        binding.purchaseFilterCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                CategoryView categoryView = categoryOptions.get(position);
-                filter.setCategory(categoryView);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                filter.setCategory(null);
-            }
-        });
+        binding.purchaseFilterCategoryInput.setItems(categoryOptions.stream().map(CategoryFilter::new).collect(Collectors.toList()),
+                (options) -> filter.setCategories((List<CategoryFilter>) options));
     }
 
     private void fillEditForm(PurchaseFilter view) {
         new Thread(() -> {
-            if (view.getFrom() != null) {
+            if (view.getFrom() != null && datePickerFrom != null) {
                 datePickerFrom.getDateResult().postValue(view.getFrom());
             }
-            if (view.getTo() != null) {
+            if (view.getTo() != null && datePickerTo != null) {
                 datePickerTo.getDateResult().postValue(view.getTo());
             }
-            if (view.getCategoryId() != null) {
-                for (int i = 0; i < categoryOptions.size(); i++) {
-                    if (view.getCategoryId().equals(categoryOptions.get(i).getId())) {
-                        binding.purchaseFilterCategorySpinner.setSelection(i, true);
-                        break;
-                    }
-                }
+            if (view.getCategories() != null && binding != null && binding.purchaseFilterCategoryInput.getAdapter() != null) {
+                binding.purchaseFilterCategoryInput.setSelected(view.getCategories());
             }
         }).start();
 
@@ -187,7 +171,7 @@ public class PurchaseFilterDialog extends DialogFragment {
 
     private void resetForm() {
         this.updateFilter(getDefaultFilter());
-        binding.purchaseFilterCategorySpinner.setSelection(0);
+        binding.purchaseFilterCategoryInput.setSelection(0);
         binding.purchaseFilterToDate.setText(R.string.to);
         binding.purchaseFilterFromDate.setText(R.string.from);
     }
@@ -209,15 +193,6 @@ public class PurchaseFilterDialog extends DialogFragment {
 
     private void updateFilter(PurchaseFilter observedFilter) {
         filter = observedFilter;
-        if (filter.getCategoryId() == null || categoryAdapter == null) {
-            return;
-        }
-        for (int i = 0; i < categoryAdapter.getCount(); i++) {
-            CategoryView entry = categoryAdapter.getItem(i);
-            if (entry.getId() != null && entry.getId().equals(filter.getCategoryId())) {
-                binding.purchaseFilterCategorySpinner.setSelection(i);
-                return;
-            }
-        }
+        this.fillEditForm(filter);
     }
 }

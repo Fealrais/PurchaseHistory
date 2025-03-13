@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 
@@ -35,9 +35,7 @@ public class PurchaseFilter implements Parcelable {
     private final DateTimeFormatter dtf = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
     private LocalDate from;
     private LocalDate to;
-    private Long categoryId;
-    private String categoryName;
-    //    private PageRequest pageRequest;
+    private List<CategoryFilter> categories = new ArrayList<>();
     private UUID userId;
 
     public PurchaseFilter() {
@@ -53,29 +51,39 @@ public class PurchaseFilter implements Parcelable {
     protected PurchaseFilter(Parcel in) {
         setFrom(getDateFromParcel(in));
         setTo(getDateFromParcel(in));
-        long categoryId = in.readLong();
-        if (categoryId >= 0) {
-            this.categoryId = categoryId;
-        }
-        this.categoryName = in.readString();
+
+        this.categories = in.readParcelableList(this.categories, CategoryFilter.class.getClassLoader());
         String userString = in.readString();
         if (userString != null && !userString.isBlank())
             setUserId(UUID.fromString(userString));
     }
 
-    public void setCategory(CategoryView category) {
-        if (category == null) {
-            this.categoryId = null;
-            this.categoryName = null;
-            return;
-        }
-        this.categoryId = category.getId();
-        this.categoryName = category.getName();
+    public PurchaseFilter(LocalDate from, LocalDate to) {
+        this.from = from;
+        this.to = to;
     }
 
+    public void setCategory(List<CategoryView> categories) {
+        if (categories == null || categories.isEmpty()) {
+            clearCategories();
+            return;
+        }
+        this.categories = Arrays.stream(categories.toArray(new CategoryFilter[0])).collect(Collectors.toList());
+    }
+
+    public void setCategory(CategoryView category) {
+        if (category == null) {
+            clearCategories();
+            return;
+        }
+        this.categories = Arrays.asList(new CategoryFilter(category));
+    }
+    public void clearCategories() {
+        this.categories.clear();
+    }
 
     public boolean isEmpty() {
-        return from == null && to == null && categoryId == null && userId == null;
+        return from == null && to == null && (categories == null || categories.isEmpty()) && userId == null;
     }
 
     @Override
@@ -85,8 +93,8 @@ public class PurchaseFilter implements Parcelable {
             builder.append("from=").append(from.format(DateTimeFormatter.ISO_LOCAL_DATE)).append("&");
         if (to != null)
             builder.append("to=").append(to.format(DateTimeFormatter.ISO_LOCAL_DATE)).append("&");
-        if (categoryId != null)
-            builder.append("categoryId=").append(categoryId).append("&");
+        if (categories != null && !categories.isEmpty())
+            builder.append("categories=").append(categories.stream().map(String::valueOf).collect(Collectors.joining(","))).append("&");
         if (userId != null)
             builder.append("userId=").append(userId).append("&");
 //        if (pageRequest != null)
@@ -98,7 +106,7 @@ public class PurchaseFilter implements Parcelable {
         PurchaseFilter def = getDefaultFilter();
         LocalDate from = getFrom() != null ? getFrom() : def.getFrom();
         LocalDate filterTo = getTo() != null ? getTo() : def.getTo();
-        return from.format(dtf) + " - " + filterTo.format(dtf) + (categoryName == null ? "" : "\nCategory:" + categoryName);
+        return from.format(dtf) + " - " + filterTo.format(dtf) + (categories.isEmpty() ? "" : "\nCategory:" + categories.stream().map(CategoryFilter::getName).collect(Collectors.joining(",")));
     }
 
     @Override
@@ -110,8 +118,7 @@ public class PurchaseFilter implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeLong(from == null ? -1L : from.toEpochDay());
         dest.writeLong(to == null ? -1L : to.toEpochDay());
-        dest.writeLong(categoryId == null ? -1L : categoryId);
-        dest.writeString(categoryName == null ? "" : categoryName);
+        dest.writeParcelableArray(categories.toArray(new CategoryFilter[0]), flags);
         dest.writeString(userId == null ? "" : userId.toString());
 //        dest.writeParcelable(pageRequest);
     }
@@ -131,7 +138,7 @@ public class PurchaseFilter implements Parcelable {
 
         if (!from.equals(that.from)) return false;
         if (!to.equals(that.to)) return false;
-        if (!Objects.equals(categoryId, that.categoryId)) return false;
+        if (!Objects.equals(categories, that.categories)) return false;
         return Objects.equals(userId, that.userId);
     }
 
@@ -139,15 +146,14 @@ public class PurchaseFilter implements Parcelable {
     public int hashCode() {
         int result = from.hashCode();
         result = 31 * result + to.hashCode();
-        result = 31 * result + (categoryId != null ? categoryId.hashCode() : 0);
+        result = 31 * result + (categories != null ? categories.hashCode() : 0);
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
     }
 
     public @NotNull PurchaseFilter copy() {
         PurchaseFilter purchaseFilter = new PurchaseFilter();
-        purchaseFilter.setCategoryId(categoryId);
-        purchaseFilter.setCategoryName(categoryName);
+        purchaseFilter.setCategories(categories);
         purchaseFilter.setFrom(from);
         purchaseFilter.setTo(to);
         purchaseFilter.setUserId(userId);

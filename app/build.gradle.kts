@@ -76,7 +76,7 @@ dependencies {
 //  UI
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
     implementation("com.github.Mohammad3125:KavehColorPicker:v1.0.0")
-    implementation ("uk.co.samuelwall:material-tap-target-prompt:3.0.0")
+    implementation("uk.co.samuelwall:material-tap-target-prompt:3.0.0")
 
     implementation("org.aspectj:aspectjweaver:1.9.22.1")
 

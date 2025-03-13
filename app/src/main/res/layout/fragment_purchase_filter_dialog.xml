@@ -31,19 +31,6 @@
         app:layout_constraintEnd_toStartOf="@+id/purchaseFilter_toDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Spinner
-        android:id="@+id/purchaseFilter_categorySpinner"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
-
     <Button
         android:id="@+id/purchase_filter_submit_button"
         android:layout_width="wrap_content"
@@ -52,7 +39,18 @@
         android:text="@string/filterButton"
         app:layout_constraintEnd_toStartOf="@+id/purchaseFilter_clearButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/purchaseFilter_categorySpinner" />
+        app:layout_constraintTop_toBottomOf="@id/purchaseFilter_categoryInput" />
+    <com.angelp.purchasehistory.components.MultiselectSpinner
+        android:id="@+id/purchaseFilter_categoryInput"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scrollView2"/>
 
     <Button
         android:id="@+id/purchaseFilter_clearButton"
