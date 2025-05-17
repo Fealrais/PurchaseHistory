@@ -20,8 +20,10 @@ import com.angelp.purchasehistory.databinding.FragmentPurchasesListCardBinding;
 import com.angelp.purchasehistory.ui.FullscreenGraphActivity;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchasesAdapter;
+import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
+import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.PurchaseListView;
 import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,7 +75,8 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     private void initializePurchasesRecyclerView(int maxSize, PurchaseFilter filter) {
         new Thread(() -> {
             if (binding == null) return;
-            List<PurchaseView> purchases = purchaseClient.getAllPurchases(filter);
+            PurchaseListView purchaseListView = purchaseClient.getAllPurchases(filter);
+            List<PurchaseView> purchases = purchaseListView.getContent();
             purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
             setupShowMoreButton(purchases.size(), maxSize);
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
@@ -81,7 +84,7 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (binding != null) {
                     setShowEmptyView(purchases.isEmpty());
-
+                    binding.purchaseSumText.setText(AndroidUtils.formatCurrency(purchaseListView.getTotalSum(), getContext()));
                     binding.purchaseList.setLayoutManager(llm);
                     binding.purchaseList.setAdapter(purchasesAdapter);
                 }
@@ -120,18 +123,19 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
         }
         isRefreshing.postValue(true);
         new Thread(() -> {
-            List<PurchaseView> allPurchases = purchaseClient.getAllPurchases(filter);
-            Log.i(TAG, "Received purchases list with size of " + allPurchases.size());
-            updateAdapter(allPurchases);
+            PurchaseListView purchaseListView = purchaseClient.getAllPurchases(filter);
+            Log.i(TAG, "Received purchases list with size of " + purchaseListView.getContent().size());
+            updateAdapter(purchaseListView);
             isRefreshing.postValue(false);
         }).start();
     }
 
-    private void updateAdapter(List<PurchaseView> allPurchases) {
+    private void updateAdapter(PurchaseListView allPurchases) {
         new Handler(Looper.getMainLooper()).post(() -> {
-            setShowEmptyView(allPurchases.isEmpty());
-            purchasesAdapter.setPurchaseViews(allPurchases);
-            updateSeeAllButton(allPurchases.size(), maxSize);
+            setShowEmptyView(allPurchases.getContent().isEmpty());
+            purchasesAdapter.setPurchaseViews(allPurchases.getContent());
+            binding.purchaseSumText.setText(AndroidUtils.formatCurrency(allPurchases.getTotalSum(), getContext()));
+            updateSeeAllButton(allPurchases.getContent().size(), maxSize);
         });
     }
 

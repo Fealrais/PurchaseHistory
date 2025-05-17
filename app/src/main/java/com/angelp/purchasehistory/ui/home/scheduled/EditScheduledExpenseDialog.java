@@ -22,7 +22,7 @@ import com.angelp.purchasehistory.components.form.TimePickerFragment;
 import com.angelp.purchasehistory.databinding.DialogEditScheduledExpenseBinding;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
 import com.angelp.purchasehistory.util.AndroidUtils;
-import com.angelp.purchasehistory.util.CommonUtils;
+import com.angelp.purchasehistory.util.Utils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistory.web.clients.ScheduledExpenseClient;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
@@ -136,16 +136,13 @@ public class EditScheduledExpenseDialog extends DialogFragment {
         binding.editScheduledExpenseEditTextPrice.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                String str = s.toString();
-                if (CommonUtils.isInvalidCurrency(str)) {
-                    scheduledExpense.setPrice(new BigDecimal(s.toString()));
-                }
-                if (CommonUtils.isInvalidCurrency(str)) {
+                String current = s.toString();
+                if (Utils.isInvalidCurrency(current)) {
                     binding.editScheduledExpenseEditTextPrice.setError("Invalid price!");
                     binding.editScheduledExpenseSaveButton.setEnabled(false);
                 } else {
-                    if (str.trim().isEmpty()) scheduledExpense.setPrice(new BigDecimal(BigInteger.ZERO));
-                    else scheduledExpense.setPrice(new BigDecimal(s.toString()));
+                    if (current.trim().isEmpty()) scheduledExpense.setPrice(new BigDecimal(BigInteger.ZERO));
+                    else scheduledExpense.setPrice(new BigDecimal(current));
                     binding.editScheduledExpenseSaveButton.setEnabled(true);
                     binding.editScheduledExpenseEditTextPrice.setError(null);
                 }

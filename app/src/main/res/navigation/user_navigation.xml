@@ -13,8 +13,12 @@
     <fragment
         android:id="@+id/navigation_scheduled_expenses"
         android:name="com.angelp.purchasehistory.ui.home.scheduled.ScheduledExpensesFragment"
-        android:label="@string/title_spectated_users"
-        tools:layout="@layout/fragment_scheduled_expenses" />
+        android:label="@string/title_scheduled_expenses"
+        tools:layout="@layout/fragment_scheduled_expenses" >
+        <action
+            android:id="@+id/action_navigation_scheduled_expenses_to_navigation_qrscanner"
+            app:destination="@id/navigation_qrscanner" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_qrscanner"
         android:name="com.angelp.purchasehistory.ui.home.qr.QrScannerFragment"

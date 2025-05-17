@@ -18,6 +18,7 @@ import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.tour.TourStep;
 import com.angelp.purchasehistory.databinding.ActivityHomeBinding;
+import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.AuthClient;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -55,6 +56,7 @@ public class HomeActivity extends AppCompatActivity {
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
             NavigationUI.setupWithNavController(binding.navView, navController);
+            NavigationUI.setupActionBarWithNavController(this, navHostFragment.getNavController(), appBarConfiguration);
         }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -121,7 +123,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
+        if (requestCode == AndroidUtils.SAVE_CSV_REQUEST_CODE && resultCode == RESULT_OK) {
             if (data != null) {
                 Uri uri = data.getData();
                 new Thread(() -> purchaseClient.getExportedCsv(this, uri)).start();

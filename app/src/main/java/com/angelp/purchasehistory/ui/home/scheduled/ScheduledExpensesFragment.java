@@ -17,6 +17,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.NavOptions;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
@@ -25,13 +27,11 @@ import com.angelp.purchasehistory.data.model.ScheduledNotification;
 import com.angelp.purchasehistory.databinding.FragmentScheduledExpensesBinding;
 import com.angelp.purchasehistory.receivers.scheduled.InitiateNotificationReceiver;
 import com.angelp.purchasehistory.web.clients.ScheduledExpenseClient;
-import com.angelp.purchasehistorybackend.models.views.incoming.TriggerPurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import com.google.gson.Gson;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +79,7 @@ public class ScheduledExpensesFragment extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
             adapter = new ScheduledExpenseAdapter(scheduledExpenses, new ScheduledExpenseAdapter.OnItemClickListener() {
+
                 @Override
                 public void onSilenceToggleTrigger(ScheduledExpenseView item, boolean silenced) {
                     new Thread(() -> {
@@ -94,14 +95,7 @@ public class ScheduledExpensesFragment extends Fragment {
 
                 @Override
                 public void onTriggerClick(ScheduledExpenseView item) {
-                    new Thread(() -> {
-                        try {
-                            scheduledExpenseClient.triggerScheduledPurchase(new TriggerPurchaseDTO(item.getId(), LocalDateTime.now()));
-                            PurchaseHistoryApplication.getInstance().alert(R.string.purchase_created_title);
-                        } catch (Exception e) {
-                            PurchaseHistoryApplication.getInstance().alert("Error deleting scheduled expense: " + e.getMessage());
-                        }
-                    }).start();
+                    new Thread(() -> sendToQRPage(item)).start();
                 }
 
                 @Override
@@ -154,12 +148,18 @@ public class ScheduledExpensesFragment extends Fragment {
         });
     }
 
+    private void sendToQRPage(ScheduledExpenseView item) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("scheduledNotification", new ScheduledNotification(item));
+        NavOptions navOptions = new NavOptions.Builder().setLaunchSingleTop(true).build();
+        new Handler(Looper.getMainLooper()).post(() -> NavHostFragment.findNavController(this).navigate(R.id.action_navigation_scheduled_expenses_to_navigation_qrscanner, bundle, navOptions));
+    }
+
     private void refresh() {
         new Thread(() -> {
             isLoading.postValue(true);
-            adapter.getScheduledExpenses().clear();
             List<ScheduledExpenseView> allForUser = scheduledExpenseClient.findAllForUser();
-            ScheduledExpenseAdapter.sort(allForUser);
+            adapter.getScheduledExpenses().clear();
             adapter.getScheduledExpenses().addAll(allForUser);
             new Handler(Looper.getMainLooper()).post(() -> {
                 adapter.notifyDataSetChanged();

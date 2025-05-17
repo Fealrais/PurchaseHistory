@@ -44,13 +44,33 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/purchaseSumTextLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/total_sum"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filterRow" />
+
+        <TextView
+            android:id="@+id/purchaseSumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/purchaseSumTextLabel"
+            app:layout_constraintTop_toTopOf="@+id/purchaseSumTextLabel" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/purchaseList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filterRow"
+            app:layout_constraintTop_toBottomOf="@+id/purchaseSumText"
             tools:listitem="@layout/recycler_view_purchase" />
 
         <ImageView

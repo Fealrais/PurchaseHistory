@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:hint="@string/price"
+        android:text="@string/currency_zero"
         android:inputType="numberDecimal"
         android:minHeight="48dp" />
 

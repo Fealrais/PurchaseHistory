@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
+import androidx.core.content.pm.ShortcutManagerCompat;
 import com.angelp.purchasehistory.MainActivity;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
@@ -61,6 +62,7 @@ public final class AndroidUtils {
         PurchaseHistoryApplication.getInstance().loggedUser.postValue(null);
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        ShortcutManagerCompat.removeAllDynamicShortcuts(context);
         context.startActivity(intent);
     }
 

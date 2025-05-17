@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,18 +27,23 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
-import com.angelp.purchasehistory.components.CurrencyInputChangeWatcher;
 import com.angelp.purchasehistory.components.form.CreateCategoryDialog;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.components.form.TimePickerFragment;
 import com.angelp.purchasehistory.data.Constants;
+import com.angelp.purchasehistory.data.model.ScheduledNotification;
 import com.angelp.purchasehistory.databinding.FragmentQrBinding;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
 import com.angelp.purchasehistory.util.AndroidUtils;
-import com.angelp.purchasehistory.util.CommonUtils;
+import com.angelp.purchasehistory.util.Utils;
 import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Result;
+import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.integration.android.IntentIntegrator;
 import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
@@ -78,6 +86,19 @@ public class QrScannerFragment extends Fragment {
                     }
                 }
             });
+    private final ActivityResultLauncher<Intent> openGalleryRequest = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent intent = result.getData();
+                    if (intent != null) {
+                        Uri uri = intent.getData();
+                        readQRFromImage(uri);
+                    } else {
+                        Log.i(TAG, "QR scan Cancelled");
+                    }
+                }
+            });
+
     private final ActivityResultLauncher<String> requestPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), (isGranted) -> {
         if (isGranted) {
             initQRCodeScanner();
@@ -97,8 +118,12 @@ public class QrScannerFragment extends Fragment {
         qrScannerViewModel = new ViewModelProvider(this).get(QrScannerViewModel.class);
         binding = FragmentQrBinding.inflate(inflater, container, false);
         initQRForm(inflater);
-
-
+        if (getArguments() != null) {
+            ScheduledNotification scheduledNotification = getArguments().getParcelable("scheduledNotification");
+            if (scheduledNotification != null) {
+                fillQRForm(scheduledNotification.getPurchaseDTO());
+            }
+        }
 //        mAdView = new AdView(getContext());
 //        mAdView.setAdSize(getCurrentOrientationAnchoredAdaptiveBannerAdSize(getContext(), R.id.adView));
 //        mAdView.setAdUnitId("myAdUnitId");
@@ -140,6 +165,9 @@ public class QrScannerFragment extends Fragment {
                     binding.qrDateInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_DATE));
                     binding.qrTimeInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_TIME));
                 }
+                if (Utils.defined(purchaseDTO.getNote())) {
+                    binding.qrNoteInput.setText(purchaseDTO.getNote());
+                }
             });
         }).start();
     }
@@ -152,6 +180,61 @@ public class QrScannerFragment extends Fragment {
         }
     }
 
+    private final ActivityResultLauncher<String> requestPermissionGallery = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            (isGranted) -> {
+                if (isGranted) {
+                    initQRPhotoChooser();
+                } else {
+                    showPermissionDeniedToast();
+                }
+            });
+
+    private void openGalleryFlow(LayoutInflater inflater) {
+        String permission = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU
+                ? Manifest.permission.READ_MEDIA_IMAGES
+                : Manifest.permission.READ_EXTERNAL_STORAGE;
+
+        if (ContextCompat.checkSelfPermission(inflater.getContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+            initQRPhotoChooser();
+        } else {
+            requestPermissionGallery.launch(permission);
+        }
+    }
+
+    private void showPermissionDeniedToast() {
+        PurchaseHistoryApplication.getInstance().getApplicationContext().getMainExecutor().execute(() ->
+                Toast.makeText(getContext(), "The application cannot function without this", Toast.LENGTH_SHORT).show());
+    }
+
+    private void initQRPhotoChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        openGalleryRequest.launch(Intent.createChooser(intent, getString(R.string.scanner_gallery)));
+    }
+
+    private void readQRFromImage(Uri uri) {
+        try {
+            Bitmap image;
+            ImageDecoder.Source source = ImageDecoder.createSource(requireContext().getContentResolver(), uri);
+            image = ImageDecoder.decodeBitmap(source).copy(Bitmap.Config.RGBA_F16, true);
+
+            int[] intArray = new int[image.getWidth() * image.getHeight()];
+            image.getPixels(intArray, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+
+            RGBLuminanceSource sourceRGB = new RGBLuminanceSource(image.getWidth(), image.getHeight(), intArray);
+            MultiFormatReader reader = new MultiFormatReader();
+            Result result = reader.decode(new BinaryBitmap(new HybridBinarizer(sourceRGB)));
+            Log.i(TAG, "QR Code: " + result.getText());
+            PurchaseDTO purchaseDTO = new PurchaseDTO(result.toString());
+            qrScannerViewModel.validatePurchaseView(purchaseDTO, this::onInvalidPurchase);
+            fillQRForm(purchaseDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void initQRForm(LayoutInflater inflater) {
         timePicker = new TimePickerFragment(LocalTime.now());
         datePicker = new DatePickerFragment(LocalDate.now());
@@ -161,6 +244,7 @@ public class QrScannerFragment extends Fragment {
                 binding.qrCategorySpinner.setSelection(categoryAdapter.getPosition(newCategory));
             }
         }));
+        binding.qrFloatingPhotoButton.setOnClickListener((view) -> openGalleryFlow(inflater));
         binding.qrFloatingQrButton.setOnClickListener((view) -> openCameraFlow(inflater));
         binding.qrClearButton.setOnClickListener(v -> resetForm());
         binding.qrSubmitButton.setOnClickListener((view) -> onSubmit(qrScannerViewModel.getPurchaseDTO()));
@@ -173,14 +257,12 @@ public class QrScannerFragment extends Fragment {
             qrScannerViewModel.getPurchaseDTO().setDate(v);
             binding.qrDateInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
         });
-        binding.qrPriceInput.setCursorVisible(false);
-        binding.qrPriceInput.setOnClickListener(v -> binding.qrPriceInput.setSelection(binding.qrPriceInput.getText().length()));
-        binding.qrPriceInput.addTextChangedListener(new CurrencyInputChangeWatcher(binding.qrPriceInput) {
+        binding.qrPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (binding.qrPriceInput.hasFocus()) {
                     String str = binding.qrPriceInput.getText().toString();
-                    if (CommonUtils.isInvalidCurrency(str)) {
+                    if (Utils.isInvalidCurrency(str)) {
                         binding.qrPriceInput.setError("Invalid price!");
                         binding.qrSubmitButton.setEnabled(false);
                     } else {

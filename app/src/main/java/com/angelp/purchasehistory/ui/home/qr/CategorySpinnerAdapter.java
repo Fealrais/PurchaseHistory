@@ -15,7 +15,7 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 
 import java.util.List;
 
-import static com.angelp.purchasehistory.util.CommonUtils.COLOR_REGEX;
+import static com.angelp.purchasehistory.util.Utils.COLOR_REGEX;
 
 public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
     //    private final List<CategoryView> items;

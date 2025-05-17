@@ -1,0 +1,17 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    <shortcut
+        android:shortcutId="compose"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/qr_shortcut_short_label"
+        android:shortcutLongLabel="@string/qr_shortcut_long_label"
+        android:shortcutDisabledMessage="@string/qr_disabled_message">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.angelp.purchasehistory"
+            android:targetClass="com.angelp.purchasehistory.ui.home.HomeActivity" />
+        <categories android:name="android.shortcut.conversation" />
+        <capability-binding android:key="actions.intent.CREATE_MESSAGE" />
+    </shortcut>-->
+    <!-- Specify more shortcuts here. -->
+</shortcuts>

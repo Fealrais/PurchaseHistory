@@ -18,7 +18,6 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseV
 import com.google.gson.Gson;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -31,17 +30,8 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
     private final OnItemClickListener listener;
 
     public ScheduledExpenseAdapter(List<ScheduledExpenseView> scheduledExpenses, OnItemClickListener listener) {
-        sort(scheduledExpenses);
         this.scheduledExpenses = scheduledExpenses;
         this.listener = listener;
-    }
-
-    public static void sort(List<ScheduledExpenseView> scheduledExpenses) {
-        scheduledExpenses.sort((a, b) -> {
-            LocalDateTime nextTimestampA = a.getPeriod().getNextTimestamp(a.getTimestamp());
-            LocalDateTime nextTimestampB = b.getPeriod().getNextTimestamp(b.getTimestamp());
-            return nextTimestampA.compareTo(nextTimestampB);
-        });
     }
 
     @NonNull
@@ -109,7 +99,8 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
             setNextTimestampString(textViewNextDate, scheduledExpense);
             silenceButton.setChecked(!isSilenced);
             setSilencedState(isSilenced);
-            silenceButton.setOnCheckedChangeListener((v, value) -> {
+            silenceButton.setOnClickListener((v) -> {
+                boolean value = silenceButton.isChecked();
                 listener.onSilenceToggleTrigger(scheduledExpense, !value);
                 setSilencedState(!value);
             });

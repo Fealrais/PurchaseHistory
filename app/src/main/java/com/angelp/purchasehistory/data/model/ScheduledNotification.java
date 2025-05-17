@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
+import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Getter
@@ -74,7 +76,10 @@ public class ScheduledNotification implements Parcelable {
     }
 
     private static long getEpochMilli(ScheduledExpenseView notification) {
-        return notification.getPeriod().getNextTimestamp(notification.getTimestamp()).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        if (notification.getNextTimestamp() == null) {
+            return 0;
+        }
+        return notification.getNextTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     public boolean isRepeating() {
@@ -96,5 +101,14 @@ public class ScheduledNotification implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public PurchaseDTO getPurchaseDTO() {
+        PurchaseDTO purchaseDTO = new PurchaseDTO();
+        purchaseDTO.setNote(this.note);
+        purchaseDTO.setPrice(this.price);
+        purchaseDTO.setCategoryId(this.categoryId);
+        purchaseDTO.setTimestamp(LocalDateTime.now());
+        return purchaseDTO;
     }
 }

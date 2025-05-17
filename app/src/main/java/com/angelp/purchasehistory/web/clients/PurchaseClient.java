@@ -14,6 +14,7 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.PageView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReport;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
+import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.PurchaseListView;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.Response;
@@ -89,19 +90,9 @@ public class PurchaseClient extends HttpClient {
         return null;
     }
 
-    public List<PurchaseView> getAllPurchases(PurchaseFilter filter) throws RuntimeException {
+    public PurchaseListView getAllPurchases(PurchaseFilter filter) throws RuntimeException {
         try (Response res = get(BACKEND_URL + "/purchase/filtered?" + filter)) {
-            ResponseBody body = res.body();
-            if (body != null) {
-                String json = body.string();
-                Log.i("httpResponse", "Get all purchases: " + json);
-                if (res.isSuccessful())
-                    return Arrays.stream(gson.fromJson(json, PurchaseResponse[].class)).map(PurchaseResponse::toPurchaseView).collect(Collectors.toList());
-                else {
-                    ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
-                    throw new RuntimeException(String.valueOf(errorResponse));
-                }
-            }
+            return utils.getBody(res, PurchaseListView.class);
         } catch (IOException | JsonParseException | NullPointerException e) {
             Log.e(TAG, "getAllPurchases ERROR: " + e.getMessage());
         }

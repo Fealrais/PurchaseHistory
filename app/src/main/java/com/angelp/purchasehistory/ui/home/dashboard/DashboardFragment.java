@@ -58,6 +58,11 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
             List<DashboardComponent> savedFragments = getFragmentsFromPreferences();
             if (savedFragments == null || savedFragments.isEmpty()) {
                 savedFragments = new ArrayList<>(Constants.DEFAULT_COMPONENTS);
+            } else for (DashboardComponent defaultComponent : Constants.DEFAULT_COMPONENTS) {
+                if (!savedFragments.contains(defaultComponent)) {
+                    defaultComponent.setVisible(false);
+                    savedFragments.add(defaultComponent);
+                } // upon application update, the saved fragments might not contain the new default components
             }
             setupFragments(new ArrayList<>(), savedFragments);
             selectedFragments = savedFragments;

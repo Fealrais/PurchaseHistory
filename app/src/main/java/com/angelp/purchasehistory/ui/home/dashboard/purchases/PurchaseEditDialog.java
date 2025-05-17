@@ -15,7 +15,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
-import com.angelp.purchasehistory.components.CurrencyInputChangeWatcher;
 import com.angelp.purchasehistory.components.form.CreateCategoryDialog;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.components.form.TimePickerFragment;
@@ -23,7 +22,7 @@ import com.angelp.purchasehistory.data.filters.PurchaseFilterSingleton;
 import com.angelp.purchasehistory.databinding.FragmentPurchaseEditDialogBinding;
 import com.angelp.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
-import com.angelp.purchasehistory.util.CommonUtils;
+import com.angelp.purchasehistory.util.Utils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.incoming.PurchaseDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
@@ -109,18 +108,16 @@ public class PurchaseEditDialog extends DialogFragment {
             categoryAdapter = new CategorySpinnerAdapter(getContext(), allCategories);
             getActivity().runOnUiThread(() -> {
                 binding.purchaseEditCategorySpinner.setAdapter(categoryAdapter);
-                int index = CommonUtils.findIndex(allCategories, (category) -> category.getId().equals(purchase.getCategoryId()));
+                int index = Utils.findIndex(allCategories, (category) -> category.getId().equals(purchase.getCategoryId()));
                 if (index >= 0)
                     binding.purchaseEditCategorySpinner.setSelection(index);
             });
         }).start();
-        binding.purchaseEditPriceInput.setCursorVisible(false);
-        binding.purchaseEditPriceInput.setOnClickListener(v -> binding.purchaseEditPriceInput.setSelection(binding.purchaseEditPriceInput.getText().length()));
-        binding.purchaseEditPriceInput.addTextChangedListener(new CurrencyInputChangeWatcher(binding.purchaseEditPriceInput) {
+        binding.purchaseEditPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 String str = binding.purchaseEditPriceInput.getText().toString();
-                if (CommonUtils.isInvalidCurrency(str)) {
+                if (Utils.isInvalidCurrency(str)) {
                     binding.purchaseEditPriceInput.setError("Invalid price!");
                     binding.purchaseEditSaveButton.setEnabled(false);
                 } else {

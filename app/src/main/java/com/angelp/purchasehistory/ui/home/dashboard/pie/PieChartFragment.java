@@ -22,7 +22,7 @@ import com.angelp.purchasehistory.ui.home.dashboard.DashboardViewModel;
 import com.angelp.purchasehistory.ui.home.dashboard.graph.CurrencyValueFormatter;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
-import com.angelp.purchasehistory.util.CommonUtils;
+import com.angelp.purchasehistory.util.Utils;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsEntry;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
@@ -161,7 +161,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
     private void setPiechartCenterText(String centerText, float secondValue, CategoryView category) {
         String name = category.getName();
-        name = CommonUtils.limitString(name, 12);
+        name = Utils.limitString(name, 12);
         binding.pieChart.setCenterText(name + "\n" + centerText + "\n" + AndroidUtils.formatCurrency(secondValue, getContext()));
         binding.pieChart.setCenterTextSize(16);
         binding.pieChart.setCenterTextTypeface(tf);

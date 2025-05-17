@@ -22,6 +22,7 @@ import com.angelp.purchasehistory.components.form.TimePickerFragment;
 import com.angelp.purchasehistory.databinding.DialogEditScheduledExpenseBinding;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
 import com.angelp.purchasehistory.util.AndroidUtils;
+import com.angelp.purchasehistory.util.Utils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistory.web.clients.ScheduledExpenseClient;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -119,12 +121,18 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
             }
         });
         binding.editScheduledExpenseEditTextPrice.addTextChangedListener(new AfterTextChangedWatcher() {
+
             @Override
             public void afterTextChanged(Editable s) {
-                try {
-                    scheduledExpense.setPrice(new BigDecimal(s.toString()));
-                } catch (NumberFormatException e) {
-                    Log.e("EditScheduledExpenseDialog", "Invalid price format", e);
+                String current = s.toString();
+                if (Utils.isInvalidCurrency(current)) {
+                    binding.editScheduledExpenseEditTextPrice.setError("Invalid price!");
+                    binding.editScheduledExpenseSaveButton.setEnabled(false);
+                } else {
+                    if (current.trim().isEmpty()) scheduledExpense.setPrice(new BigDecimal(BigInteger.ZERO));
+                    else scheduledExpense.setPrice(new BigDecimal(current));
+                    binding.editScheduledExpenseSaveButton.setEnabled(true);
+                    binding.editScheduledExpenseEditTextPrice.setError(null);
                 }
             }
         });
@@ -185,7 +193,7 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
     }
 
     private void onSubmit(DialogInterface dialog) {
-        if (scheduledExpense.getNote().isBlank() || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()) {
+        if (!Utils.defined(scheduledExpense.getNote()) || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()) {
             binding.editScheduledExpenseEditTextPrice.setError(getText(R.string.error_price_empty));
             return;
         }
@@ -216,4 +224,5 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
             }
         }).start();
     }
+
 }

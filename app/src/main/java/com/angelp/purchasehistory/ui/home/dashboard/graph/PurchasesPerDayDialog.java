@@ -24,6 +24,7 @@ import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
+import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.PurchaseListView;
 import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
@@ -103,10 +104,10 @@ public class PurchasesPerDayDialog extends DialogFragment {
 
     private void initializePurchasesRecyclerView(int maxSize, PurchaseFilter filter) {
         new Thread(() -> {
-            List<PurchaseView> purchases = purchaseClient.getAllPurchases(filter);
+            PurchaseListView purchaseListView = purchaseClient.getAllPurchases(filter);
+            List<PurchaseView> purchases = purchaseListView.getContent();
             purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
-            BigDecimal sum = purchases.stream().map(PurchaseView::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
-            dialog.setMessage(getString(R.string.currency_total, sum.floatValue()));
+            dialog.setMessage(getString(R.string.currency_total, purchaseListView.getTotalSum().floatValue()));
             setupShowMoreButton(purchases.size(), maxSize);
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -146,21 +147,19 @@ public class PurchasesPerDayDialog extends DialogFragment {
             return;
         }
         new Thread(() -> {
-            List<PurchaseView> allPurchases = purchaseClient.getAllPurchases(filter);
+            PurchaseListView purchaseListView = purchaseClient.getAllPurchases(filter);
             purchasesAdapter.getPurchaseViews().clear();
-            Log.i(TAG, "Received purchases list with size of " + allPurchases.size());
-            updateUI(allPurchases);
+            Log.i(TAG, "Received purchases list with size of " + purchaseListView.getContent().size());
+            updateUI(purchaseListView);
         }).start();
     }
 
-    private void updateUI(List<PurchaseView> allPurchases) {
-        BigDecimal sum = allPurchases.stream().reduce(BigDecimal.ZERO, (bigDecimal, view) -> bigDecimal.add(view.getPrice()), BigDecimal::add);
-
+    private void updateUI(PurchaseListView allPurchases) {
         new Handler(Looper.getMainLooper()).post(() -> {
             dialog.setTitle(filter.getFrom().format(dtf_long));
-            dialog.setMessage(AndroidUtils.formatCurrency(sum, getContext()));
-            purchasesAdapter.setPurchaseViews(allPurchases);
-            updateSeeAllButton(allPurchases.size(), maxSize);
+            dialog.setMessage(AndroidUtils.formatCurrency(allPurchases.getTotalSum(), getContext()));
+            purchasesAdapter.setPurchaseViews(allPurchases.getContent());
+            updateSeeAllButton(allPurchases.getContent().size(), maxSize);
         });
     }
 }
