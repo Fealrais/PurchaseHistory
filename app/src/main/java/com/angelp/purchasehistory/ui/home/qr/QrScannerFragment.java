@@ -228,6 +228,10 @@ public class QrScannerFragment extends Fragment {
             Result result = reader.decode(new BinaryBitmap(new HybridBinarizer(sourceRGB)));
             Log.i(TAG, "QR Code: " + result.getText());
             PurchaseDTO purchaseDTO = new PurchaseDTO(result.toString());
+            if(purchaseDTO.getPrice() == null) {
+                PurchaseHistoryApplication.getInstance().alert(R.string.failed_to_read_qr_code);
+                return;
+            }
             qrScannerViewModel.validatePurchaseView(purchaseDTO, this::onInvalidPurchase);
             fillQRForm(purchaseDTO);
         } catch (Exception e) {

@@ -226,7 +226,7 @@
     <string name="average_spending_per_purchase">Средни разходи на покупка: <b>%s</b></string>
     <string name="total_spending">Общо разходи: <b>%s</b></string>
     <string name="total_number_of_purchases">Общ брой покупки: <b>%s</b></string>
-    <string name="most_frequently_purchased_category">Най-често използваната категория в последните 15 дни:</string>
+    <string name="most_frequently_purchased_category">Най-често използваната категория в последните 30 дни:</string>
     <string name="most_frequently_purchased_category_count">Брой покупки: <b>%s</b></string>
     <string name="most_frequently_purchased_category_sum">Общо : <b>%s</b></string>
     <string name="no_scheduled_expenses">Няма планирани разходи</string>
@@ -255,4 +255,6 @@
     <string name="title_hint">Въведете заглавие…</string>
     <string name="feedback_hint">Опишете проблема, с който сте се сблъскали, или обяснете вашата идея…</string>
     <string name="error_required_field">Моля попълнете задължително поле</string>
+    <string name="scanner_gallery">Изберете снимка с QR код</string>
+    <string name="failed_to_read_qr_code">Failed to read QR code</string>
 </resources>

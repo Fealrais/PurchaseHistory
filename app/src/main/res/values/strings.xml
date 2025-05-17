@@ -236,7 +236,7 @@
     <string name="average_spending_per_purchase">Average Spending Per Purchase: <b>%s</b></string>
     <string name="total_spending">Total Spending: <b>%s</b></string>
     <string name="total_number_of_purchases">Total Number of Purchases: <b>%s</b></string>
-    <string name="most_frequently_purchased_category">Most-used category in the last 15 days:</string>
+    <string name="most_frequently_purchased_category">Most-used category in the last 30 days:</string>
     <string name="most_frequently_purchased_category_count">Purchases made: <b>%s</b></string>
     <string name="most_frequently_purchased_category_sum">Total sum: <b>%s</b></string>
     <string name="no_scheduled_expenses">There are no scheduled expenses</string>
@@ -267,4 +267,5 @@
     <string name="feedback_hint">Describe the issue you encountered or explain your idea…</string>
     <string name="error_required_field">Required field</string>
     <string name="scanner_gallery">Select a photo with a QR code to scan</string>
+    <string name="failed_to_read_qr_code">Failed to read QR code</string>
 </resources>

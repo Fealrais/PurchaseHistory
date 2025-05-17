@@ -63,6 +63,7 @@ public class ProfileFragment extends Fragment {
                         int textColor = AndroidUtils.getTextColor(color);
                         drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.ADD));
                         binding.categoryAnalytics.setBackground(drawable);
+                        binding.mostFrequentlyPurchasedCategoryLabel.setTextColor(textColor);
                         binding.mostFrequentlyPurchasedCategoryName.setTextColor(textColor);
                         binding.mostFrequentlyPurchasedCategoryCount.setTextColor(textColor);
                         binding.mostFrequentlyPurchasedCategorySum.setTextColor(textColor);
