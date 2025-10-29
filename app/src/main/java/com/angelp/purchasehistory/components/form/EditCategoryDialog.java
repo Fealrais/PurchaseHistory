@@ -101,6 +101,16 @@ public class EditCategoryDialog extends DialogFragment {
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.categoryColorInput.setText(defaultValue.getColor());
             binding.categoryNameInput.setText(defaultValue.getName());
+            // FIX: Set the initial color of the color picker view
+            String color = defaultValue.getColor();
+            if (color != null && color.length() == 7 && color.startsWith("#")) {
+                try {
+                    int colorValue = Color.parseColor(color);
+                    binding.colorPickerView.setColor(colorValue);
+                } catch (IllegalArgumentException e) {
+                    Log.e(TAG, "Invalid default color for picker: " + color);
+                }
+            }
         });
     }
 

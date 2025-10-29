@@ -37,14 +37,26 @@ public class UserClient extends HttpClient {
         try (Response res = put(BACKEND_URL + "/users/self/edit", user)) {
             if (res.isSuccessful() && res.body() != null) {
                 String json = res.body().string();
-                Log.i("httpResponse", "register: " + json);
+                Log.i("httpResponse", "editUser: " + json);
                 return gson.fromJson(json, UserView.class);
+            } else {
+                if (res.body() != null) {
+                    String body = res.body().string();
+                    ErrorResponse errorResponse = gson.fromJson(body, ErrorResponse.class);
+                    if (errorResponse != null && errorResponse.getErrorResource() != null) {
+                        throw new WebException(errorResponse.getErrorResource());
+                    }
+                }
+                // Default error based on code
+                if (res.code() == 401) { // Unauthorized, likely for invalid password
+                    throw new WebException(R.string.err1011);
+                }
+                throw new WebException(R.string.failed);
             }
         } catch (IOException e) {
-            Log.e("registerResult", "failed:" + e.getMessage());
+            Log.e("editUserResult", "failed:" + e.getMessage());
             throw new WebException(R.string.server_connection_failed_500);
         }
-        return null;
     }
 
     public boolean deleteAccount() {

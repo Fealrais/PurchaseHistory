@@ -103,12 +103,27 @@ public class AuthClient extends HttpClient {
                 String json = res.body().string();
                 Log.i("httpResponse", "register: " + json);
                 return Optional.of(gson.fromJson(json, UserView.class));
+            } else {
+                if (res.body() != null) {
+                    String body = res.body().string();
+                    ErrorResponse errorResponse = gson.fromJson(body, ErrorResponse.class);
+                    if (errorResponse != null && errorResponse.getErrorResource() != null) {
+                        throw new WebException(errorResponse.getErrorResource());
+                    }
+                }
+                // Specific checks for common registration failure codes
+                if (res.code() == 409) { // Conflict for duplicate email
+                    throw new WebException(R.string.email_already_registered);
+                }
+                if (res.code() == 400) { // Bad Request for invalid format
+                    throw new WebException(R.string.invalid_input);
+                }
+                throw new WebException(R.string.failed);
             }
         } catch (IOException e) {
             Log.e("registerResult", "failed:" + e.getMessage());
             throw new WebException(R.string.server_connection_failed_500);
         }
-        return Optional.empty();
     }
 
 
@@ -117,14 +132,26 @@ public class AuthClient extends HttpClient {
             String body = res.body() == null ? "" : res.body().string();
             Log.i("forgotPassword: ", "code: " + res.code() + " body:" + body);
             if (res.code() == 429) throw new WebException(R.string.tooManyRequest_429);
-            if (!res.isSuccessful() && !body.isEmpty()) {
-                ErrorResponse errorResponse = gson.fromJson(body, ErrorResponse.class);
-                if ("NO_EMAIL_FOUND".equals(errorResponse.getDetail()))
-                    throw new WebException(R.string.email_not_found_400);
+
+            if (!res.isSuccessful()) {
+                if (!body.isEmpty()) {
+                    ErrorResponse errorResponse = gson.fromJson(body, ErrorResponse.class);
+                    if (errorResponse != null && "NO_EMAIL_FOUND".equals(errorResponse.getDetail())) {
+                        throw new WebException(R.string.email_not_found_400);
+                    }
+                    if (errorResponse != null && errorResponse.getErrorResource() != null) {
+                        throw new WebException(errorResponse.getErrorResource());
+                    }
+                }
+                // Generic error for other failed responses
+                throw new WebException(R.string.failed_to_send_reset_email_please_try_again);
             }
             return res.isSuccessful();
         } catch (IOException e) {
             Log.e("forgotPassword", "failed:" + e.getMessage());
+            if (e instanceof UnknownHostException) {
+                throw new WebException(R.string.error_hostException);
+            }
             throw new WebException(R.string.server_connection_failed_500);
         }
     }

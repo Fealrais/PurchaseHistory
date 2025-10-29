@@ -72,6 +72,7 @@ public class EditProfileFragment extends Fragment {
         try {
             UserView user = userClient.editUser(new UserDTO(username, email, password));
             new Handler(Looper.getMainLooper()).post(() -> {
+                PurchaseHistoryApplication.getInstance().getLoggedUser().postValue(user);
                 tvFeedback.setText(R.string.profile_updated_successfully);
                 tvFeedback.setTextColor(getResources().getColor(R.color.success_green, getContext().getTheme()));
                 tvFeedback.setVisibility(View.VISIBLE);
