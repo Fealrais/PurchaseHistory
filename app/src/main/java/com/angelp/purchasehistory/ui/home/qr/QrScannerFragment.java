@@ -227,7 +227,7 @@ public class QrScannerFragment extends Fragment {
             MultiFormatReader reader = new MultiFormatReader();
             Result result = reader.decode(new BinaryBitmap(new HybridBinarizer(sourceRGB)));
             Log.i(TAG, "QR Code: " + result.getText());
-            PurchaseDTO purchaseDTO = new PurchaseDTO(result.toString());
+            PurchaseDTO purchaseDTO = new PurchaseDTO(result.getText());
             if(purchaseDTO.getPrice() == null) {
                 PurchaseHistoryApplication.getInstance().alert(R.string.failed_to_read_qr_code);
                 return;
