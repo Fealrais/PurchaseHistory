@@ -40,9 +40,9 @@
         android:layout_margin="20dp"
         android:padding="20dp"
         android:text="@string/no_data"
-        android:textColor="@color/foreground_color"
+        android:textColor="@color/text"
         android:visibility="gone"
-        app:drawableTint="@color/foreground_color"
+        app:drawableTint="@color/text"
         app:drawableTopCompat="@drawable/no_data" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

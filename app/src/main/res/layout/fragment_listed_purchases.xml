@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:outlineAmbientShadowColor="@color/black"
-        android:textColor="@color/danger"
+        android:textColor="@color/dangerA10"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/progressBar"
         app:layout_constraintStart_toStartOf="@id/progressBar"

@@ -73,7 +73,7 @@ public class EditProfileFragment extends Fragment {
             UserView user = userClient.editUser(new UserDTO(username, email, password));
             new Handler(Looper.getMainLooper()).post(() -> {
                 tvFeedback.setText(R.string.profile_updated_successfully);
-                tvFeedback.setTextColor(getResources().getColor(R.color.success_green, getContext().getTheme()));
+                tvFeedback.setTextColor(getResources().getColor(R.color.successA10, getContext().getTheme()));
                 tvFeedback.setVisibility(View.VISIBLE);
             });
         } catch (WebException e) {
@@ -82,7 +82,7 @@ public class EditProfileFragment extends Fragment {
             }
             new Handler(Looper.getMainLooper()).post(() -> {
                 tvFeedback.setText(e.getErrorResource());
-                tvFeedback.setTextColor(getResources().getColor(R.color.error_red, getContext().getTheme()));
+                tvFeedback.setTextColor(getResources().getColor(R.color.dangerA10, getContext().getTheme()));
                 tvFeedback.setVisibility(View.VISIBLE);
             });
         }
@@ -106,7 +106,7 @@ public class EditProfileFragment extends Fragment {
 
     private void showError(String message) {
         tvFeedback.setText(message);
-        tvFeedback.setTextColor(getResources().getColor(R.color.error_red, getContext().getTheme()));
+        tvFeedback.setTextColor(getResources().getColor(R.color.dangerA10, getContext().getTheme()));
         tvFeedback.setVisibility(View.VISIBLE);
     }
 

@@ -11,8 +11,8 @@ public class AppColorCollection {
     private final int middleColor;
 
     public AppColorCollection(Context context) {
-        this.foregroundColor = context.getColor(R.color.foreground_color);
-        this.backgroundColor = context.getColor(R.color.background_color);
-        this.middleColor = context.getColor(R.color.middle_color);
+        this.foregroundColor = context.getColor(R.color.text);
+        this.backgroundColor = context.getColor(R.color.surfaceA10);
+        this.middleColor = context.getColor(R.color.surfaceA30);
     }
 }

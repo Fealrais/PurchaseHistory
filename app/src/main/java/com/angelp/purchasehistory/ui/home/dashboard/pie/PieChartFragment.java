@@ -104,7 +104,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
     private void initFilterRow() {
         binding.piechartFilterButton.setOnClickListener((v) -> openFilter());
-        binding.textView.setTextColor(getContext().getColor(R.color.foreground_color));
+        binding.textView.setTextColor(getContext().getColor(R.color.text));
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.piechartFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
             binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
@@ -154,7 +154,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     private void setPiechartCenterText(BigDecimal sum) {
         String centerText = (sum == null) ? getString(R.string.no_data) : AndroidUtils.formatCurrency(sum, getContext());
         binding.pieChart.setCenterText(centerText);
-        binding.pieChart.setCenterTextColor(R.color.primaryColor);
+        binding.pieChart.setCenterTextColor(R.color.primaryA10);
         binding.pieChart.setCenterTextSize(24);
         binding.pieChart.setCenterTextTypeface(tf);
     }

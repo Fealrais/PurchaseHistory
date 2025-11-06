@@ -1,7 +1,7 @@
 <resources>
 
     <style name="Widget.Theme.PurchaseHistory.MyView" parent="">
-        <item name="android:background">@color/gray_600</item>
-        <item name="exampleColor">@color/light_blue_600</item>
+        <item name="android:background">@color/surfaceA20</item>
+        <item name="exampleColor">@color/primaryA30</item>
     </style>
 </resources>

@@ -141,7 +141,7 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
 
     private void initFilterRow() {
         binding.filterButton.setOnClickListener((v) -> openFilter());
-        binding.filterDateText.setTextColor(getContext().getColor(R.color.foreground_color));
+        binding.filterDateText.setTextColor(getContext().getColor(R.color.text));
         new Handler(Looper.getMainLooper()).post(() -> binding.filterRow.setVisibility(showFilter ? View.VISIBLE : View.GONE));
     }
 

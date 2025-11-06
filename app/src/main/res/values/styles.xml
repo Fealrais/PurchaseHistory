@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    ########### BUTTONS ###########-->
+    <style name="PurchaseHistoryButton" parent="Widget.AppCompat.Button">
+        <item name="borderRound">5dp</item>
+        <item name="android:paddingVertical">2dp</item>
+        <item name="android:paddingHorizontal">4dp</item>
+    </style>
+    <style name="Primary" parent="PurchaseHistoryButton">
+        <item name="android:textColor">@color/black</item>
+        <item name="backgroundTint">@color/primaryA20</item>
+    </style>
+    <style name="Borderless" parent="PurchaseHistoryButton">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:backgroundTint">@color/surfaceA20</item>
+    </style>
+    <style name="Bordered" parent="PurchaseHistoryButton">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:background">@drawable/bordered_bg</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
+</resources>

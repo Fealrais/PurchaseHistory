@@ -62,7 +62,7 @@ public class ForgotPasswordChangeActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).post(() -> {
             if (isSuccessful) {
                 tvFeedback.setText(R.string.password_changed_successfully);
-                tvFeedback.setTextColor(getColorResource(R.color.success_green));
+                tvFeedback.setTextColor(getColorResource(R.color.successA10));
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     Intent intent = new Intent(this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -70,7 +70,7 @@ public class ForgotPasswordChangeActivity extends AppCompatActivity {
                 }, 3000);
             } else {
                 tvFeedback.setText(R.string.failed_to_change_password_please_try_again);
-                tvFeedback.setTextColor(getColorResource(R.color.error_red));
+                tvFeedback.setTextColor(getColorResource(R.color.dangerA10));
             }
             tvFeedback.setVisibility(View.VISIBLE);
         });
@@ -112,7 +112,7 @@ public class ForgotPasswordChangeActivity extends AppCompatActivity {
 
     private void showError(String message) {
         tvFeedback.setText(message);
-        tvFeedback.setTextColor(getColorResource(R.color.error_red));
+        tvFeedback.setTextColor(getColorResource(R.color.dangerA10));
         tvFeedback.setVisibility(View.VISIBLE);
     }
 }

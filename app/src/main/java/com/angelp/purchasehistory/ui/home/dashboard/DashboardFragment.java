@@ -50,6 +50,7 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
         initializeDashboardFragments();
         filterDialog = new PurchaseFilterDialog(true);
         binding.dashboardFilterButton.setOnClickListener(v -> openFilter());
+
         binding.customizeDashboardButton.setOnClickListener(v -> openCustomizationDialog());
     }
 

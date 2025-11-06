@@ -5,6 +5,6 @@
         android:id="@+id/action_icon"
         android:icon="@drawable/baseline_help_outline_24"
         android:title="@string/help_button"
-        app:iconTint="@color/foreground_color"
+        app:iconTint="@color/text"
         app:showAsAction="always" />
 </menu>

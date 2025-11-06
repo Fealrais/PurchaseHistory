@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <!-- User Info Card -->
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/user_info_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginVertical="16dp"
-                    android:background="@color/accentColor" />
+                    android:background="@color/infoA0" />
 
                 <TextView
                     android:id="@+id/averageSpendingPerPurchase"
@@ -61,7 +61,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:padding="8dp"
                     android:text="@string/average_spending_per_purchase"
-                    android:textColor="@color/foreground_color"
+                    android:textColor="@color/text"
                     android:textSize="16sp" />
 
                 <TextView
@@ -71,7 +71,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:padding="8dp"
                     android:text="@string/total_spending"
-                    android:textColor="@color/foreground_color"
+                    android:textColor="@color/text"
                     android:textSize="16sp" />
 
                 <TextView
@@ -81,7 +81,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:padding="8dp"
                     android:text="@string/total_number_of_purchases"
-                    android:textColor="@color/foreground_color"
+                    android:textColor="@color/text"
                     android:textSize="16sp" />
 
                 <LinearLayout
@@ -99,7 +99,7 @@
                         android:fontFamily="sans-serif-medium"
                         android:padding="8dp"
                         android:text="@string/most_frequently_purchased_category"
-                        android:textColor="@color/foreground_color"
+                        android:textColor="@color/text"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -132,7 +132,7 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
         <ImageButton
             android:id="@+id/edit_button"
@@ -196,7 +196,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:backgroundTint="@color/danger"
+            android:backgroundTint="@color/dangerA10"
             android:text="@string/delete_account"
             android:textColor="@color/white"
             android:textStyle="bold"

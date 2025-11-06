@@ -109,7 +109,7 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
 
     private void initFilterRow() {
         binding.graphFilterButton.setOnClickListener((v) -> openFilter());
-        binding.textView.setTextColor(getContext().getColor(R.color.foreground_color));
+        binding.textView.setTextColor(getContext().getColor(R.color.text));
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.graphFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
             binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);

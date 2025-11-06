@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="middle_color">#A59F9F</color>
-    <color name="primaryColor">#42d3cc</color>
-    <color name="secondaryColor">#a0d9d4</color>
-    <color name="accentColor">#77bbc9</color>
-    <color name="background_color">#0F0F0F</color>
-    <color name="background_color_accent">#071e1c</color>
-    <color name="foreground_color">#f4fcfb</color>
+    <color name="text">#FFFFFF</color>
+    <color name="primaryA0">#37f0e3</color>
+    <color name="primaryA10">#60f2e6</color>
+    <color name="primaryA20">#7cf4e9</color>
+    <color name="primaryA30">#93f6ec</color>
+    <color name="surfaceA0">#121212</color>
+    <color name="surfaceA10">#282828</color>
+    <color name="surfaceA20">#3f3f3f</color>
+    <color name="surfaceA30">#575757</color>
+    <color name="successA0">#22946e</color>
+    <color name="successA10">#47d5a6</color>
+    <color name="successA20">#9ae8ce</color>
+    <color name="warningA0">#a87a2a</color>
+    <color name="warningA10">#d7ac61</color>
+    <color name="warningA20">#ecd7b2</color>
+    <color name="dangerA0">#9c2121</color>
+    <color name="dangerA10">#d94a4a</color>
+    <color name="dangerA20">#eb9e9e</color>
+    <color name="infoA0">#21498a</color>
+    <color name="infoA10">#4077d1</color>
+    <color name="infoA20">#92b2e5</color>
 </resources>

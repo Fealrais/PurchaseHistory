@@ -1,41 +1,9 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Theme.PurchaseHistory" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color: Blue for professionalism -->
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryVariant">@color/secondaryColor</item>
-        <item name="colorOnPrimary">@color/foreground_color</item>
-
-        <!-- Secondary brand color: Purple for elegance -->
-        <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorAccent">@color/accentColor</item>
-
-
-        <!-- Text colors -->
-        <item name="android:textColor">@color/foreground_color</item>
-        <item name="titleTextColor">@color/foreground_color</item>
-        <!-- Background color -->
-        <item name="android:colorBackground">@color/background_color</item>
-        <item name="android:navigationBarColor">@color/background_color_accent</item>
-        <item name="colorSurface">@color/background_color_accent</item>
-
+    <style name="Theme.PurchaseHistory" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="android:colorBackground">@color/surfaceA0</item>
+        <item name="android:navigationBarColor">@color/surfaceA20</item>
+        <item name="colorSurface">@color/surfaceA20</item>
         <item name="fontFamily">@font/ibmplexmono_regular</item>
         <item name="fontWeight">400</item>
-        <item name="buttonTint">@color/primaryColor</item>
-        <item name="preferenceTheme">@style/AngelPStyle.Preference.v1</item>
-
     </style>
-
-    <style name="Theme.PurchaseHistory.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AngelPStyle.Preference.v1" parent="@style/PreferenceThemeOverlay.v14.Material">
-        <item name="android:tint">@color/foreground_color</item>
-    </style>
-
-    <style name="Theme.PurchaseHistory.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.PurchaseHistory.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

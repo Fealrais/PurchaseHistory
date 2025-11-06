@@ -1,48 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#320500</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="Gray">#c4c4c4</color>
-    <color name="danger">#FC3C3C</color>
-    <color name="light_blue_400">#FF29B6F6</color>
-    <color name="light_blue_600">#FF039BE5</color>
-    <color name="gray_400">#FFBDBDBD</color>
-    <color name="gray_600">#FF757575</color>
-    <color name="colorOnPrimary">#0D47A1</color> <!-- White for text/icons on Blue -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
 
-    <!--###################################################-->
-    <color name="primaryColor">#42d3cc</color>
-    <color name="secondaryColor">#a0d9d4</color>
-    <color name="accentColor">#77bbc9</color>
-    <color name="background_color">#f4fcfb</color>
-    <color name="background_color_accent">#B3FFED</color>
-    <color name="foreground_color">#071e1c</color>
-    <!--###################################################-->
+    <color name="text">#000000</color>
 
+    <!--    /** Theme primary colors */-->
+    <color name="primaryA0">#37f0e3</color>
+    <color name="primaryA10">#36d2c7</color>
+    <color name="primaryA20">#34b5ac</color>
+    <color name="primaryA30">#309991</color>
 
-    <!-- Secondary Colors (Purple) -->
-    <color name="purple_700">#7B1FA2</color> <!-- Darker Variant of Purple -->
-    <color name="colorOnSecondary">#FFFFFF</color> <!-- White for text/icons on Purple -->
+    <!--    /** Theme surface colors */-->
+    <color name="surfaceA0">#ffffff</color>
+    <color name="surfaceA10">#f0f0f0</color>
+    <color name="surfaceA20">#e1e1e1</color>
+    <color name="surfaceA30">#d3d3d3</color>
 
-    <!-- Neutral Colors -->
-    <color name="gray_900">#212121</color> <!-- Dark Gray for Text (Day Mode) -->
-    <color name="gray_100">#F5F5F5</color> <!-- Light Gray for Background (Day Mode) -->
-    <color name="gray_800">#303030</color> <!-- Dark Gray for Background (Night Mode) -->
-    <color name="gray_200">#EEEEEE</color> <!-- Light Gray for Text (Night Mode) -->
+    <!--    /** Success colors */-->
+    <color name="successA0">#1b7f5c</color>
+    <color name="successA10">#28be8a</color>
+    <color name="successA20">#58dbad</color>
 
-    <!-- Additional Colors (Optional) -->
-    <color name="error_red">#D32F2F</color> <!-- For Error Messages -->
-    <color name="info_blue">#2196F3</color> <!-- For Information Highlights -->
-    <color name="success_green">#4CAF50</color> <!-- For Success Messages -->
-    <color name="colorPressed">#FFB0BEC5</color> <!-- Light Gray for Pressed State -->
-    <color name="colorFocused">#FF90A4AE</color> <!-- Light Gray for Focused State -->
-    <color name="colorDefault">#FFFFFFFF</color>
-    <color name="light_blue_900">#FF01579B</color>
-    <color name="light_blue_A200">#FF40C4FF</color>
-    <color name="light_blue_A400">#FF00B0FF</color>
-    <color name="black_overlay">#66000000</color> <!-- White for Default State -->
+    <!--    /** Warning colors */-->
+    <color name="warningA0">#b8871f</color>
+    <color name="warningA10">#dfae44</color>
+    <color name="warningA20">#ebca85</color>
 
-    <color name="middle_color">#5B5B60</color>
+    <!--    /** Danger colors */-->
+    <color name="dangerA0">#b13535</color>
+    <color name="dangerA10">#d06262</color>
+    <color name="dangerA20">#e29d9d</color>
+
+    <!--/** Info colors"-->
+    -<color name="infoA0">#1e56a3</color>
+    -<color name="infoA10">#347ada</color>
+    -<color name="infoA20">#74a4e6</color>
+
     <!-- Line Chart Colors -->
     <color name="line_chart_color_1">#FF5733</color> <!-- Vibrant Orange -->
     <color name="line_chart_color_2">#33FF57</color> <!-- Vibrant Green -->

@@ -45,7 +45,7 @@ public class ForgotPasswordEmailActivity extends AppCompatActivity {
         btnAlreadyHaveCode.setOnClickListener(v -> startPasswordChangeActivity());
         btnSendEmail.setOnClickListener(v -> {
             btnSendEmail.setEnabled(false);
-            tvFeedback.setTextColor(getColorResource(R.color.gray_900));
+            tvFeedback.setTextColor(getColorResource(R.color.surfaceA10));
             tvFeedback.setText(R.string.sending);
             String email = etEmail.getText().toString().trim();
             if (isValidEmail(email)) {
@@ -54,7 +54,7 @@ public class ForgotPasswordEmailActivity extends AppCompatActivity {
             } else {
                 btnSendEmail.setEnabled(true);
                 tvFeedback.setText(R.string.please_enter_a_valid_email_address);
-                tvFeedback.setTextColor(getColorResource(R.color.error_red));
+                tvFeedback.setTextColor(getColorResource(R.color.dangerA10));
                 tvFeedback.setVisibility(View.VISIBLE);
             }
         });
@@ -66,17 +66,17 @@ public class ForgotPasswordEmailActivity extends AppCompatActivity {
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (isSuccessful) {
                     tvFeedback.setText(R.string.reset_email_sent_successfully);
-                    tvFeedback.setTextColor(getColorResource(R.color.success_green));
+                    tvFeedback.setTextColor(getColorResource(R.color.successA10));
                     new Handler(Looper.getMainLooper()).postDelayed(this::startPasswordChangeActivity, 3000);
                 } else {
                     btnSendEmail.setEnabled(true);
                     tvFeedback.setText(R.string.failed_to_send_reset_email_please_try_again);
-                    tvFeedback.setTextColor(getColorResource(R.color.error_red));
+                    tvFeedback.setTextColor(getColorResource(R.color.dangerA10));
                 }
             });
         } catch (WebException e) {
             new Handler(Looper.getMainLooper()).post(() -> {
-                tvFeedback.setTextColor(getColorResource(R.color.error_red));
+                tvFeedback.setTextColor(getColorResource(R.color.dangerA10));
                 tvFeedback.setText(e.getErrorResource());
                 btnSendEmail.setEnabled(!e.getErrorResource().equals(R.string.tooManyRequest_429));
             });
