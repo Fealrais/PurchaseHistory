@@ -36,6 +36,7 @@ public class PurchaseFilter implements Parcelable {
     private LocalDate from;
     private LocalDate to;
     private Long categoryId;
+    private String categoryColor;
     private String categoryName;
     //    private PageRequest pageRequest;
     private UUID userId;
@@ -58,6 +59,7 @@ public class PurchaseFilter implements Parcelable {
             this.categoryId = categoryId;
         }
         this.categoryName = in.readString();
+        this.categoryColor = in.readString();
         String userString = in.readString();
         if (userString != null && !userString.isBlank())
             setUserId(UUID.fromString(userString));
@@ -67,10 +69,12 @@ public class PurchaseFilter implements Parcelable {
         if (category == null) {
             this.categoryId = null;
             this.categoryName = null;
+            this.categoryColor = null;
             return;
         }
         this.categoryId = category.getId();
         this.categoryName = category.getName();
+        this.categoryColor = category.getColor();
     }
 
 
@@ -94,11 +98,11 @@ public class PurchaseFilter implements Parcelable {
         return builder.toString();
     }
 
-    public String getReadableString() {
+    public String getDateString() {
         PurchaseFilter def = getDefaultFilter();
         LocalDate from = getFrom() != null ? getFrom() : def.getFrom();
         LocalDate filterTo = getTo() != null ? getTo() : def.getTo();
-        return from.format(dtf) + " - " + filterTo.format(dtf) + (categoryName == null ? "" : "\nCategory:" + categoryName);
+        return from.format(dtf) + " - " + filterTo.format(dtf);
     }
 
     @Override
@@ -112,6 +116,7 @@ public class PurchaseFilter implements Parcelable {
         dest.writeLong(to == null ? -1L : to.toEpochDay());
         dest.writeLong(categoryId == null ? -1L : categoryId);
         dest.writeString(categoryName == null ? "" : categoryName);
+        dest.writeString(categoryColor == null ? "" : categoryColor);
         dest.writeString(userId == null ? "" : userId.toString());
 //        dest.writeParcelable(pageRequest);
     }
@@ -148,6 +153,7 @@ public class PurchaseFilter implements Parcelable {
         PurchaseFilter purchaseFilter = new PurchaseFilter();
         purchaseFilter.setCategoryId(categoryId);
         purchaseFilter.setCategoryName(categoryName);
+        purchaseFilter.setCategoryName(categoryColor);
         purchaseFilter.setFrom(from);
         purchaseFilter.setTo(to);
         purchaseFilter.setUserId(userId);

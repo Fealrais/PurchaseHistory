@@ -256,5 +256,6 @@
     <string name="feedback_hint">Опишете проблема, с който сте се сблъскали, или обяснете вашата идея…</string>
     <string name="error_required_field">Моля попълнете задължително поле</string>
     <string name="scanner_gallery">Изберете снимка с QR код</string>
-    <string name="failed_to_read_qr_code">Failed to read QR code</string>
+    <string name="failed_to_read_qr_code">Грешка при четенето на QR кода</string>
+    <string name="category">Категория</string>
 </resources>

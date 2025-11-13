@@ -268,4 +268,5 @@
     <string name="error_required_field">Required field</string>
     <string name="scanner_gallery">Select a photo with a QR code to scan</string>
     <string name="failed_to_read_qr_code">Failed to read QR code</string>
+    <string name="category">Category</string>
 </resources>

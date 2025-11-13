@@ -148,7 +148,7 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     private void applyFilter(PurchaseFilter newFilter) {
         new Handler(Looper.getMainLooper()).post(() -> {
                     if (binding == null) return;
-                    binding.filterDateText.setText(newFilter.getReadableString());
+                    binding.filterDateText.setText(newFilter.getDateString());
                 }
         );
     }

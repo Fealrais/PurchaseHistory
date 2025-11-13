@@ -29,7 +29,7 @@ public final class Constants {
 
     static {
         tourSteps.add(new TourStep(R.id.navigation_dashboard, R.string.tour_navigation_dashboard, R.string.tour_navigation_dashboard_secondary));
-        tourSteps.add(new TourStep(R.id.dashboard_filterButton, R.string.tour_filter_button, R.string.tour_filter_button_secondary));
+        tourSteps.add(new TourStep(R.id.filter_btn, R.string.tour_filter_button, R.string.tour_filter_button_secondary));
         tourSteps.add(new TourStep(R.id.navigation_qrscanner, R.string.tour_navigation_qrscanner, R.string.tour_navigation_qrscanner_secondary));
         tourSteps.add(new TourStep(R.id.navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses_secondary));
         tourSteps.add(new TourStep(R.id.navigation_profile, R.string.tour_navigation_profile, R.string.tour_navigation_profile_secondary));
@@ -50,11 +50,11 @@ public final class Constants {
     }
 
     public static PurchaseFilter getDefaultFilter() {
-        return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now(), null, null, null);
+        return new PurchaseFilter(LocalDate.now().withDayOfMonth(1), LocalDate.now(), null, null, null, null);
     }
 
     public static PurchaseFilter getFilter30Days() {
-        return new PurchaseFilter(LocalDate.now().minusDays(30), LocalDate.now(), null, null, null);
+        return new PurchaseFilter(LocalDate.now().minusDays(30), LocalDate.now(), null, null, null, null);
     }
 
     public interface Preferences {

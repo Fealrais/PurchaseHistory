@@ -18,6 +18,7 @@ import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.FragmentDashboardBinding;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
+import com.angelp.purchasehistory.util.AndroidUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -49,9 +50,9 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
         super.onViewCreated(view, savedInstanceState);
         initializeDashboardFragments();
         filterDialog = new PurchaseFilterDialog(true);
-        binding.dashboardFilterButton.setOnClickListener(v -> openFilter());
+        binding.filterBar.filterBtn.setOnClickListener(v -> openFilter());
 
-        binding.customizeDashboardButton.setOnClickListener(v -> openCustomizationDialog());
+//        binding.customizeDashboardButton.setOnClickListener(v -> openCustomizationDialog());
     }
 
     private void initializeDashboardFragments() {
@@ -94,12 +95,15 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
     @Override
     public void onResume() {
         super.onResume();
-        if (!binding.dashboardFilterButton.isEnabled()) binding.dashboardFilterButton.setEnabled(true);
+        if (!binding.filterBar.filterBtn.isEnabled()) binding.filterBar.filterBtn.setEnabled(true);
     }
 
     private void applyFilter(PurchaseFilter newFilter) {
-        binding.dashboardFilterButton.setText(R.string.filterButton);
-        binding.dashboardFilterDateText.setText(newFilter.getReadableString());
+        int color = newFilter.getCategoryId() == null ? getResources().getColor(R.color.surfaceA20) :AndroidUtils.getColor(newFilter.getCategoryColor());
+        binding.filterBar.filterCategoryBtn.getBackground().setTint(color);
+        binding.filterBar.filterCategoryBtn.setTextColor(AndroidUtils.getTextColor(color));
+        binding.filterBar.filterCategoryBtn.setText(newFilter.getCategoryName() == null ? getString(R.string.category) : newFilter.getCategoryName());
+        binding.filterBar.filterDateBtn.setText(newFilter.getDateString());
     }
 
     private void openFilter() {

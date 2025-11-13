@@ -218,7 +218,7 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
 
     private void applyFilter(PurchaseFilter newFilter) {
         binding.graphFilterButton.setText(R.string.filterButton);
-        binding.textView.setText(newFilter.getReadableString());
+        binding.textView.setText(newFilter.getDateString());
     }
 
     public void refresh(PurchaseFilter filter) {

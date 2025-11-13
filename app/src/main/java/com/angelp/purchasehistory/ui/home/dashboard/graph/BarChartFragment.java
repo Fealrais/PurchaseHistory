@@ -203,7 +203,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
 
     private void applyFilter(PurchaseFilter newFilter) {
         binding.graphFilterButton.setText(R.string.filterButton);
-        binding.textView.setText(newFilter.getReadableString());
+        binding.textView.setText(newFilter.getDateString());
     }
 
     public void refresh(PurchaseFilter filter) {

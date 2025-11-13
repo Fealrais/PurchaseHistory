@@ -99,7 +99,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
     private void applyFilter(PurchaseFilter newFilter) {
         binding.piechartFilterButton.setText(R.string.filterButton);
-        binding.textView.setText(newFilter.getReadableString());
+        binding.textView.setText(newFilter.getDateString());
     }
 
     private void initFilterRow() {
