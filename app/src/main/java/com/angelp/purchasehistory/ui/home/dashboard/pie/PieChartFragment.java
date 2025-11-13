@@ -258,15 +258,15 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
     private void highlightPieChartOnFilterChange(PurchaseFilter filter) {
         if (binding.pieChart.isEmpty() || entries.isEmpty()) return;
+        binding.pieChart.highlightValue(0, -1, false);
         if (filter.getCategoryId() == null) {
-            binding.pieChart.highlightValue(0, -1, false);
             return;
         }
         for (int i = 0; i < entries.size(); i++) {
             PieEntry entry = entries.get(i);
             if (entry.getData() != null && ((CategoryView) entry.getData()).getId().equals(filter.getCategoryId())) {
-                if (!binding.pieChart.needsHighlight(i)) return;
-                binding.pieChart.highlightValue(i, 0, false);
+                if (!binding.pieChart.needsHighlight(i))
+                    binding.pieChart.highlightValue(i, 0, false);
                 return;
             }
         }
