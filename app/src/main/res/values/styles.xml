@@ -19,5 +19,9 @@
         <item name="android:background">@drawable/bordered_bg</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
-
+    <style name="BaseDialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@drawable/base_dialog_bg</item>
+        <item name="android:paddingHorizontal">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
 </resources>

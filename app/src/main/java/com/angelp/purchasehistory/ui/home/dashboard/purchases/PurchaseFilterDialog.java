@@ -57,6 +57,8 @@ public class PurchaseFilterDialog extends DialogFragment {
 
     public PurchaseFilterDialog(boolean containCategory) {
         this.containCategory = containCategory;
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.BaseDialogStyle);
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -72,9 +74,9 @@ public class PurchaseFilterDialog extends DialogFragment {
             filterViewModel.updateFilter(filter);
             this.dismiss();
         });
+        binding.dialogTitle.title.setText(R.string.filterTitle);
         return binding.getRoot();
     }
-
 
     private void setupDatePickers() {
         datePickerFrom = new DatePickerFragment();
@@ -164,6 +166,7 @@ public class PurchaseFilterDialog extends DialogFragment {
             }
         });
     }
+
 
     private void fillEditForm(PurchaseFilter view) {
         new Thread(() -> {

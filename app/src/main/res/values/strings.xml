@@ -182,7 +182,7 @@
     <string name="title_line_chart">Monthly Spending Trends</string>
     <string name="title_stacked_bar_chart">Daily Categorized Expenses</string>
     <string name="description_pie_chart">Displaying all purchases within a period, grouped by category and formed into a piechart</string>
-    <string name="description_line_chart">A line chart showing the sum of all purchases per day. Usefull to see patterns for each month</string>
+    <string name="description_line_chart">A line chart showing the sum of all purchases per day. Useful to see patterns for each month</string>
     <string name="description_bar_chart">A stacked bar chart displaying the summed purchases for each day, separated by categories. Useful for detailed view of each day.</string>
     <string name="description_purchases_list">A list of the latest purchases</string>
     <string name="move_up">Move up</string>
@@ -269,4 +269,5 @@
     <string name="scanner_gallery">Select a photo with a QR code to scan</string>
     <string name="failed_to_read_qr_code">Failed to read QR code</string>
     <string name="category">Category</string>
+    <string name="filterTitle">Filter</string>
 </resources>

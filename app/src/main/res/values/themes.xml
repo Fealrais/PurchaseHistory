@@ -4,5 +4,7 @@
         <item name="android:navigationBarColor">@color/surfaceA20</item>
         <item name="colorSurface">@color/surfaceA20</item>
         <item name="fontFamily">@font/falling_sky</item>
+        <item name="alertDialogTheme">@style/BaseDialogStyle</item>
+        <item name="dialogTheme">@style/BaseDialogStyle</item>
     </style>
 </resources>

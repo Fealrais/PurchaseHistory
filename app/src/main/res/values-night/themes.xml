@@ -1,7 +1,0 @@
-<resources>
-    <style name="Theme.PurchaseHistory" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="android:background">@color/surfaceA0</item>
-        <item name="android:navigationBarColor">@color/surfaceA10</item>
-        <item name="fontFamily">@font/falling_sky</item>
-    </style>
-</resources>
