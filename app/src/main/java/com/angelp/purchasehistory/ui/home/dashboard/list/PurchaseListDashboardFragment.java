@@ -74,7 +74,6 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
 
     private void initializePurchasesRecyclerView(int maxSize, PurchaseFilter filter) {
         new Thread(() -> {
-            if (binding == null) return;
             PurchaseListView purchaseListView = purchaseClient.getAllPurchases(filter);
             List<PurchaseView> purchases = purchaseListView.getContent();
             purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
@@ -97,6 +96,7 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     }
 
     private void setupShowMoreButton(int purchaseSize, int maxSize) {
+        if (binding == null) return;
         binding.seeAllButton.setOnClickListener((v) -> {
             Intent intent = new Intent(getActivity(), FullscreenGraphActivity.class);
             DashboardComponent dashboardComponent = new DashboardComponent("PurchaseListPurchaseFragment");
@@ -110,6 +110,7 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
         purchasesAdapter.setLimit(maxSize);
         boolean isBiggerThanLimit = maxSize > 0 && maxSize < purchaseSize;
         new Handler(Looper.getMainLooper()).post(() -> {
+            if (binding == null) return;
             binding.seeAllButton.setText(getString(R.string.see_all_n_purchases, purchaseSize));
             binding.seeAllButton.setVisibility(isBiggerThanLimit ? View.VISIBLE : View.GONE);
             binding.seeAllBackdrop.setVisibility(isBiggerThanLimit ? View.VISIBLE : View.GONE);
@@ -142,7 +143,11 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     private void initFilterRow() {
         binding.filterButton.setOnClickListener((v) -> openFilter());
         binding.filterDateText.setTextColor(getContext().getColor(R.color.text));
-        new Handler(Looper.getMainLooper()).post(() -> binding.filterRow.setVisibility(showFilter ? View.VISIBLE : View.GONE));
+        new Handler(Looper.getMainLooper()).post(() ->
+        {
+            if (binding == null) return;
+            binding.filterRow.setVisibility(showFilter ? View.VISIBLE : View.GONE);
+        });
     }
 
     private void applyFilter(PurchaseFilter newFilter) {

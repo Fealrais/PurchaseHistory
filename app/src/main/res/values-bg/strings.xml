@@ -170,7 +170,6 @@
     <string name="pie_chart">Разбивка по категории</string>
     <string name="line_chart">Тенденции в разходите</string>
     <string name="bar_chart">Дневни разходи</string>
-    <string name="title_pie_chart">Разбивка по категории</string>
     <string name="title_line_chart">Месечни тенденции в разходите</string>
     <string name="title_stacked_bar_chart">Дневни категоризирани разходи</string>
     <string name="description_pie_chart">Показване на всички покупки за период, групирани по категории и оформени в кръгова диаграма</string>
@@ -181,7 +180,8 @@
     <string name="move_down">Премести надолу</string>
     <string name="details">Детайли</string>
     <string name="see_all_n_purchases">Виж всички %d покупки</string>
-    <string name="total_sum">Обща сума</string>
+    <string name="total_str">Обща сума:</string>
+    <string name="total_sum">Обща сума:\n %s</string>
     <string name="title_activity_profile">Профил</string>
     <string name="avatar">Аватар</string>
     <string name="help_button">Помощ</string>
@@ -259,4 +259,5 @@
     <string name="failed_to_read_qr_code">Грешка при четенето на QR кода</string>
     <string name="category">Категория</string>
     <string name="filterTitle">Филтър</string>
+    <string name="show_all">Показване на всички</string>
 </resources>

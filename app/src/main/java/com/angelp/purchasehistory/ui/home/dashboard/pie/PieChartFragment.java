@@ -79,8 +79,8 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentPieChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
-        tf = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_regular);
-        tfBold = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_bold);
+        tf = ResourcesCompat.getFont(inflater.getContext(), R.font.falling_sky);
+        tfBold = ResourcesCompat.getFont(inflater.getContext(), R.font.falling_sky_boldplus);
         super.setLoadingScreen(binding.loadingBar);
 
         return binding.getRoot();
@@ -123,7 +123,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
             return;
         }
         entries = report.getContent().stream().map(this::parsePieEntries).collect(Collectors.toList());
-        PieDataSet dataSet = new PieDataSet(entries, "Category");
+        PieDataSet dataSet = new PieDataSet(entries, getString(R.string.category));
 
         List<Integer> categoryColors = report.getContent().stream().map(entry -> AndroidUtils.getColor(entry.getCategory())
         ).collect(Collectors.toList());
@@ -134,7 +134,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         dataSet.setDrawIcons(false);
         dataSet.setSliceSpace(3f);
         dataSet.setIconsOffset(new MPPointF(0, 40));
-        dataSet.setSelectionShift(5f);
+//        dataSet.setSelectionShift(12f);
         dataSet.setColors(categoryColors);
         dataSet.setValueTextColors(categoryColors.stream().map(AndroidUtils::getTextColor).collect(Collectors.toList()));
         dataSet.setValueTextSize(12f);
@@ -152,10 +152,10 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     }
 
     private void setPiechartCenterText(BigDecimal sum) {
-        String centerText = (sum == null) ? getString(R.string.no_data) : AndroidUtils.formatCurrency(sum, getContext());
-        binding.pieChart.setCenterText(centerText);
-        binding.pieChart.setCenterTextColor(R.color.primaryA10);
-        binding.pieChart.setCenterTextSize(24);
+        String centerText = (sum == null) ? AndroidUtils.formatCurrency(0, getContext()) : AndroidUtils.formatCurrency(sum, getContext());
+        binding.pieChart.setCenterText(getString(R.string.total_sum, centerText));
+        binding.pieChart.setCenterTextColor(appColorCollection.getForegroundColor());
+        binding.pieChart.setCenterTextSize(20);
         binding.pieChart.setCenterTextTypeface(tf);
     }
 
@@ -177,16 +177,14 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         chart.getDescription().setEnabled(false);
         chart.setExtraOffsets(5, 10, 5, 5);
         chart.setDragDecelerationFrictionCoef(0.95f);
-        chart.setDrawEntryLabels(true);
+        chart.setDrawEntryLabels(false);
 
         chart.setDrawHoleEnabled(true);
-        chart.setHoleColor(appColorCollection.getForegroundColor());
+        chart.setHoleColor(appColorCollection.getBackgroundColor());
+        chart.setTransparentCircleRadius(60f);
+        chart.setHoleRadius(58f);
+        chart.setTransparentCircleColor(appColorCollection.getBackgroundColor());
 
-        chart.setTransparentCircleColor(appColorCollection.getForegroundColor());
-//        chart.setTransparentCircleAlpha(50);
-
-//        chart.setHoleRadius(58f);
-//        chart.setTransparentCircleRadius(61f);
         chart.setDrawCenterText(true);
         chart.setRotationAngle(0);
         chart.setElevation(5);
@@ -195,24 +193,24 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         // enable rotation of the chart by touch
         chart.setRotationEnabled(true);
         chart.setHighlightPerTapEnabled(true);
-        chart.setRenderer(new ColoredLabelXAxisRenderer(chart, chart.getAnimator(), chart.getViewPortHandler()));
 
         // add a selection listener
         chart.setOnChartValueSelectedListener(this);
 
         Legend l = chart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setTypeface(tf);
         l.setTextColor(appColorCollection.getForegroundColor());
         l.setDrawInside(false);
-        l.setXEntrySpace(7f);
+        l.setXEntrySpace(4f);
         l.setYEntrySpace(0f);
-        l.setYOffset(0f);
+        l.setWordWrapEnabled(true);
 
         // entry label styling
         chart.setEntryLabelColor(appColorCollection.getForegroundColor());
+
     }
 
 

@@ -1,5 +1,7 @@
 package com.angelp.purchasehistory.ui.home.dashboard.graph;
 
+import java.util.Locale;
+
 public class CurrencyValueFormatter extends com.github.mikephil.charting.formatter.ValueFormatter {
 
     private final String string;
@@ -13,7 +15,7 @@ public class CurrencyValueFormatter extends com.github.mikephil.charting.formatt
         if (value <= 0) {
             return "";
         } else {
-            return value + string;
+            return String.format(Locale.getDefault(),"%.2f",value) + string;
         }
     }
 }

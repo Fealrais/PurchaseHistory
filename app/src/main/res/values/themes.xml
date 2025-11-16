@@ -2,9 +2,12 @@
     <style name="Theme.PurchaseHistory" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:colorBackground">@color/surfaceA0</item>
         <item name="android:navigationBarColor">@color/surfaceA20</item>
-        <item name="colorSurface">@color/surfaceA20</item>
         <item name="fontFamily">@font/falling_sky</item>
         <item name="alertDialogTheme">@style/BaseDialogStyle</item>
         <item name="dialogTheme">@style/BaseDialogStyle</item>
+        <item name="colorPrimary">@color/primaryA0</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSurface">@color/surfaceA20</item>
+        <item name="actionBarTheme">@style/AppBarStyle</item>
     </style>
 </resources>

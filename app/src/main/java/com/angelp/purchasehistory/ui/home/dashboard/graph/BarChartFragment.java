@@ -38,10 +38,7 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @AndroidEntryPoint
 public class BarChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
@@ -170,7 +167,12 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
         barDataSet.setStackLabels(labels.toArray(new String[0]));
         BarData data = new BarData(barDataSet);
         data.setValueTextColor(appColorCollection.getForegroundColor());
-        data.setBarWidth(0.95f);
+
+        barDataSet.setValueTextColor(appColorCollection.getForegroundColor());
+        barDataSet.setValueTypeface(tf);
+        barDataSet.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(requireContext())));
+
+        data.setBarWidth(0.9f);
         notifyDataChanged(data);
     }
 
@@ -179,10 +181,8 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
 
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.barChartView.setData(data);
-            binding.barChartView.getData().notifyDataChanged();
             binding.barChartView.notifyDataSetChanged();
             binding.barChartView.animateY(1000);
-            binding.barChartView.invalidate();
         });
     }
 

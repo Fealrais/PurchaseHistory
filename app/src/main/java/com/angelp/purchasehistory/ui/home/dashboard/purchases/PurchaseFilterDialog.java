@@ -20,6 +20,7 @@ import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.filters.PurchaseFilterSingleton;
 import com.angelp.purchasehistory.databinding.FragmentPurchaseFilterDialogBinding;
+import com.angelp.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -30,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,7 @@ import static com.angelp.purchasehistory.data.Constants.getDefaultFilter;
 @AndroidEntryPoint
 public class PurchaseFilterDialog extends DialogFragment {
     private final String TAG = this.getClass().getSimpleName();
-    private final boolean containCategory;
+    private boolean containCategory;
 
     @Inject
     PurchaseClient purchaseClient;
@@ -54,6 +56,9 @@ public class PurchaseFilterDialog extends DialogFragment {
     private PurchaseFilter filter;
     private List<CategoryView> categoryOptions = new ArrayList<>();
 
+    public PurchaseFilterDialog() {
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.BaseDialogStyle);
+    }
 
     public PurchaseFilterDialog(boolean containCategory) {
         this.containCategory = containCategory;
@@ -64,6 +69,8 @@ public class PurchaseFilterDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i(getTag(), "onCreateView: View created");
+        if (savedInstanceState != null)
+            containCategory = savedInstanceState.getBoolean("containCategory");
         binding = FragmentPurchaseFilterDialogBinding.inflate(inflater, container, false);
         filterViewModel.getFilter().observe(getViewLifecycleOwner(), this::updateFilter);
         updateFilter(filterViewModel.getFilterValue());
@@ -74,7 +81,7 @@ public class PurchaseFilterDialog extends DialogFragment {
             filterViewModel.updateFilter(filter);
             this.dismiss();
         });
-        binding.dialogTitle.title.setText(R.string.filterTitle);
+        binding.dialogTitle.setText(R.string.filterTitle);
         return binding.getRoot();
     }
 
@@ -83,11 +90,11 @@ public class PurchaseFilterDialog extends DialogFragment {
         datePickerTo = new DatePickerFragment();
         datePickerFrom.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
             filter.setFrom(v);
-            binding.purchaseFilterFromDate.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
+            binding.purchaseFilterFromDate.setText(v.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         });
         datePickerTo.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
             filter.setTo(v);
-            binding.purchaseFilterToDate.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
+            binding.purchaseFilterToDate.setText(v.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         });
         binding.purchaseFilterClearButton.setOnClickListener(v -> {
             if (getActivity() != null)
@@ -122,6 +129,15 @@ public class PurchaseFilterDialog extends DialogFragment {
         });
     }
 
+    /**
+     * @param outState Bundle in which to place your saved state.
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("containCategory", this.containCategory);
+    }
+
     private void quickUpdateFilter(LocalDate from) {
         quickUpdateFilter(from, LocalDate.now());
     }
@@ -146,8 +162,8 @@ public class PurchaseFilterDialog extends DialogFragment {
         }
         new Thread(() -> {
             categoryOptions = purchaseClient.getAllCategories();
-            categoryOptions.add(0, new CategoryView(null, "None", "#fff"));
-            categoryAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, categoryOptions);
+            categoryOptions.add(0, new CategoryView(null, getString(R.string.show_all), "#ffffff"));
+            categoryAdapter = new CategorySpinnerAdapter(getContext(), categoryOptions);
             new Handler(Looper.getMainLooper()).post(() -> {
                 binding.purchaseFilterCategorySpinner.setAdapter(categoryAdapter);
                 updateFilter(filterViewModel.getFilterValue());
@@ -193,12 +209,6 @@ public class PurchaseFilterDialog extends DialogFragment {
         binding.purchaseFilterCategorySpinner.setSelection(0);
         binding.purchaseFilterToDate.setText(R.string.to);
         binding.purchaseFilterFromDate.setText(R.string.from);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        this.dismiss();
     }
 
     @Override

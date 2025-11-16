@@ -178,7 +178,6 @@
     <string name="pie_chart">Category Breakdown</string>
     <string name="line_chart">Spending Trends</string>
     <string name="bar_chart">Daily Expenses</string>
-    <string name="title_pie_chart">Category Breakdown</string>
     <string name="title_line_chart">Monthly Spending Trends</string>
     <string name="title_stacked_bar_chart">Daily Categorized Expenses</string>
     <string name="description_pie_chart">Displaying all purchases within a period, grouped by category and formed into a piechart</string>
@@ -189,7 +188,8 @@
     <string name="move_down">Move down</string>
     <string name="details">Details</string>
     <string name="see_all_n_purchases">See all %d purchases</string>
-    <string name="total_sum">Total sum</string>
+    <string name="total_str">Total:</string>
+    <string name="total_sum">Total:\n %s</string>
     <string name="title_activity_profile">Profile</string>
     <string name="avatar">Avatar</string>
     <string name="help_button">Help</string>
@@ -270,4 +270,5 @@
     <string name="failed_to_read_qr_code">Failed to read QR code</string>
     <string name="category">Category</string>
     <string name="filterTitle">Filter</string>
+    <string name="show_all">Showing all</string>
 </resources>

@@ -26,6 +26,7 @@ import com.angelp.purchasehistory.ui.home.dashboard.graph.DayAxisValueFormatter;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -176,45 +177,50 @@ public final class AndroidUtils {
     }
 
     public static void initChart(BarLineChartBase<?> chart, AppColorCollection colors, String format, Typeface tf) {
-//        chart.setBackgroundColor(colors.getBackgroundColor());
-        chart.getXAxis().setTextColor(colors.getForegroundColor());
-        chart.getLegend().setTextColor(colors.getForegroundColor());
-        // Grid and Borders
-        chart.getXAxis().setGridColor(colors.getMiddleColor());
-        chart.getLegend().setTextColor(colors.getForegroundColor());
-        chart.getDescription().setTextColor(colors.getForegroundColor());
-        chart.getDescription().setTypeface(tf);
+
         chart.setExtraOffsets(5, 10, 5, 5);
         chart.setDragDecelerationFrictionCoef(0.95f);
         chart.setHighlightPerTapEnabled(true);
         chart.setHighlightPerDragEnabled(false);
         chart.getDescription().setEnabled(false);
+//        chart.setDrawGridBackground(false);
+        chart.setPinchZoom(true);
+        chart.setScaleEnabled(true);
         chart.setMinimumHeight(Constants.GRAPH_MIN_HEIGHT);
-        DayAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(format);
-        // change the position of the y-labels
+
+
+        if (chart instanceof BarChart barChart) {
+            barChart.setDrawBarShadow(false);
+            barChart.setDrawValueAboveBar(true);
+        }
+
         YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         leftAxis.setTextColor(colors.getForegroundColor());
         leftAxis.setTypeface(tf);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setAxisMinimum(0f); // fallback
+
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
 
+        DayAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(format);
         XAxis xLabels = chart.getXAxis();
         xLabels.setPosition(XAxis.XAxisPosition.BOTTOM);
         xLabels.setValueFormatter(xAxisFormatter);
         xLabels.setGranularity(1f);
         xLabels.setTextColor(colors.getForegroundColor());
         xLabels.setTypeface(tf);
+
         Legend l = chart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setTextColor(colors.getForegroundColor());
-        l.setDrawInside(true);
-        l.setFormSize(8f);
-        l.setFormToTextSpace(4f);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setTypeface(tf);
-        l.setXEntrySpace(6f);
+        l.setTextColor(colors.getForegroundColor());
+        l.setDrawInside(false);
+        l.setXEntrySpace(4f);
+        l.setYEntrySpace(0f);
+        l.setWordWrapEnabled(true);
 
     }
 

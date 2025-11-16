@@ -29,7 +29,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -159,6 +158,7 @@ public class PurchasesPerDayDialog extends DialogFragment {
             dialog.setTitle(filter.getFrom().format(dtf_long));
             dialog.setMessage(AndroidUtils.formatCurrency(allPurchases.getTotalSum(), getContext()));
             purchasesAdapter.setPurchaseViews(allPurchases.getContent());
+            if (binding == null) return;
             updateSeeAllButton(allPurchases.getContent().size(), maxSize);
         });
     }

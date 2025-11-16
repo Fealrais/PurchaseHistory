@@ -18,6 +18,7 @@ import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.ActivityFullscreenGraphBinding;
 import com.angelp.purchasehistory.ui.home.HomeActivity;
+import com.angelp.purchasehistory.ui.home.dashboard.list.PurchaseListDashboardFragment;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -41,6 +42,9 @@ public class FullscreenGraphActivity extends AppCompatActivity {
                 actionBar.setTitle(dashboardComponent.getTitle());
 
             }
+            if (dashboardComponent.isLandscapeOnly()) {
+                setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
             RefreshablePurchaseFragment fragment = DashboardComponentsFactory.createFragment(dashboardComponent.getFragmentName());
             if (fragment.getArguments() != null) {
                 fragment.getArguments().putInt(Constants.Arguments.ARG_MAX_SIZE, -1);
@@ -48,6 +52,12 @@ public class FullscreenGraphActivity extends AppCompatActivity {
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
                     .replace(binding.fullscreenFragmentContainer.getId(), fragment);
+            if (dashboardComponent.getFragmentName().equals("PieChartFragment")) {
+                PurchaseListDashboardFragment listFragment = new PurchaseListDashboardFragment();
+                fragment.getArguments().putInt(Constants.Arguments.ARG_MAX_SIZE, -1);
+                fragment.getArguments().putBoolean(Constants.Arguments.ARG_SHOW_FILTER, false);
+                transaction.add(binding.secondaryFragmentContainer.getId(), listFragment);
+            }
             transaction.commit();
         }
     }

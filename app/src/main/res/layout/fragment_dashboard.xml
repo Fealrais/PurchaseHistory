@@ -46,8 +46,9 @@
     <ScrollView
         android:id="@+id/dashboardScrollView"
         android:layout_width="match_parent"
-        android:layout_height="852dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/filterBar"
+        app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteX="0dp">
 
         <LinearLayout

@@ -66,7 +66,7 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
                     savedFragments.add(defaultComponent);
                 } // upon application update, the saved fragments might not contain the new default components
             }
-            setupFragments(new ArrayList<>(), savedFragments);
+            setupFragments(savedFragments, savedFragments);
             selectedFragments = savedFragments;
         }).start();
     }
