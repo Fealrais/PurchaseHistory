@@ -149,7 +149,7 @@ public class PurchaseFilterDialog extends DialogFragment {
         filter.setFrom(from);
         datePickerTo.setValue(to);
         filter.setTo(to);
-        Animation shake = AnimationUtils.loadAnimation(this.getContext(), R.anim.shake);
+        Animation shake = AnimationUtils.loadAnimation(this.getContext(), R.anim.jump);
 
         if (fromHasChanged) binding.purchaseFilterFromDate.startAnimation(shake);
         if (toHasChanged) binding.purchaseFilterToDate.startAnimation(shake);
