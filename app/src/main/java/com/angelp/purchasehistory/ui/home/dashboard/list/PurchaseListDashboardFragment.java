@@ -18,7 +18,6 @@ import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.FragmentPurchasesListCardBinding;
 import com.angelp.purchasehistory.ui.FullscreenGraphActivity;
-import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchasesAdapter;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
@@ -33,7 +32,6 @@ import java.util.List;
 @AndroidEntryPoint
 public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     private final String TAG = this.getClass().getSimpleName();
-    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
     PurchaseClient purchaseClient;
     private FragmentPurchasesListCardBinding binding;
@@ -141,7 +139,6 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
     }
 
     private void initFilterRow() {
-        binding.filterButton.setOnClickListener((v) -> openFilter());
         binding.filterDateText.setTextColor(getContext().getColor(R.color.text));
         new Handler(Looper.getMainLooper()).post(() ->
         {
@@ -157,10 +154,4 @@ public class PurchaseListDashboardFragment extends RefreshablePurchaseFragment {
                 }
         );
     }
-
-    private void openFilter() {
-        filterDialog.show(getParentFragmentManager(), "barchartFilterDialog");
-    }
-
-
 }

@@ -17,7 +17,8 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginVertical="4dp"
         app:tint="@color/primaryA20"
-        android:background="@drawable/bordered_bg"/>
+        android:background="@drawable/bordered_bg"
+        android:backgroundTint="@color/surfaceA30"/>
 
     <TableRow
         android:id="@+id/tableRow"

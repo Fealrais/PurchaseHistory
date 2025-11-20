@@ -15,6 +15,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.ListView;
 import android.widget.TextView;
 import androidx.core.content.pm.ShortcutManagerCompat;
 import com.angelp.purchasehistory.MainActivity;
@@ -23,12 +24,14 @@ import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.ui.home.dashboard.graph.DayAxisValueFormatter;
+import com.angelp.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -271,6 +275,32 @@ public final class AndroidUtils {
             }
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid number: " + string);
+        }
+    }
+
+    /**
+     * Sets the provided legend onto the ListView.
+     *
+     * @return true if successful
+     */
+    public static boolean setLegendList(Legend legend, ListView listView) {
+        try {
+            if (listView == null) return false;
+            List<CategoryView> legendItems = new ArrayList<>();
+            LegendEntry[] entries = legend.getEntries();
+            for (int j = 0; j < entries.length; j++) {
+                LegendEntry item = entries[j];
+                String color = String.format("#%06X", (0xFFFFFF & item.formColor));
+                CategoryView categoryView = new CategoryView((long) j, item.label, color);
+                new Handler(Looper.getMainLooper()).post(() -> legendItems.add(categoryView));
+            }
+            CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(listView.getContext(), CategorySpinnerAdapter.SIZE_SMALL, legendItems);
+            new Handler(Looper.getMainLooper()).post(() -> listView.setAdapter(adapter));
+
+            return true;
+        } catch (NullPointerException e) {
+            Log.e("Legend", "Failed to fetch legend list");
+            return false;
         }
     }
 }

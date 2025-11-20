@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
@@ -20,7 +21,6 @@ import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentAccumulativeChartBinding;
-import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.ui.home.settings.SettingsActivity;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
@@ -29,6 +29,7 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.MonthlyLimitView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReport;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -52,16 +53,16 @@ import java.util.Map;
 public class AccumulativeChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MMM yy");
     private final String TAG = this.getClass().getSimpleName();
-    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
     PurchaseClient purchaseClient;
     @Inject
     SettingsClient settingsClient;
     private FragmentAccumulativeChartBinding binding;
-    private boolean showFilter;
+    private boolean showLimit;
     private AppColorCollection appColorCollection;
     private Typeface tf;
     private PurchasesPerDayDialog dialog;
+    private Integer legendId;
 
     public AccumulativeChartFragment() {
         Bundle args = new Bundle();
@@ -72,7 +73,9 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            showFilter = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
+            showLimit = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
+            legendId = getArguments().getInt(Constants.Arguments.EXTERNAL_LEGEND);
+
         }
 
     }
@@ -92,10 +95,8 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (binding == null) return;
-        this.applyFilter(filterViewModel.getFilterValue());
-        initFilterRow();
         initGraph(binding.lineChartView);
-        if (!showFilter) {
+        if (!showLimit) {
             binding.editLimitButton.setVisibility(View.GONE);
         }
         binding.editLimitButton.setOnClickListener((v) -> {
@@ -104,15 +105,6 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
             startActivity(intent);
         });
         setData(filterViewModel.getFilterValue());
-    }
-
-    private void initFilterRow() {
-        binding.graphFilterButton.setOnClickListener((v) -> openFilter());
-        binding.textView.setTextColor(requireContext().getColor(R.color.text));
-        new Handler(Looper.getMainLooper()).post(() -> {
-            binding.graphFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-            binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-        });
     }
 
     private void initGraph(LineChart chart) {
@@ -195,7 +187,15 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
             binding.lineChartView.notifyDataSetChanged();
             binding.lineChartView.animateY(1000);
             binding.lineChartView.invalidate();
+            new Thread(()->{
+                if (legendId != null && getActivity()!=null) {
+                    Legend legend = binding.lineChartView.getLegend();
+                    ListView listView = getActivity().findViewById(legendId);
+                    legend.setEnabled(!AndroidUtils.setLegendList(legend,listView));
+                }
+            }).start();
         });
+
     }
 
     private Entry parseEntries(CalendarReportEntry entry, float sum) {
@@ -205,16 +205,6 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
                 .toEpochDay()).floatValue();
 
         return new Entry(x, entry.getSum().floatValue() + sum, entry);
-    }
-
-    private void openFilter() {
-        filterDialog.show(getParentFragmentManager(), "purchasesFilterDialog");
-    }
-
-
-    private void applyFilter(PurchaseFilter newFilter) {
-        binding.graphFilterButton.setText(R.string.filterButton);
-        binding.textView.setText(newFilter.getDateString());
     }
 
     public void refresh(PurchaseFilter filter) {

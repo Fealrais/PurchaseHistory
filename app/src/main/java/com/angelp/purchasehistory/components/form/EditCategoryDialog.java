@@ -77,13 +77,11 @@ public class EditCategoryDialog extends DialogFragment {
             public void afterTextChanged(Editable s) {
                 String color = s.toString();
                 if (color.trim().isEmpty() || !color.startsWith("#") || color.trim().length() != 7) {
-                    binding.categoryColorInput.setBackgroundColor(Color.WHITE);
-                    binding.categoryColorInput.setTextColor(Color.BLACK);
+                    binding.colorBlob.setBackgroundColor(Color.WHITE);
                     return;
                 }
                 int colorValue = Color.parseColor(color);
-                binding.categoryColorInput.setBackgroundColor(colorValue);
-                binding.categoryColorInput.setTextColor(AndroidUtils.getTextColor(colorValue));
+                binding.colorBlob.setBackgroundColor(colorValue);
             }
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);

@@ -74,5 +74,6 @@ public final class Constants {
         String ARG_MAX_SIZE = "max_size";
         String ARG_FILTER = "purchases_filter";
         String OPEN_CAMERA = "open_camera";
+        String EXTERNAL_LEGEND = "external_legend";
     }
 }

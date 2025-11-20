@@ -21,6 +21,13 @@
         <item name="android:textColor">@color/text</item>
         <item name="android:background">@drawable/bordered_bg</item>
     </style>
+    <style name="Danger" >
+        <item name="android:textColor">@color/text</item>
+        <item name="android:background">@drawable/bordered_bg</item>
+        <item name="backgroundTint">@color/dangerA10</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:minHeight">40dp</item>
+    </style>
     <style name="BaseDialogStyle" parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@drawable/base_dialog_bg</item>
         <item name="android:paddingBottom">8dp</item>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_width="100dp"
+    android:layout_marginEnd="6dp">
+
+    <Button
+        android:id="@+id/filter_category_btn"
+        style="@style/Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:paddingHorizontal="10dp" />
+
+    <Button
+        android:id="@+id/filter_date_btn"
+        style="@style/Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeMinTextSize="8sp"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:maxLines="2"
+        android:paddingHorizontal="10dp" />
+
+    <Button
+        android:id="@+id/filter_btn"
+        style="@style/Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_menu_filter"
+        android:maxLines="1"
+        android:paddingHorizontal="10dp"
+        android:text="@string/filterButton"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp"/>
+    <ListView
+        android:id="@+id/legendList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" android:layout_weight="1"/>
+</LinearLayout>

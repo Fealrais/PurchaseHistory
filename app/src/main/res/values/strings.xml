@@ -273,5 +273,6 @@
     <string name="filterTitle">Filter</string>
     <string name="show_all">Showing all</string>
     <string name="delete_category">Delete category</string>
-    <string name="delete_category_confirmation">Сигурни ли сте, че искате да изтриете %s?\\nВсички покупки в тази категория ще останат без категория.</string>
+    <string name="delete_category_confirmation">Are you sure you want ot delete %s?\nAll purchases in this category will be left without one.</string>
+    <string name="edit_purchase_id">Editing purchase #%s</string>
 </resources>

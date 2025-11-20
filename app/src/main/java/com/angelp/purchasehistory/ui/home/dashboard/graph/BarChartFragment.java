@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
@@ -17,13 +18,13 @@ import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentBarChartBinding;
-import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReport;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -45,14 +46,13 @@ import java.util.Map;
 @AndroidEntryPoint
 public class BarChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     private final String TAG = this.getClass().getSimpleName();
-    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
     PurchaseClient purchaseClient;
     private FragmentBarChartBinding binding;
     private PurchasesPerDayDialog dialog;
-    private boolean showFilter;
     private AppColorCollection appColorCollection;
     private Typeface tf;
+    private Integer legendId;
 
     public BarChartFragment() {
         Bundle args = new Bundle();
@@ -87,14 +87,14 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            showFilter = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
+            legendId = getArguments().getInt(Constants.Arguments.EXTERNAL_LEGEND);
+
         }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(Constants.Arguments.ARG_SHOW_FILTER, showFilter);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -111,19 +111,8 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (binding == null) return;
-        this.applyFilter(filterViewModel.getFilterValue());
-        initFilterRow();
         initGraph(binding.barChartView);
         setData(filterViewModel.getFilterValue());
-    }
-
-    private void initFilterRow() {
-        binding.graphFilterButton.setOnClickListener((v) -> openFilter());
-        binding.textView.setTextColor(getContext().getColor(R.color.text));
-        new Handler(Looper.getMainLooper()).post(() -> {
-            binding.graphFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-            binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-        });
     }
 
     private void initGraph(BarChart chart) {
@@ -181,6 +170,13 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
             binding.barChartView.setData(data);
             binding.barChartView.notifyDataSetChanged();
             binding.barChartView.animateY(1000);
+            new Thread(()->{
+                if (legendId != null && getActivity()!=null) {
+                    Legend legend = binding.barChartView.getLegend();
+                    ListView listView = getActivity().findViewById(legendId);
+                    legend.setEnabled(!AndroidUtils.setLegendList(legend,listView));
+                }
+            }).start();
         });
     }
 
@@ -194,19 +190,8 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
         }
         return new BarEntry(x, list, entries);
     }
-
-    private void openFilter() {
-        filterDialog.show(getParentFragmentManager(), "barchartFilterDialog");
-    }
-
-    private void applyFilter(PurchaseFilter newFilter) {
-        binding.graphFilterButton.setText(R.string.filterButton);
-        binding.textView.setText(newFilter.getDateString());
-    }
-
     public void refresh(PurchaseFilter filter) {
         if (binding == null) return;
-        applyFilter(filter);
         new Thread(() -> {
             setData(filter);
         }).start();

@@ -81,7 +81,7 @@ public class PurchaseFilterDialog extends DialogFragment {
             filterViewModel.updateFilter(filter);
             this.dismiss();
         });
-        binding.dialogTitle.setText(R.string.filterTitle);
+        binding.dialogTitle.dialogTitle.setText(R.string.filterTitle);
         return binding.getRoot();
     }
 

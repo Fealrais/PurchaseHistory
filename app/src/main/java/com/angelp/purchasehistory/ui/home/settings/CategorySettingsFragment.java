@@ -41,11 +41,11 @@ public class CategorySettingsFragment extends PreferenceFragmentCompat {
                 setupCategory(categoryView, categoryPreference);
                 categoryPreference.setOnPreferenceClickListener((p) -> {
                     editCategoryDialog = new EditCategoryDialog(categoryView.getId(), categoryView,
-                            (newCategory) -> setupCategory(newCategory, categoryPreference), () -> {
-                        requireActivity().runOnUiThread(() -> {
-                            category.removePreference(categoryPreference);
-                        });
-                    });
+                            (newCategory) -> setupCategory(newCategory, categoryPreference),
+                            () -> {
+                                editCategoryDialog.dismiss();
+                                requireActivity().runOnUiThread(() -> category.removePreference(categoryPreference));
+                            });
                     editCategoryDialog.show(getParentFragmentManager(), "Edit_category");
                     return false;
                 });

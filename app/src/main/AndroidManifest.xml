@@ -39,7 +39,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.FullscreenGraphActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
             android:exported="false" />
         <activity
             android:name=".ui.legal.PrivacyPolicyActivity"

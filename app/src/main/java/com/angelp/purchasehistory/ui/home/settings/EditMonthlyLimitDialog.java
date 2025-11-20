@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.util.AndroidUtils;
@@ -45,7 +46,9 @@ public class EditMonthlyLimitDialog extends DialogFragment {
         limitValue.setText(monthlyLimitView.getValue().toString());
         limitLabel.setText(monthlyLimitView.getLabel());
         builder.setView(view);
-        builder.setTitle(R.string.edit_limit);
+        View title = getLayoutInflater().inflate(R.layout.dialog_title, null);
+        ((TextView) title.findViewById(R.id.dialogTitle)).setText(R.string.edit_limit);
+        builder.setCustomTitle(title);
         Button buttonSave = view.findViewById(R.id.buttonSave);
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
         buttonSave.setOnClickListener((v) -> {

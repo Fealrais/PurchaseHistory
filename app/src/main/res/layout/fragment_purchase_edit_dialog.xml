@@ -4,20 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minWidth="350dp">
-
-
-    <TextView
-        android:id="@+id/purchaseEdit_update_purchase_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/purchaseEdit_update_purchase_title"
-        android:textAllCaps="true"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    <include layout="@layout/dialog_title" android:id="@+id/title"/>
     <TextView
         android:id="@+id/purchaseEdit_billLabel"
         android:layout_width="wrap_content"
@@ -44,7 +31,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/qr_terminal_id_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_update_purchase_text" />
+        app:layout_constraintTop_toBottomOf="@id/title" />
 
     <TextView
         android:id="@+id/purchaseEdit_storeIdValue"
@@ -71,57 +58,72 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_storeLabel" />
-
-    <Button
-        android:id="@+id/purchaseEdit_timeInput"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/dateTimeButtons"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginStart="10dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/time"
-        app:layout_constraintEnd_toEndOf="@+id/purchaseEdit_priceInput"
-        app:layout_constraintStart_toEndOf="@+id/purchaseEdit_dateInput"
-        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_dateInput" />
+        android:paddingHorizontal="10dp"
+        android:layout_marginTop="8dp"
 
-    <Button
-        android:id="@+id/purchaseEdit_dateInput"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="12dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/date"
-        app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_timeInput"
-        app:layout_constraintStart_toStartOf="@+id/purchaseEdit_priceInput"
-        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_priceInput" />
-
-    <Spinner
-        android:id="@+id/purchaseEdit_categorySpinner"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_categoryAddButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_dateInput" />
+        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_priceInput">
+        <Button
+            android:id="@+id/purchaseEdit_dateInput"
+            style="@style/Bordered"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/date"
+            android:nextFocusDown="@id/qr_timeInput"/>
+        <Button
+            style="@style/Bordered"
+            android:id="@+id/purchaseEdit_timeInput"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:autofillHints=""
+            android:layout_marginStart="10dp"
+            android:hint="@string/time"
+            android:nextFocusDown="@id/qr_categorySpinner" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/purchaseEdit_categoryAddButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="@string/add_button_text"
-        app:layout_constraintEnd_toEndOf="@+id/purchaseEdit_timeInput"
-        app:layout_constraintStart_toEndOf="@+id/purchaseEdit_categorySpinner"
-        app:layout_constraintTop_toTopOf="@+id/purchaseEdit_categorySpinner" />
+    <LinearLayout
+        android:id="@+id/category_row"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+
+        android:paddingHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTimeButtons">
+        <Spinner
+            android:id="@+id/purchaseEdit_categorySpinner"
+            style="@style/BorderedDropdown"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:nextFocusDown="@id/qr_noteInput"/>
+
+        <Button
+            style="@style/Bordered"
+            android:id="@+id/purchaseEdit_categoryAddButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:text="@string/create_category"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/purchaseEdit_clearButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-
+style="@style/Borderless"
         android:text="@string/reset_text"
         app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_deleteButton"
         app:layout_constraintStart_toEndOf="@+id/purchaseEdit_saveButton"
@@ -131,9 +133,9 @@
         android:id="@+id/purchaseEdit_saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:padding="10dp"
-
+style="@style/Primary"
         android:text="@string/save"
         app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_clearButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -143,9 +145,8 @@
         android:id="@+id/purchaseEdit_deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/roundcorner_10"
         android:contentDescription="@string/delete"
-        android:padding="10dp"
+        style="@style/Danger"
         android:src="@drawable/baseline_delete_24"
         app:layout_constraintBottom_toBottomOf="@+id/purchaseEdit_clearButton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -154,14 +155,15 @@
 
     <EditText
         android:id="@+id/purchaseEdit_noteInput"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/add_note"
         android:inputType="text"
-        app:layout_constraintEnd_toEndOf="@+id/purchaseEdit_priceInput"
-        app:layout_constraintStart_toStartOf="@+id/purchaseEdit_categorySpinner"
-        app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_categorySpinner" />
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginHorizontal="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/category_row" />
 </androidx.constraintlayout.widget.ConstraintLayout>

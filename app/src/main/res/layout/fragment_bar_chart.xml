@@ -26,30 +26,7 @@
             android:layout_gravity="center" />
     </FrameLayout>
 
-    <Button
-        android:id="@+id/graph_filterButton"
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/design_default_color_secondary"
-        android:contentDescription="@string/filterButton"
-        android:elevation="10dp"
-        android:text="@string/filterButton"
-
-        app:icon="@drawable/ic_menu_filter"
-        app:layout_constraintStart_toStartOf="@+id/barChart_view"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/graph_filterButton"
-        app:layout_constraintTop_toTopOf="@+id/graph_filterButton" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart_view"

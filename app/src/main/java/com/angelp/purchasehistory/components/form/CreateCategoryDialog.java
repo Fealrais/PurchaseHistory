@@ -71,7 +71,7 @@ public class CreateCategoryDialog extends DialogFragment {
                     return;
                 }
                 int colorValue = Color.parseColor(color);
-                binding.colorBlob.getBackground().setTint(colorValue);
+                binding.colorBlob.setBackgroundColor(colorValue);
             }
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);

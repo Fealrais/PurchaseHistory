@@ -20,7 +20,6 @@ import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentPieChartBinding;
 import com.angelp.purchasehistory.ui.home.dashboard.DashboardViewModel;
 import com.angelp.purchasehistory.ui.home.dashboard.graph.CurrencyValueFormatter;
-import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.util.Utils;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
@@ -48,7 +47,6 @@ import java.util.stream.Collectors;
 public class PieChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter";
     private final String TAG = this.getClass().getSimpleName();
-    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     private DashboardViewModel viewModel;
     private FragmentPieChartBinding binding;
     private boolean showFilter;
@@ -103,16 +101,11 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     }
 
     private void initFilterRow() {
-        binding.piechartFilterButton.setOnClickListener((v) -> openFilter());
         binding.textView.setTextColor(getContext().getColor(R.color.text));
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.piechartFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
             binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
         });
-    }
-
-    private void openFilter() {
-        filterDialog.show(getParentFragmentManager(), "piechartFilterDialog");
     }
 
     private void setData(PurchaseFilter filter) {

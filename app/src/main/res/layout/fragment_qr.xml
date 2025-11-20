@@ -7,18 +7,6 @@
     tools:context=".ui.home.dashboard.DashboardFragment">
 
     <TextView
-        android:id="@+id/qr_manualAddLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/qr_manual_add_title"
-        android:textAllCaps="true"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/qr_billLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,10 +29,10 @@
 
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:text="@string/qr_terminal_id_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qr_manualAddLabel" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/qr_storeIdValue"

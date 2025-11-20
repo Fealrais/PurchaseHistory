@@ -7,18 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.dashboard.graph.AccumulativeChartFragment">
 
-    <Button
-        android:id="@+id/graph_filterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:contentDescription="@string/filterButton"
-        android:elevation="10dp"
-        android:text="@string/filterButton"
-        app:icon="@drawable/ic_menu_filter"
-        app:layout_constraintStart_toStartOf="@+id/lineChart_view"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
     <FrameLayout
         android:id="@+id/loading_bar"
@@ -38,16 +27,6 @@
             android:layout_height="80dp"
             android:layout_gravity="center" />
     </FrameLayout>
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/text"
-        app:layout_constraintStart_toEndOf="@+id/graph_filterButton"
-        app:layout_constraintTop_toTopOf="@+id/graph_filterButton" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart_view"

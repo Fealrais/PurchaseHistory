@@ -5,20 +5,7 @@
     android:layout_height="match_parent"
     android:minWidth="350dp">
 
-    <TextView
-        android:id="@+id/dialogTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/surfaceA30"
-        android:fontFamily="@font/falling_sky_semibold"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="@string/lorem"
-        android:textAlignment="gravity"
-        android:textColor="@color/text"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <include layout="@layout/dialog_title" android:id="@+id/dialogTitle"/>
 
     <Button
         android:id="@+id/purchaseFilter_fromDate"
@@ -88,6 +75,7 @@
             android:maxLines="1"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="16sp"
             android:layout_weight="1"
             android:text="@string/three_months" />
     </LinearLayout>
