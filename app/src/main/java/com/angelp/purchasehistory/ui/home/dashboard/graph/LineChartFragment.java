@@ -96,7 +96,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
 
     private void initFilterRow() {
         binding.graphFilterButton.setOnClickListener((v) -> openFilter());
-        binding.textView.setTextColor(getContext().getColor(R.color.text));
+        binding.textView.setTextColor(requireContext().getColor(R.color.text));
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.graphFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
             binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
@@ -126,19 +126,19 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
                 lineDataSet.setValueTypeface(tf);
                 lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
                 lineDataSet.setDrawFilled(true);
-                Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.fade_red);
+                Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.fade_red);
                 if (i < colors.size()) {
                     int color = colors.get(i++);
                     lineDataSet.setColor(color);
                     lineDataSet.setCircleColor(color);
-                    if(drawable!=null){drawable.setTint(color);}
+                    if (drawable != null) drawable.setTint(color);
                 }
                 lineDataSet.setFillDrawable(drawable);
                 lineDataSet.setLabel(entry.getKey().format(DATE_TIME_FORMATTER));
                 data.addDataSet(lineDataSet);
             }
             data.setValueTextColor(appColorCollection.getForegroundColor());
-            data.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(getContext())));
+            data.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(requireContext())));
             notifyDataChanged(data);
             isRefreshing.postValue(false);
         }).start();

@@ -109,7 +109,7 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
 
     private void initFilterRow() {
         binding.graphFilterButton.setOnClickListener((v) -> openFilter());
-        binding.textView.setTextColor(getContext().getColor(R.color.text));
+        binding.textView.setTextColor(requireContext().getColor(R.color.text));
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.graphFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
             binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
@@ -135,7 +135,6 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
             for (Map.Entry<LocalDate, List<Entry>> entry : entriesMap.entrySet()) {
                 List<Entry> entries = entry.getValue();
                 LineDataSet lineDataSet = new LineDataSet(entries, "Purchases");
-//                lineDataSet.setDrawIcons(false);
                 lineDataSet.setDrawCircleHole(false);
                 lineDataSet.setValueTypeface(tf);
                 lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
@@ -149,7 +148,7 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
                 data.addDataSet(lineDataSet);
             }
             data.setValueTextColor(appColorCollection.getForegroundColor());
-            data.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(getContext())));
+            data.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(requireContext())));
             notifyDataChanged(data);
             isRefreshing.postValue(false);
         }).start();
