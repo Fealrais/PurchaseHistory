@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
@@ -122,12 +124,16 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
 //                lineDataSet.setDrawIcons(false);
                 lineDataSet.setDrawCircleHole(false);
                 lineDataSet.setValueTypeface(tf);
-                lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                lineDataSet.setDrawFilled(true);
+                Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.fade_red);
                 if (i < colors.size()) {
                     int color = colors.get(i++);
                     lineDataSet.setColor(color);
                     lineDataSet.setCircleColor(color);
+                    if(drawable!=null){drawable.setTint(color);}
                 }
+                lineDataSet.setFillDrawable(drawable);
                 lineDataSet.setLabel(entry.getKey().format(DATE_TIME_FORMATTER));
                 data.addDataSet(lineDataSet);
             }

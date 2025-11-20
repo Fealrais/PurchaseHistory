@@ -139,7 +139,6 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
                 lineDataSet.setDrawCircleHole(false);
                 lineDataSet.setValueTypeface(tf);
                 lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-                lineDataSet.setDrawFilled(true);
                 if (i < colors.size()) {
                     int color = colors.get(i++);
                     lineDataSet.setColor(color);
