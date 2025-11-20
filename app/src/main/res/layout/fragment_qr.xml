@@ -53,105 +53,145 @@
         android:layout_marginStart="10dp"
         app:layout_constraintStart_toEndOf="@+id/qr_storeLabel"
         app:layout_constraintTop_toTopOf="@+id/qr_storeLabel" />
-
-    <EditText
-        android:id="@+id/qr_priceInput"
+    <FrameLayout
+        android:id="@+id/qr_priceInputFrame"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:autofillHints="The total cost of the bill"
-        android:ems="10"
-        android:hint="@string/price"
-        android:inputType="numberDecimal"
-        android:minHeight="48dp"
-        android:nextFocusDown="@id/qr_dateInput"
-        android:text="@string/currency_zero"
-        android:textSize="35sp"
+        android:layout_height="wrap_content"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qr_storeLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/qr_storeLabel"
+        >
+        <EditText
+            android:id="@+id/qr_priceInput"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
+            android:autofillHints="The total cost of the bill"
+            android:ems="10"
+            android:hint="@string/price"
+            android:inputType="numberDecimal"
+            android:minHeight="48dp"
+            android:nextFocusDown="@id/qr_dateInput"
+            android:text="@string/currency_zero"
+            android:textSize="35sp"/>
 
-    <Button
-        android:id="@+id/qr_dateInput"
-        android:layout_width="0dp"
+        <ImageButton
+            android:id="@+id/qrFloatingPhotoButton"
+            style="@style/Primary"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end|center"
+            android:layout_marginEnd="20dp"
+            android:contentDescription="@string/qr_open_camera_button_hint"
+            android:src="@drawable/baseline_add_photo_24"/>
+
+        <ImageButton
+            android:id="@+id/qrFloatingQrButton"
+            style="@style/Primary"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end|center"
+            android:layout_marginEnd="78dp"
+            android:contentDescription="@string/qr_open_camera_button_hint"
+            android:src="@drawable/qr_code_outline_icon" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/dateTimeButtons"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/date"
-        android:nextFocusDown="@id/qr_timeInput"
-        app:layout_constraintEnd_toStartOf="@+id/qr_timeInput"
-        app:layout_constraintStart_toStartOf="@+id/qr_priceInput"
-        app:layout_constraintTop_toBottomOf="@+id/qr_priceInput" />
+        android:paddingHorizontal="10dp"
+        android:layout_marginTop="8dp"
 
-    <Button
-        android:id="@+id/qr_clearButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reset_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/qr_submitButton"
-        app:layout_constraintTop_toTopOf="@+id/qr_submitButton" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qr_priceInputFrame">
+        <Button
+            android:id="@+id/qr_dateInput"
+            style="@style/Bordered"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/date"
+            android:nextFocusDown="@id/qr_timeInput"/>
+        <Button
+            style="@style/Bordered"
+            android:id="@+id/qr_timeInput"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:autofillHints=""
+            android:layout_marginStart="10dp"
+            android:hint="@string/time"
+            android:nextFocusDown="@id/qr_categorySpinner" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/qr_categoryAddButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="@string/add_button_text"
-        app:layout_constraintBottom_toBottomOf="@+id/qr_categorySpinner"
-        app:layout_constraintEnd_toEndOf="@+id/qr_timeInput"
-        app:layout_constraintStart_toEndOf="@+id/qr_categorySpinner"
-        app:layout_constraintTop_toTopOf="@+id/qr_categorySpinner" />
+    <LinearLayout
+        android:id="@+id/category_row"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
 
-    <Button
-        android:id="@+id/qr_timeInput"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTimeButtons">
+        <Spinner
+            android:id="@+id/qr_categorySpinner"
+            style="@style/BorderedDropdown"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:nextFocusDown="@id/qr_noteInput"/>
+
+        <Button
+            style="@style/Bordered"
+            android:id="@+id/qr_categoryAddButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:text="@string/create_category"/>
+    </LinearLayout>
+    <EditText
+        android:id="@+id/qr_noteInput"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:autofillHints=""
         android:ems="10"
-        android:hint="@string/time"
-        android:nextFocusDown="@id/qr_categorySpinner"
-        app:layout_constraintEnd_toEndOf="@+id/qr_priceInput"
-        app:layout_constraintStart_toEndOf="@+id/qr_dateInput"
-        app:layout_constraintTop_toTopOf="@+id/qr_dateInput" />
-
-    <Spinner
-        android:id="@+id/qr_categorySpinner"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="10dp"
-        android:nextFocusDown="@id/qr_noteInput"
-        app:layout_constraintEnd_toStartOf="@+id/qr_categoryAddButton"
-        app:layout_constraintStart_toStartOf="@+id/qr_dateInput"
-        app:layout_constraintTop_toBottomOf="@+id/qr_dateInput" />
-
+        android:hint="@string/add_note"
+        android:inputType="text"
+        android:nextFocusDown="@id/qr_submitButton"
+        app:layout_constraintEnd_toEndOf="@+id/qr_priceInputFrame"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/category_row"
+        app:layout_constraintTop_toBottomOf="@+id/category_row" />
     <Button
         android:id="@+id/qr_submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
+        style="@style/Primary"
         android:text="@string/submit_text"
         app:layout_constraintEnd_toStartOf="@+id/qr_clearButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/qr_noteInput" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/qrFloatingQrButton"
+    <Button
+        android:id="@+id/qr_clearButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="40dp"
-        android:clickable="true"
-        android:contentDescription="@string/qr_open_camera_button_hint"
-        android:src="@drawable/qr_code_outline_icon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        style="@style/Borderless"
+        android:text="@string/reset_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/qr_submitButton"
+        app:layout_constraintTop_toTopOf="@+id/qr_submitButton" />
 
     <!--    <com.google.android.gms.ads.AdView
             xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -164,31 +204,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />-->
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/qrFloatingPhotoButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:contentDescription="@string/qr_open_camera_button_hint"
-        android:src="@drawable/baseline_add_photo_24"
-        app:layout_constraintBottom_toTopOf="@+id/qrFloatingQrButton"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/qr_noteInput"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/add_note"
-        android:inputType="text"
-        android:nextFocusDown="@id/qr_submitButton"
-        app:layout_constraintEnd_toEndOf="@+id/qr_priceInput"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/qr_categorySpinner"
-        app:layout_constraintTop_toBottomOf="@+id/qr_categorySpinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
 package com.angelp.purchasehistory.ui.home.dashboard.graph;
 
-import android.app.AlertDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,7 +37,10 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @AndroidEntryPoint
 public class BarChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
@@ -46,7 +48,6 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
     private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
     PurchaseClient purchaseClient;
-    AlertDialog.Builder alertBuilder;
     private FragmentBarChartBinding binding;
     private PurchasesPerDayDialog dialog;
     private boolean showFilter;
@@ -88,7 +89,6 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
         if (getArguments() != null) {
             showFilter = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
         }
-        alertBuilder = new AlertDialog.Builder(getActivity());
     }
 
     @Override
@@ -137,9 +137,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
             isRefreshing.postValue(true);
             CalendarReport calendarReport = purchaseClient.getCategorizedCalendarReport(filter);
             List<CategoryView> allCategories = purchaseClient.getAllCategories();
-            if (!calendarReport.getContent().isEmpty()) {
-                updateChart(filter, calendarReport, allCategories);
-            }
+            updateChart(filter, calendarReport, allCategories);
             isRefreshing.postValue(false);
         }).start();
     }

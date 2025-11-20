@@ -14,6 +14,7 @@ import com.angelp.purchasehistory.web.clients.SettingsClient;
 import com.angelp.purchasehistorybackend.models.views.incoming.MonthlyLimitDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.MonthlyLimitView;
 import dagger.hilt.android.AndroidEntryPoint;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
@@ -34,8 +35,9 @@ public class EditMonthlyLimitDialog extends DialogFragment {
         monthlyLimitViewConsumer = consumer;
     }
 
+    @NotNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit_monthly_limit, null);
         EditText limitValue = view.findViewById(R.id.editTextMonthlyLimit);

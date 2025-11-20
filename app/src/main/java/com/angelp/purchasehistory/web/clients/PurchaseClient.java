@@ -203,6 +203,17 @@ public class PurchaseClient extends HttpClient {
         return null;
     }
 
+    public void deleteCategory(Long id) {
+        try (Response res = delete(BACKEND_URL + "/category/" + id)) {
+            ResponseBody body = res.body();
+            if (res.isSuccessful() && body != null) {
+                String json = body.string();
+                Log.i("httpResponse", "Delete Category: " + json);
+            } else throw new IOException("Failed to delete category");
+        } catch (IOException ignored) {
+        }
+    }
+
     public void getExportedCsv(Context context, Uri saveLocation) {
         try (Response res = get(BACKEND_URL + "/purchase/export")) {
             ResponseBody body = res.body();
@@ -272,5 +283,4 @@ public class PurchaseClient extends HttpClient {
         }
         return false;
     }
-
 }

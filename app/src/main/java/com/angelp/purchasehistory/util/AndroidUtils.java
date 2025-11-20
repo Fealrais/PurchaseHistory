@@ -226,7 +226,7 @@ public final class AndroidUtils {
 
     public static void showSuccessAnimation(View view) {
         if (view == null) return;
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext(), R.style.BaseDialogStyle);
         LayoutInflater inflater = LayoutInflater.from(view.getContext());
         View customView = inflater.inflate(R.layout.success_toast, null);
         builder.setView(customView);

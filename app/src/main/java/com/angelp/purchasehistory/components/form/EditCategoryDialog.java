@@ -8,11 +8,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.model.Category;
 import com.angelp.purchasehistory.databinding.CategoryDialogBinding;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
@@ -36,24 +40,31 @@ public class EditCategoryDialog extends DialogFragment {
     List<String> defaultCategories = List.of("Groceries", "Medicine", "Travel", "Gifts", "Fast food", "Hobbies", "Bills", "Investments", "Essentials");
     List<String> defaultColors = List.of("#FADADD", "#AECBFA", "#D4EED1", "#FFF9C4", "#E6E6FA", "#FFDAB9", "#F5FFFA", "#F08080");
     private CategoryView defaultValue;
-    private Long purchaseId;
+    private Long categoryId;
     private Consumer<CategoryView> consumer;
+    private Runnable onDelete;
 
     private CategoryDialogBinding binding;
 
     public EditCategoryDialog() {
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.BaseDialogStyle);
     }
 
-    public EditCategoryDialog(Long id, CategoryView defaultValue, Consumer<CategoryView> categoryViewProvider) {
-        this.purchaseId = id;
+    public EditCategoryDialog(Long id, CategoryView defaultValue, Consumer<CategoryView> categoryViewProvider, Runnable onDelete) {
+        this.categoryId = id;
         this.defaultValue = defaultValue;
         this.consumer = categoryViewProvider;
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.BaseDialogStyle);
+        this.onDelete = onDelete;
     }
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        binding = CategoryDialogBinding.inflate(getLayoutInflater());
+        LayoutInflater layoutInflater = getLayoutInflater();
+        binding = CategoryDialogBinding.inflate(layoutInflater);
+        View titleView = layoutInflater.inflate(R.layout.dialog_title, null, false);
+        TextView title = titleView.findViewById(R.id.dialogTitle);
         fillNameAutocomplete();
         binding.colorPickerView.setHueSliderView(binding.hueSlider);
         binding.colorPickerView.setOnColorChangedListener((color) -> {
@@ -75,8 +86,9 @@ public class EditCategoryDialog extends DialogFragment {
                 binding.categoryColorInput.setTextColor(AndroidUtils.getTextColor(colorValue));
             }
         });
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Editing category#" + purchaseId);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);
+        title.setText(getString(R.string.edit_category, categoryId.toString()));
+        builder.setCustomTitle(titleView);
         builder.setView(binding.getRoot());
         binding.saveButton.setOnClickListener(v -> {
             String name = binding.categoryNameInput.getText().toString();
@@ -84,7 +96,7 @@ public class EditCategoryDialog extends DialogFragment {
             boolean isValid = AndroidUtils.validateCategoryValues(binding.categoryNameInput, binding.categoryColorInput);
             if (isValid) {
                 new Thread(() -> {
-                    Category category = purchaseClient.editCategory(purchaseId.intValue(), new CategoryDTO(name, color));
+                    Category category = purchaseClient.editCategory(categoryId.intValue(), new CategoryDTO(name, color));
                     defaultValue.setColor(category.getColor());
                     defaultValue.setName(category.getName());
                     consumer.accept(category);
@@ -92,9 +104,28 @@ public class EditCategoryDialog extends DialogFragment {
                 }).start();
             }
         });
+        binding.deleteButton.setOnClickListener(v -> showDeleteAlertConfirmation());
         binding.cancelButton.setOnClickListener(v -> dismiss());
         updateUI(defaultValue);
         return builder.create();
+    }
+
+    private void showDeleteAlertConfirmation() {
+        View title = getLayoutInflater().inflate(R.layout.dialog_title, null);
+        ((TextView) title.findViewById(R.id.dialogTitle)).setText(R.string.delete_category);
+        new AlertDialog.Builder(requireContext(), R.style.BaseDialogStyle)
+                .setCustomTitle(title)
+                .setMessage(getString(R.string.delete_category_confirmation, defaultValue.getName()))
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    new Thread(() -> {
+                        purchaseClient.deleteCategory(categoryId);
+                        onDelete.run();
+                    }).start();
+                })
+
+                .setNegativeButton(R.string.cancel, null)
+                .setCancelable(true)
+                .show();
     }
 
     private void updateUI(CategoryView defaultValue) {

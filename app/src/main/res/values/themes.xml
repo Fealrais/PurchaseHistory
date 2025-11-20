@@ -9,5 +9,7 @@
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorSurface">@color/surfaceA20</item>
         <item name="actionBarTheme">@style/AppBarStyle</item>
+        <item name="materialCalendarTheme">@style/App_MaterialCalendar_Theme</item>
+        <item name="materialTimePickerTheme">@style/App_MaterialTimePicker_Theme</item>
     </style>
 </resources>

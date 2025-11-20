@@ -186,7 +186,7 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
 
 
     private Dialog createAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);
         builder.setTitle(R.string.title_scheduled_expenses);
         builder.setView(binding.getRoot());
         return builder.create();

@@ -39,7 +39,7 @@ public class SpectatorAddUserDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         binding = SpectatorAddUserDialogBinding.inflate(getLayoutInflater());
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);
         binding.submit.setOnClickListener((view) -> {
             binding.submit.setEnabled(false);
             String token = binding.spectatorTokenInput.getText().toString();

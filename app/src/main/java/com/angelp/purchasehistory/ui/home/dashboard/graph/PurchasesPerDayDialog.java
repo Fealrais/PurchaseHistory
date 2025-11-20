@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -49,6 +50,7 @@ public class PurchasesPerDayDialog extends DialogFragment {
     private PurchasesAdapter purchasesAdapter;
     private AlertDialog dialog;
     private PurchaseFilter filter;
+    private TextView title;
 
     public PurchasesPerDayDialog() {
         Bundle bundle = new Bundle();
@@ -68,11 +70,14 @@ public class PurchasesPerDayDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //Set all the title, button etc. for the AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);
         LayoutInflater layoutInflater = getLayoutInflater();
+        View titleView = layoutInflater.inflate(R.layout.dialog_title, null, false);
         binding = DialogGraphDetailsBinding.inflate(layoutInflater, null, false);
-        builder.setTitle(getArguments().getString(TITLE));
-        builder.setMessage(AndroidUtils.formatCurrency(getArguments().getFloat(TOTAL_SUM), getContext()));
+        builder.setCustomTitle(titleView);
+        title = titleView.findViewById(R.id.dialogTitle);
+        title.setText(getArguments().getString(TITLE));
+        binding.message.setText(AndroidUtils.formatCurrency(getArguments().getFloat(TOTAL_SUM), getContext()));
         builder.setView(binding.getRoot());
         filter = getArguments().getParcelable(Constants.Arguments.ARG_FILTER);
         initializePurchasesRecyclerView(maxSize, filter);
@@ -106,7 +111,8 @@ public class PurchasesPerDayDialog extends DialogFragment {
             PurchaseListView purchaseListView = purchaseClient.getAllPurchases(filter);
             List<PurchaseView> purchases = purchaseListView.getContent();
             purchasesAdapter = new PurchasesAdapter(purchases, getActivity());
-            dialog.setMessage(getString(R.string.currency_total, purchaseListView.getTotalSum().floatValue()));
+            String sum = AndroidUtils.formatCurrency(purchaseListView.getTotalSum(), getActivity());
+            binding.message.setText(getString(R.string.total_sum, sum));
             setupShowMoreButton(purchases.size(), maxSize);
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -155,8 +161,9 @@ public class PurchasesPerDayDialog extends DialogFragment {
 
     private void updateUI(PurchaseListView allPurchases) {
         new Handler(Looper.getMainLooper()).post(() -> {
-            dialog.setTitle(filter.getFrom().format(dtf_long));
-            dialog.setMessage(AndroidUtils.formatCurrency(allPurchases.getTotalSum(), getContext()));
+            title.setText(filter.getFrom().format(dtf_long));
+            binding.message.setText(AndroidUtils.formatCurrency(allPurchases.getTotalSum(), getContext()));
+
             purchasesAdapter.setPurchaseViews(allPurchases.getContent());
             if (binding == null) return;
             updateSeeAllButton(allPurchases.getContent().size(), maxSize);

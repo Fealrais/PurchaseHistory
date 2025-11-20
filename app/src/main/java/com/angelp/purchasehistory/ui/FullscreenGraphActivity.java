@@ -76,7 +76,7 @@ public class FullscreenGraphActivity extends AppCompatActivity {
             return true;
         } else if (item.getItemId() == R.id.action_icon) {
             // Show information about the activity
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.BaseDialogStyle)
                     .setTitle(getString(dashboardComponent.getTitle()))
                     .setMessage(getComponentInfo(dashboardComponent))
                     .setPositiveButton(android.R.string.ok, null)

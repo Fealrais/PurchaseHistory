@@ -71,7 +71,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
         if (getArguments() != null) {
             showFilter = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
         }
-        alertBuilder = new AlertDialog.Builder(getActivity());
+        alertBuilder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -178,7 +178,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     }
 
     private void notifyDataChanged(LineData data) {
-        if (data == null || data.getDataSetCount() == 0) return;
+        if (data == null) return;
 
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.lineChartView.setData(data);

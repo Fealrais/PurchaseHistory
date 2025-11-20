@@ -205,7 +205,7 @@ public class EditScheduledExpenseDialog extends DialogFragment {
     }
 
     private Dialog createDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);
         builder.setTitle("Editing scheduled expense#" + scheduledExpense.getId());
         builder.setView(binding.getRoot());
         return builder.create();

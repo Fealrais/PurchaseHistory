@@ -124,6 +124,7 @@
     <string name="this_year">Тази година</string>
     <string name="last_year">Миналата година</string>
     <string name="edit_categories">Редактирай своите категории</string>
+    <string name="edit_category">Редактиране на категория #%s</string>
     <string name="application_settings">Настройки на Приложението</string>
     <string name="number_of_purchases">Брой покупки</string>
 
@@ -260,4 +261,6 @@
     <string name="category">Категория</string>
     <string name="filterTitle">Филтър</string>
     <string name="show_all">Показване на всички</string>
+    <string name="delete_category">Изтриване на категория</string>
+    <string name="delete_category_confirmation">Сигурни ли сте, че искате да изтриете %s?\\nВсички покупки в тази категория ще останат без категория.</string>
 </resources>

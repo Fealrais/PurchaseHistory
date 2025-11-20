@@ -8,11 +8,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.model.Category;
 import com.angelp.purchasehistory.databinding.CategoryDialogBinding;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
@@ -48,7 +52,11 @@ public class CreateCategoryDialog extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        binding = CategoryDialogBinding.inflate(getLayoutInflater());
+        LayoutInflater layoutInflater = getLayoutInflater();
+        binding = CategoryDialogBinding.inflate(layoutInflater);
+        View titleView = layoutInflater.inflate(R.layout.dialog_title, null, false);
+        TextView title = titleView.findViewById(R.id.dialogTitle);
+        binding.deleteButton.setVisibility(View.GONE);
         fillNameAutocomplete();
         binding.colorPickerView.setHueSliderView(binding.hueSlider);
         binding.colorPickerView.setOnColorChangedListener((color) -> {
@@ -59,17 +67,16 @@ public class CreateCategoryDialog extends DialogFragment {
             public void afterTextChanged(Editable s) {
                 String color = s.toString();
                 if (color.trim().isEmpty() || !color.startsWith("#") || color.trim().length() != 7) {
-                    binding.categoryColorInput.setBackgroundColor(Color.WHITE);
-                    binding.categoryColorInput.setTextColor(Color.BLACK);
+                    binding.colorBlob.getBackground().setTint(Color.WHITE);
                     return;
                 }
                 int colorValue = Color.parseColor(color);
-                binding.categoryColorInput.setBackgroundColor(colorValue);
-                binding.categoryColorInput.setTextColor(AndroidUtils.getTextColor(colorValue));
+                binding.colorBlob.getBackground().setTint(colorValue);
             }
         });
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Creating a new category");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);
+        title.setText(R.string.create_category);
+        builder.setCustomTitle(titleView);
         builder.setView(binding.getRoot());
         binding.saveButton.setOnClickListener(v -> {
             String name = binding.categoryNameInput.getText().toString();

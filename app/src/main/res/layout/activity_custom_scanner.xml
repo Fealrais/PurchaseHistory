@@ -10,14 +10,17 @@
         android:id="@+id/zxing_barcode_scanner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:zxing_scanner_layout="@layout/custom_barcode_scanner"></com.journeyapps.barcodescanner.DecoratedBarcodeView>
+        app:zxing_scanner_layout="@layout/custom_barcode_scanner"/>
 
-    <ToggleButton
+    <ImageButton
         android:id="@+id/switch_flashlight"
+        style="@style/Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/baseline_flashlight_on_24"
         android:layout_centerHorizontal="true"
-        android:text="@string/turn_off_flashlight" />
+        android:contentDescription="@string/turn_on_flashlight" />
 
 </RelativeLayout>

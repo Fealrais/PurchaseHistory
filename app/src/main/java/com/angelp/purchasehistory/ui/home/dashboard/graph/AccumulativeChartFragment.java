@@ -1,6 +1,5 @@
 package com.angelp.purchasehistory.ui.home.dashboard.graph;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -58,7 +57,6 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
     PurchaseClient purchaseClient;
     @Inject
     SettingsClient settingsClient;
-    AlertDialog.Builder alertBuilder;
     private FragmentAccumulativeChartBinding binding;
     private boolean showFilter;
     private AppColorCollection appColorCollection;
@@ -76,13 +74,14 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
         if (getArguments() != null) {
             showFilter = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
         }
-        alertBuilder = new AlertDialog.Builder(getActivity());
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: View created");
         binding = FragmentAccumulativeChartBinding.inflate(inflater, container, false);
+
         appColorCollection = new AppColorCollection(inflater.getContext());
         tf = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_regular);
         super.setLoadingScreen(binding.loadingBar);
@@ -189,11 +188,10 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
     }
 
     private void notifyDataChanged(LineData data) {
-        if (data == null || data.getDataSetCount() == 0) return;
+        if (data == null) return;
 
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.lineChartView.setData(data);
-            binding.lineChartView.getData().notifyDataChanged();
             binding.lineChartView.notifyDataSetChanged();
             binding.lineChartView.animateY(1000);
             binding.lineChartView.invalidate();

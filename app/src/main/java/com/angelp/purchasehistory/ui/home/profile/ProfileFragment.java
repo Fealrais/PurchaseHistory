@@ -117,7 +117,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void showDeleteAccountConfirmation() {
-        new AlertDialog.Builder(requireContext())
+        new AlertDialog.Builder(requireContext(), R.style.BaseDialogStyle)
                 .setTitle(R.string.delete_account)
                 .setMessage(R.string.delete_account_description)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
