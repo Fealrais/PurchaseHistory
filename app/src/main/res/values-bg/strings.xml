@@ -264,4 +264,8 @@
     <string name="delete_category">Изтриване на категория</string>
     <string name="delete_category_confirmation">Сигурни ли сте, че искате да изтриете %s?\nВсички покупки в тази категория ще останат без категория.</string>
     <string name="edit_purchase_id">Редактиране на покупка #%s</string>
+    <string name="choose_category">Избери категория</string>
+    <string name="edit_schedule_id">Редактиране на планиран разход №%s</string>
+    <string name="create_schedule">Създаване на планиран разход</string>
+    <string name="error_invalid_price">Неправилна цена!</string>
 </resources>

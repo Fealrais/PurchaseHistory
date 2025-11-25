@@ -275,4 +275,9 @@
     <string name="delete_category">Delete category</string>
     <string name="delete_category_confirmation">Are you sure you want ot delete %s?\nAll purchases in this category will be left without one.</string>
     <string name="edit_purchase_id">Editing purchase #%s</string>
+    <string name="choose_category">Choose category</string>
+    <string name="edit_schedule_id">Editing scheduled expense №%s</string>
+    <string name="create_schedule">Create a scheduled expense</string>
+    <string name="error_invalid_price">Invalid price!</string>
+
 </resources>

@@ -42,7 +42,8 @@ public class AddMonthlyLimitDialog extends DialogFragment {
         builder.setView(view);
         View title = getLayoutInflater().inflate(R.layout.dialog_title, null);
         ((TextView) title.findViewById(R.id.dialogTitle)).setText(R.string.add_monthly_limit);
-        builder.setCustomTitle(title);        Button buttonSave = view.findViewById(R.id.buttonSave);
+        builder.setCustomTitle(title);
+        Button buttonSave = view.findViewById(R.id.buttonSave);
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
         buttonSave.setOnClickListener((v) -> {
             try {

@@ -43,6 +43,7 @@
         <item name="android:background">@drawable/bordered_dropdown_bg</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
+        <item name="android:paddingStart">8dp</item>
     </style>
 
     <style name="spinnerItemStyle">

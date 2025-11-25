@@ -63,9 +63,9 @@ public class PurchaseFilterDialog extends DialogFragment {
     public PurchaseFilterDialog(boolean containCategory) {
         this.containCategory = containCategory;
         setStyle(DialogFragment.STYLE_NORMAL, R.style.BaseDialogStyle);
-
     }
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i(getTag(), "onCreateView: View created");
@@ -163,7 +163,7 @@ public class PurchaseFilterDialog extends DialogFragment {
         new Thread(() -> {
             categoryOptions = purchaseClient.getAllCategories();
             categoryOptions.add(0, new CategoryView(null, getString(R.string.show_all), "#ffffff"));
-            categoryAdapter = new CategorySpinnerAdapter(getContext(), categoryOptions);
+            categoryAdapter = new CategorySpinnerAdapter(requireContext(), categoryOptions);
             new Handler(Looper.getMainLooper()).post(() -> {
                 binding.purchaseFilterCategorySpinner.setAdapter(categoryAdapter);
                 updateFilter(filterViewModel.getFilterValue());
