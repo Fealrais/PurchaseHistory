@@ -44,12 +44,15 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_scheduled_payment)
                 .setContentText(context.getString(R.string.scheduled_notification_content, scheduledNotification.getPrice()))
                 .addAction(R.drawable.baseline_attach_money_24, context.getString(R.string.add_purchase_action), triggerPendingIntent)
-                .addAction(R.drawable.baseline_money_off_24, context.getString(R.string.cancel), null)
+//                .addAction(R.drawable.baseline_money_off_24, context.getString(R.string.cancel), null)
                 .setContentTitle(context.getString(R.string.scheduled_notification_title, scheduledNotification.getNote()))
                 .setColor(scheduledNotification.getColor())
                 .build();
         Log.d(TAG, "Sending notification with ID: " + id);
         manager.notify(id.intValue(), notification);
+        if (scheduledNotification.isRepeating()) {
+            NotificationHelper.reschedule(scheduledNotification, context);
+        }
     }
 
     private NotificationChannel getOrCreateChannel(NotificationManager manager) {

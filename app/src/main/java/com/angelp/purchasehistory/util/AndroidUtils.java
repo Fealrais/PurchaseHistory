@@ -23,6 +23,7 @@ import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
 import com.angelp.purchasehistory.data.Constants;
+import com.angelp.purchasehistory.receivers.scheduled.NotificationHelper;
 import com.angelp.purchasehistory.ui.home.dashboard.graph.DayAxisValueFormatter;
 import com.angelp.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
@@ -44,6 +45,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public final class AndroidUtils {
     public static final List<String> SCHEDULED_PERIOD_LIST = Arrays.stream(ScheduledPeriod.values()).map(Enum::toString).collect(Collectors.toList());
@@ -68,6 +71,9 @@ public final class AndroidUtils {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         ShortcutManagerCompat.removeAllDynamicShortcuts(context);
+        NotificationHelper.cancelAllScheduledNotifications(context);
+        SharedPreferences player = context.getSharedPreferences("player", MODE_PRIVATE);
+        player.edit().clear().apply();
         context.startActivity(intent);
     }
 
@@ -176,7 +182,7 @@ public final class AndroidUtils {
     }
 
     public static String getCurrencySymbol(Context context) {
-        SharedPreferences appPreferences = context.getSharedPreferences(Constants.Preferences.APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences appPreferences = context.getSharedPreferences(Constants.Preferences.APP_PREFERENCES, MODE_PRIVATE);
         return appPreferences.getString(Constants.Preferences.PREFERRED_CURRENCY, "");
     }
 
