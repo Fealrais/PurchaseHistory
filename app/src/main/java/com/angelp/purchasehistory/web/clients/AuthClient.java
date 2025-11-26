@@ -99,16 +99,11 @@ public class AuthClient extends HttpClient {
 
     public Optional<UserView> register(String username, String password, String email, Locale locale) {
         try (Response res = post(BACKEND_URL + "/register", new UserDTO(username, password, email, locale.toLanguageTag()))) {
-            if (res.isSuccessful() && res.body() != null) {
-                String json = res.body().string();
-                Log.i("httpResponse", "register: " + json);
-                return Optional.of(gson.fromJson(json, UserView.class));
-            }
+                return Optional.of(utils.getBody(res,UserView.class));
         } catch (IOException e) {
             Log.e("registerResult", "failed:" + e.getMessage());
             throw new WebException(R.string.server_connection_failed_500);
         }
-        return Optional.empty();
     }
 
 

@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
@@ -37,7 +36,7 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
     private final Gson gson = new Gson();
     private FragmentDashboardBinding binding;
     private PurchaseFilterDialog filterDialog;
-    private List<DashboardComponent> selectedFragments = new ArrayList<>();
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +53,6 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
 
 //        binding.customizeDashboardButton.setOnClickListener(v -> openCustomizationDialog());
     }
-
     private void initializeDashboardFragments() {
         new Thread(() -> {
             List<DashboardComponent> savedFragments = getFragmentsFromPreferences();
@@ -67,7 +65,6 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
                 } // upon application update, the saved fragments might not contain the new default components
             }
             setupFragments(savedFragments, savedFragments);
-            selectedFragments = savedFragments;
         }).start();
     }
 
@@ -82,15 +79,7 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
         return dashboardComponents.stream().map(DashboardComponent::fillFromName).collect(Collectors.toList());
     }
 
-    private void saveFragmentsSetupToPreferences(List<DashboardComponent> selectedFragments) {
-        SharedPreferences preferences = PurchaseHistoryApplication.getContext()
-                .getSharedPreferences(Constants.Preferences.DASHBOARD_PREFS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        String fragmentsJson = gson.toJson(selectedFragments);
-        editor.remove("saved_fragments");
-        editor.putString("saved_fragments", fragmentsJson);
-        editor.apply();
-    }
+
 
     @Override
     public void onResume() {
@@ -136,16 +125,5 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
             }
         }
         transaction.commit();
-    }
-
-    private void openCustomizationDialog() {
-        CustomizationDialogFragment dialog = new CustomizationDialogFragment(selectedFragments, updatedFragments -> {
-
-            saveFragmentsSetupToPreferences(updatedFragments);
-            setupFragments(selectedFragments, updatedFragments);
-            selectedFragments.clear();
-            selectedFragments.addAll(updatedFragments);
-        });
-        dialog.show(getParentFragmentManager(), "customizationDialog");
     }
 }

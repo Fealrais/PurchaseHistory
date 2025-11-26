@@ -47,6 +47,7 @@ import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.integration.android.IntentIntegrator;
 import dagger.hilt.android.AndroidEntryPoint;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -167,18 +168,17 @@ public class QrScannerFragment extends Fragment {
             qrScannerViewModel.updatePurchaseDTO(purchaseDTO);
             datePicker.setValue(purchaseDTO.getDate());
             timePicker.setValue(purchaseDTO.getTime());
+            int index = purchaseDTO.getCategoryId() != null ? Utils.findIndex(allCategories, (category) -> category.getId().equals(purchaseDTO.getCategoryId())) : -1;
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (purchaseDTO.getStoreId() != null) binding.qrStoreIdValue.setText(purchaseDTO.getStoreId());
+                if (index >= 0) binding.qrCategorySpinner.setSelection(index);
                 if (purchaseDTO.getBillId() != null) binding.qrBillIdValue.setText(purchaseDTO.getBillId());
-                if (purchaseDTO.getPrice() != null)
-                    binding.qrPriceInput.setText(AndroidUtils.formatCurrency(purchaseDTO.getPrice()));
+                if (purchaseDTO.getPrice() != null) binding.qrPriceInput.setText(AndroidUtils.formatCurrency(purchaseDTO.getPrice()));
                 if (purchaseDTO.getTimestamp() != null) {
                     binding.qrDateInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_DATE));
                     binding.qrTimeInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_TIME));
                 }
-                if (Utils.defined(purchaseDTO.getNote())) {
-                    binding.qrNoteInput.setText(purchaseDTO.getNote());
-                }
+                if (!StringUtils.isEmpty(purchaseDTO.getNote())) binding.qrNoteInput.setText(purchaseDTO.getNote());
             });
         }).start();
     }

@@ -89,7 +89,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:visibility="gone"
-            app:icon="@drawable/baseline_keyboard_arrow_right_24"
+            style="@style/Bordered"
+            android:drawableEnd="@drawable/baseline_keyboard_arrow_right_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
