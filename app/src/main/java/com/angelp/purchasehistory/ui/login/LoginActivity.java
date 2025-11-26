@@ -1,6 +1,7 @@
 package com.angelp.purchasehistory.ui.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,16 +17,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
+import com.angelp.purchasehistory.data.model.ScheduledNotification;
 import com.angelp.purchasehistory.databinding.ActivityLoginBinding;
-import com.angelp.purchasehistory.receivers.AppBootReceiver;
+import com.angelp.purchasehistory.receivers.scheduled.InitiateNotificationReceiver;
 import com.angelp.purchasehistory.ui.forgotpassword.ForgotPasswordEmailActivity;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
+import com.angelp.purchasehistory.web.clients.ScheduledExpenseClient;
+import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import dagger.hilt.android.AndroidEntryPoint;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 @AndroidEntryPoint
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
+    @Inject
+    ScheduledExpenseClient scheduledExpenseClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,9 +74,7 @@ public class LoginActivity extends AppCompatActivity {
             if (loginResult.getSuccess() == null) {
                 showLoginFailed(loginResult.getError());
             } else {
-                Intent intent = new Intent(this, AppBootReceiver.class);
-                intent.setAction(Constants.APP_BOOT_RECEIVER);
-                sendBroadcast(intent);
+                scheduleNotificationsFromUser(this);
                 updateUiWithUser(loginResult.getSuccess().getUsername());
                 setResult(Activity.RESULT_OK);
                 finish();
@@ -99,6 +107,22 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         });
 //        binding.googleSignInButton.setOnClickListener((v)-> loginWithGoogle());
+    }
+
+    private void scheduleNotificationsFromUser(Context context) {
+        new Thread(() -> {
+            List<ScheduledExpenseView> all = scheduledExpenseClient.findAllForUser();
+            if (all.isEmpty()) return;
+
+            ArrayList<ScheduledNotification> list = new ArrayList<>();
+            for (ScheduledExpenseView v : all) {
+                list.add(new ScheduledNotification(v));
+            }
+
+            Intent intent = new Intent(context, InitiateNotificationReceiver.class);
+            intent.putParcelableArrayListExtra(Constants.Arguments.NOTIFICATION_EXTRA_ARG, list);
+            context.sendBroadcast(intent);
+        }).start();
     }
 
     private void checkIfLoggedIn() {

@@ -1,8 +1,0 @@
-<resources>
-    <style name="Theme.PurchaseHistory" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="android:background">@color/surfaceA0</item>
-        <item name="android:navigationBarColor">@color/surfaceA10</item>
-        <item name="fontFamily">@font/ibmplexmono_regular</item>
-        <item name="fontWeight">400</item>
-    </style>
-</resources>

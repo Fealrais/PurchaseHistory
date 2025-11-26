@@ -6,8 +6,9 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ToggleButton;
+import android.widget.ImageButton;
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import com.angelp.purchasehistory.R;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
@@ -17,8 +18,9 @@ import com.journeyapps.barcodescanner.ViewfinderView;
 public class CaptureActivityPortrait extends Activity implements CompoundBarcodeView.TorchListener {
     private CaptureManager capture;
     private DecoratedBarcodeView barcodeScannerView;
-    private ToggleButton switchFlashlightButton;
+    private ImageButton switchFlashlightButton;
     private ViewfinderView viewfinderView;
+    private boolean isTorchOn = false;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -28,18 +30,19 @@ public class CaptureActivityPortrait extends Activity implements CompoundBarcode
         barcodeScannerView = findViewById(R.id.zxing_barcode_scanner);
         barcodeScannerView.setTorchListener(this);
         switchFlashlightButton = findViewById(R.id.switch_flashlight);
-        switchFlashlightButton.setText(R.string.turn_off_flashlight);
+        switchFlashlightButton.setContentDescription(getString(R.string.turn_on_flashlight));
         viewfinderView = findViewById(R.id.zxing_viewfinder_view);
         if (!hasFlash()) {
             switchFlashlightButton.setVisibility(View.GONE);
         }
-        switchFlashlightButton.setOnCheckedChangeListener((v, value) -> {
-            if (value) {
-                switchFlashlightButton.setText(R.string.turn_on_flashlight);
+        switchFlashlightButton.setOnClickListener((v) -> {
+            if (isTorchOn) {
                 barcodeScannerView.setTorchOn();
+
+
             } else {
-                switchFlashlightButton.setText(R.string.turn_off_flashlight);
                 barcodeScannerView.setTorchOff();
+
             }
         });
         capture = new CaptureManager(this, barcodeScannerView);
@@ -65,12 +68,17 @@ public class CaptureActivityPortrait extends Activity implements CompoundBarcode
 
     @Override
     public void onTorchOn() {
-        switchFlashlightButton.setText(R.string.turn_on_flashlight);
+        switchFlashlightButton.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.baseline_flashlight_off_24));
+        switchFlashlightButton.setContentDescription(getString(R.string.turn_off_flashlight));
+        isTorchOn= false;
+
     }
 
     @Override
     public void onTorchOff() {
-        switchFlashlightButton.setText(R.string.turn_off_flashlight);
+        switchFlashlightButton.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.baseline_flashlight_on_24));
+        switchFlashlightButton.setContentDescription(getString(R.string.turn_on_flashlight));
+        isTorchOn= true;
 
     }
 

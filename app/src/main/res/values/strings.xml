@@ -42,7 +42,7 @@
     <string name="currency_zero">0.00</string>
     <string name="edit_text">Edit</string>
     <string name="add_button_text">Add</string>
-    <string name="create_category">New category</string>
+    <string name="create_category">Create a category</string>
     <string name="cancel">Cancel</string>
     <string name="name">Name</string>
     <string name="color">Color</string>
@@ -134,6 +134,7 @@
     <string name="this_year">This year</string>
     <string name="last_year">Last year</string>
     <string name="edit_categories">Edit categories</string>
+    <string name="edit_category">Edit category #%s</string>
     <string name="application_settings">Application settings</string>
     <string name="number_of_purchases">Number of purchases</string>
     <string name="tour_navigation_dashboard">The Dashboard</string>
@@ -178,18 +179,18 @@
     <string name="pie_chart">Category Breakdown</string>
     <string name="line_chart">Spending Trends</string>
     <string name="bar_chart">Daily Expenses</string>
-    <string name="title_pie_chart">Category Breakdown</string>
     <string name="title_line_chart">Monthly Spending Trends</string>
     <string name="title_stacked_bar_chart">Daily Categorized Expenses</string>
     <string name="description_pie_chart">Displaying all purchases within a period, grouped by category and formed into a piechart</string>
-    <string name="description_line_chart">A line chart showing the sum of all purchases per day. Usefull to see patterns for each month</string>
+    <string name="description_line_chart">A line chart showing the sum of all purchases per day. Useful to see patterns for each month</string>
     <string name="description_bar_chart">A stacked bar chart displaying the summed purchases for each day, separated by categories. Useful for detailed view of each day.</string>
     <string name="description_purchases_list">A list of the latest purchases</string>
     <string name="move_up">Move up</string>
     <string name="move_down">Move down</string>
     <string name="details">Details</string>
     <string name="see_all_n_purchases">See all %d purchases</string>
-    <string name="total_sum">Total sum</string>
+    <string name="total_str">Total:</string>
+    <string name="total_sum">Total:\n %s</string>
     <string name="title_activity_profile">Profile</string>
     <string name="avatar">Avatar</string>
     <string name="help_button">Help</string>
@@ -268,4 +269,15 @@
     <string name="error_required_field">Required field</string>
     <string name="scanner_gallery">Select a photo with a QR code to scan</string>
     <string name="failed_to_read_qr_code">Failed to read QR code</string>
+    <string name="category">Category</string>
+    <string name="filterTitle">Filter</string>
+    <string name="show_all">Showing all</string>
+    <string name="delete_category">Delete category</string>
+    <string name="delete_category_confirmation">Are you sure you want ot delete %s?\nAll purchases in this category will be left without one.</string>
+    <string name="edit_purchase_id">Editing purchase #%s</string>
+    <string name="choose_category">Choose category</string>
+    <string name="edit_schedule_id">Editing scheduled expense №%s</string>
+    <string name="create_schedule">Create a scheduled expense</string>
+    <string name="error_invalid_price">Invalid price!</string>
+
 </resources>

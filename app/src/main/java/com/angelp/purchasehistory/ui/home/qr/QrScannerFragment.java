@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
@@ -54,8 +55,11 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
+
+import static androidx.core.content.ContextCompat.getSystemService;
 
 //import static com.google.android.gms.ads.AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize;
 
@@ -148,7 +152,14 @@ public class QrScannerFragment extends Fragment {
         if (arguments != null && arguments.getBoolean(Constants.Arguments.OPEN_CAMERA)) {
             arguments.putBoolean(Constants.Arguments.OPEN_CAMERA, false);
             openCameraFlow(getLayoutInflater());
+        } else {
+            if (binding.qrPriceInput.requestFocus(View.FOCUS_DOWN) && getContext() != null) {
+                InputMethodManager imm = getSystemService(getContext(), InputMethodManager.class);
+                if (imm != null)
+                    imm.showSoftInput(binding.qrPriceInput, InputMethodManager.SHOW_IMPLICIT);
+            }
         }
+
     }
 
     private void fillQRForm(PurchaseDTO purchaseDTO) {
@@ -228,7 +239,7 @@ public class QrScannerFragment extends Fragment {
             Result result = reader.decode(new BinaryBitmap(new HybridBinarizer(sourceRGB)));
             Log.i(TAG, "QR Code: " + result.getText());
             PurchaseDTO purchaseDTO = new PurchaseDTO(result.toString());
-            if(purchaseDTO.getPrice() == null) {
+            if (purchaseDTO.getPrice() == null) {
                 PurchaseHistoryApplication.getInstance().alert(R.string.failed_to_read_qr_code);
                 return;
             }
@@ -255,11 +266,11 @@ public class QrScannerFragment extends Fragment {
 
         timePicker.getTimeResult().observe(getViewLifecycleOwner(), (v) -> {
             qrScannerViewModel.getPurchaseDTO().setTime(v);
-            binding.qrTimeInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_TIME));
+            binding.qrTimeInput.setText(v.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)));
         });
         datePicker.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
             qrScannerViewModel.getPurchaseDTO().setDate(v);
-            binding.qrDateInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
+            binding.qrDateInput.setText(v.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         });
         binding.qrPriceInput.addTextChangedListener(new AfterTextChangedWatcher() {
             @Override
@@ -390,7 +401,7 @@ public class QrScannerFragment extends Fragment {
 
     private void onInvalidPurchase(Integer errorCode) {
         new Handler(Looper.getMainLooper()).post(() ->
-                new AlertDialog.Builder(getContext())
+                new AlertDialog.Builder(getContext(), R.style.BaseDialogStyle)
                         .setIcon(R.drawable.baseline_money_off_24)
                         .setTitle(R.string.invalid_purchase_title)
                         .setMessage(errorCode)

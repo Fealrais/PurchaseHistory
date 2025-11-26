@@ -1,9 +1,9 @@
 package com.angelp.purchasehistory.ui.home.dashboard.graph;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,8 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
@@ -20,12 +22,12 @@ import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentLineChartBinding;
-import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReport;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CalendarReportEntry;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -48,15 +50,13 @@ import java.util.Map;
 public class LineChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MMM yy");
     private final String TAG = this.getClass().getSimpleName();
-    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     @Inject
     PurchaseClient purchaseClient;
-    AlertDialog.Builder alertBuilder;
     private FragmentLineChartBinding binding;
-    private boolean showFilter;
     private AppColorCollection appColorCollection;
     private Typeface tf;
     private PurchasesPerDayDialog dialog;
+    private Integer legendId;
 
     public LineChartFragment() {
         Bundle args = new Bundle();
@@ -67,9 +67,8 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            showFilter = getArguments().getBoolean(Constants.Arguments.ARG_SHOW_FILTER);
+            legendId = getArguments().getInt(Constants.Arguments.EXTERNAL_LEGEND);
         }
-        alertBuilder = new AlertDialog.Builder(getActivity());
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -86,19 +85,8 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (binding == null) return;
-        this.applyFilter(filterViewModel.getFilterValue());
-        initFilterRow();
         initGraph(binding.lineChartView);
         setData(filterViewModel.getFilterValue());
-    }
-
-    private void initFilterRow() {
-        binding.graphFilterButton.setOnClickListener((v) -> openFilter());
-        binding.textView.setTextColor(getContext().getColor(R.color.text));
-        new Handler(Looper.getMainLooper()).post(() -> {
-            binding.graphFilterButton.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-            binding.textView.setVisibility(showFilter ? View.VISIBLE : View.GONE);
-        });
     }
 
     private void initGraph(LineChart chart) {
@@ -122,17 +110,24 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
 //                lineDataSet.setDrawIcons(false);
                 lineDataSet.setDrawCircleHole(false);
                 lineDataSet.setValueTypeface(tf);
-                lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                lineDataSet.setDrawFilled(true);
+                Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.fade_red);
+
                 if (i < colors.size()) {
                     int color = colors.get(i++);
                     lineDataSet.setColor(color);
                     lineDataSet.setCircleColor(color);
+                    if (drawable != null) drawable.setTint(color);
+
                 }
+                lineDataSet.setFillDrawable(drawable);
                 lineDataSet.setLabel(entry.getKey().format(DATE_TIME_FORMATTER));
                 data.addDataSet(lineDataSet);
             }
+
             data.setValueTextColor(appColorCollection.getForegroundColor());
-            data.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(getContext())));
+            data.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(requireContext())));
             notifyDataChanged(data);
             isRefreshing.postValue(false);
         }).start();
@@ -172,7 +167,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     }
 
     private void notifyDataChanged(LineData data) {
-        if (data == null || data.getDataSetCount() == 0) return;
+        if (data == null) return;
 
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.lineChartView.setData(data);
@@ -180,6 +175,13 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
             binding.lineChartView.notifyDataSetChanged();
             binding.lineChartView.animateY(1000);
             binding.lineChartView.invalidate();
+            new Thread(()->{
+                if (legendId != null && getActivity()!=null) {
+                    Legend legend = binding.lineChartView.getLegend();
+                    ListView listView = getActivity().findViewById(legendId);
+                    legend.setEnabled(!AndroidUtils.setLegendList(legend,listView));
+                }
+            }).start();
         });
     }
 
@@ -190,16 +192,6 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
                 .toEpochDay()).floatValue();
 
         return new Entry(x, entry.getSum().floatValue(), entry);
-    }
-
-    private void openFilter() {
-        filterDialog.show(getParentFragmentManager(), "purchasesFilterDialog");
-    }
-
-
-    private void applyFilter(PurchaseFilter newFilter) {
-        binding.graphFilterButton.setText(R.string.filterButton);
-        binding.textView.setText(newFilter.getReadableString());
     }
 
     public void refresh(PurchaseFilter filter) {

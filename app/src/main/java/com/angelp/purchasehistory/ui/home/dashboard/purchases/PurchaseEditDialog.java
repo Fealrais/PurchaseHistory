@@ -36,9 +36,9 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 
 import static com.angelp.purchasehistory.data.Constants.Arguments.PURCHASE_EDIT_DIALOG_ID_KEY;
@@ -64,6 +64,9 @@ public class PurchaseEditDialog extends DialogFragment {
     private Consumer<PurchaseView> onSuccess;
     private Long purchaseId;
 
+    public PurchaseEditDialog() {
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.BaseDialogStyle);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -72,7 +75,7 @@ public class PurchaseEditDialog extends DialogFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             this.purchaseId = bundle.getLong(PURCHASE_EDIT_DIALOG_ID_KEY, 0L);
-            binding.purchaseEditUpdatePurchaseText.setText(String.format(Locale.getDefault(), "Update purchase #%d", purchaseId));
+            binding.title.dialogTitle.setText(getString(R.string.edit_purchase_id, purchaseId.toString()));
         }
         timePicker = new TimePickerFragment(purchase.getTime());
         datePicker = new DatePickerFragment(purchase.getDate());
@@ -85,11 +88,11 @@ public class PurchaseEditDialog extends DialogFragment {
 
         timePicker.getTimeResult().observe(getViewLifecycleOwner(), (v) -> {
             purchase.setTime(v);
-            binding.purchaseEditTimeInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_TIME));
+            binding.purchaseEditTimeInput.setText(v.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)));
         });
         datePicker.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
             purchase.setDate(v);
-            binding.purchaseEditDateInput.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
+            binding.purchaseEditDateInput.setText(v.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         });
         binding.purchaseEditClearButton.setOnClickListener(v -> {
             if (getActivity() != null)

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.util.AndroidUtils;
@@ -14,6 +15,7 @@ import com.angelp.purchasehistory.web.clients.SettingsClient;
 import com.angelp.purchasehistorybackend.models.views.incoming.MonthlyLimitDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.MonthlyLimitView;
 import dagger.hilt.android.AndroidEntryPoint;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
@@ -30,14 +32,17 @@ public class AddMonthlyLimitDialog extends DialogFragment {
         monthlyLimitViewConsumer = consumer;
     }
 
+    @NotNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit_monthly_limit, null);
         EditText limitValue = view.findViewById(R.id.editTextMonthlyLimit);
         EditText limitLabel = view.findViewById(R.id.editTextMonthlyLimitLabel);
         builder.setView(view);
-        builder.setTitle(R.string.add_monthly_limit);
+        View title = getLayoutInflater().inflate(R.layout.dialog_title, null);
+        ((TextView) title.findViewById(R.id.dialogTitle)).setText(R.string.add_monthly_limit);
+        builder.setCustomTitle(title);
         Button buttonSave = view.findViewById(R.id.buttonSave);
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
         buttonSave.setOnClickListener((v) -> {

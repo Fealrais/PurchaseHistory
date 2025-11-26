@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,17 +15,27 @@ import androidx.fragment.app.FragmentTransaction;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.factories.DashboardComponentsFactory;
+import com.angelp.purchasehistory.data.filters.PurchaseFilter;
+import com.angelp.purchasehistory.data.filters.PurchaseFilterSingleton;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.ActivityFullscreenGraphBinding;
 import com.angelp.purchasehistory.ui.home.HomeActivity;
+import com.angelp.purchasehistory.ui.home.dashboard.list.PurchaseListDashboardFragment;
+import com.angelp.purchasehistory.ui.home.dashboard.purchases.PurchaseFilterDialog;
+import com.angelp.purchasehistory.util.AndroidUtils;
 import dagger.hilt.android.AndroidEntryPoint;
+
+import javax.inject.Inject;
 
 @AndroidEntryPoint
 public class FullscreenGraphActivity extends AppCompatActivity {
     private static final String TAG = FullscreenGraphActivity.class.getSimpleName();
     private ActivityFullscreenGraphBinding binding;
+    private final PurchaseFilterDialog filterDialog = new PurchaseFilterDialog(true);
     private DashboardComponent dashboardComponent;
+    @Inject
+    protected PurchaseFilterSingleton filterViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,14 +53,51 @@ public class FullscreenGraphActivity extends AppCompatActivity {
 
             }
             RefreshablePurchaseFragment fragment = DashboardComponentsFactory.createFragment(dashboardComponent.getFragmentName());
+
+            if (dashboardComponent.isLandscapeOnly()) {
+                setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                fragment.getArguments().putInt(Constants.Arguments.EXTERNAL_LEGEND, R.id.legendList);
+            }
+
+            binding.verticalFilterBar.filterBtn.setOnClickListener(v -> openFilter());
+            binding.filterBar.filterBtn.setOnClickListener(v -> openFilter());
+
+            applyFilter(filterDialog.getFilter());
+            filterViewModel.getFilter().observe(this, this::applyFilter);
+
             if (fragment.getArguments() != null) {
                 fragment.getArguments().putInt(Constants.Arguments.ARG_MAX_SIZE, -1);
-                fragment.getArguments().putBoolean(Constants.Arguments.ARG_SHOW_FILTER, true);
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
                     .replace(binding.fullscreenFragmentContainer.getId(), fragment);
+            if (dashboardComponent.getFragmentName().equals("PieChartFragment") && binding.secondaryFragmentContainer != null) {
+                binding.secondaryFragmentContainer.setVisibility(View.VISIBLE);
+                PurchaseListDashboardFragment listFragment = new PurchaseListDashboardFragment();
+                fragment.getArguments().putInt(Constants.Arguments.ARG_MAX_SIZE, -1);
+                transaction.replace(binding.secondaryFragmentContainer.getId(), listFragment);
+            } else {
+                binding.secondaryFragmentContainer.setVisibility(View.GONE);
+            }
             transaction.commit();
         }
+    }
+
+    private void openFilter() {
+        filterDialog.show(getSupportFragmentManager(), "chart_filter");
+    }
+
+    private void applyFilter(PurchaseFilter newFilter) {
+        if (binding == null || newFilter == null) return;
+
+        int color = newFilter.getCategoryId() == null ? getResources().getColor(R.color.surfaceA20) : AndroidUtils.getColor(newFilter.getCategoryColor());
+        binding.filterBar.filterCategoryBtn.getBackground().setTint(color);
+        binding.filterBar.filterCategoryBtn.setTextColor(AndroidUtils.getTextColor(color));
+        binding.filterBar.filterCategoryBtn.setText(newFilter.getCategoryName() == null ? getString(R.string.category) : newFilter.getCategoryName());
+        binding.filterBar.filterDateBtn.setText(newFilter.getDateString());
+        binding.verticalFilterBar.filterCategoryBtn.getBackground().setTint(color);
+        binding.verticalFilterBar.filterCategoryBtn.setTextColor(AndroidUtils.getTextColor(color));
+        binding.verticalFilterBar.filterCategoryBtn.setText(newFilter.getCategoryName() == null ? getString(R.string.category) : newFilter.getCategoryName());
+        binding.verticalFilterBar.filterDateBtn.setText(newFilter.getDateString());
     }
 
     @Override
@@ -66,7 +114,7 @@ public class FullscreenGraphActivity extends AppCompatActivity {
             return true;
         } else if (item.getItemId() == R.id.action_icon) {
             // Show information about the activity
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.BaseDialogStyle)
                     .setTitle(getString(dashboardComponent.getTitle()))
                     .setMessage(getComponentInfo(dashboardComponent))
                     .setPositiveButton(android.R.string.ok, null)

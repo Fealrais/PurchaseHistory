@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.FullscreenGraphActivity">
-
+    tools:context=".ui.FullscreenGraphActivity"
+    android:orientation="vertical">
+    <include layout="@layout/component_filter_bar" android:id="@+id/filter_bar"/>
+    <include layout="@layout/component_filter_bar_vertical" android:id="@+id/vertical_filter_bar" android:visibility="gone"/>
     <androidx.fragment.app.FragmentContainerView
-
         android:id="@+id/fullscreen_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/surfaceA10"/>
+    <androidx.fragment.app.FragmentContainerView
+
+        android:id="@+id/secondary_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

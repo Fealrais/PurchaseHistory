@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/delete_button"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_gravity="center"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:src="@drawable/baseline_delete_24"
+    app:tint="@color/dangerA10"
+    android:contentDescription="@string/delete" />

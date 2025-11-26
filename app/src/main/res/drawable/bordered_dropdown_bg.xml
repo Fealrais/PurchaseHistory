@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bordered_bg" />
+    <item android:drawable="@drawable/baseline_arrow_down_24"
+        android:gravity="center|end"
+        android:right="10dp"
+        android:width="36dp"
+        android:height="36dp"/>
+</layer-list>

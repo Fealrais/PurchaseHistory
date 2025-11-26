@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
         Button yesButton = dialog.findViewById(R.id.tour_guide_next);
         yesButton.setOnClickListener(v -> {
             binding.navView.setEnabled(false);
-            findViewById(R.id.dashboard_filterButton).setEnabled(false);
+            findViewById(R.id.filter_btn).setEnabled(false);
             showNextTourStep();
             dialog.dismiss();
         });

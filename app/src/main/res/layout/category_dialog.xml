@@ -2,15 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:orientation="vertical">
 
     <AutoCompleteTextView
         android:id="@+id/category_nameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autofillHints="The name of the category"
-        android:ems="10"
+        android:layout_marginHorizontal="16dp"
 
         android:hint="@string/name"
         android:inputType="text" />
@@ -20,23 +19,49 @@
         android:id="@+id/colorPickerView"
         android:layout_width="match_parent"
         android:layout_height="191dp"
-        android:layout_marginHorizontal="6dp" />
+        android:layout_marginHorizontal="16dp"
+        />
 
     <ir.kotlin.kavehcolorpicker.KavehHueSlider
         android:id="@+id/hueSlider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        />
 
-    <AutoCompleteTextView
-        android:id="@+id/category_colorInput"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autofillHints="The color of the category"
-        android:ems="10"
-        android:hint="@string/color"
-        android:inputType="text"
-        android:minHeight="48dp" />
+        android:gravity="center"
+        android:orientation="horizontal"        
+        android:layout_marginHorizontal="16dp"
+        >
 
+        <AutoCompleteTextView
+            android:id="@+id/category_colorInput"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:autofillHints="The color of the category"
+            android:ems="10"
+            android:hint="@string/color"
+            android:layout_marginEnd="10dp"
+            android:inputType="text"
+            android:minHeight="48dp" />
+
+        <View
+            android:id="@+id/colorBlob"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:background="@drawable/roundcorner_10"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/delete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" style="@style/Bordered"
+        android:text="@string/delete" android:backgroundTint="@color/dangerA0"
+        android:layout_marginTop="16dp"
+        android:drawableStart="@drawable/baseline_delete_24" android:layout_marginHorizontal="16dp"/>
     <TextView
         android:id="@+id/category_errorText"
         android:layout_width="match_parent"
@@ -45,28 +70,27 @@
         android:textColor="@color/dangerA10" />
 
     <LinearLayout
-        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:orientation="horizontal">
-
         <Button
-            android:id="@+id/cancel_button"
-            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/save_button"
+            style="@style/Primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:text="@string/save" />
+        <Button
+            android:id="@+id/cancel_button"
+            style="@style/Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/cancel" />
 
-        <Button
-            android:id="@+id/save_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:layout_weight="1"
-            android:text="@string/save" />
     </LinearLayout>
+
 
 </LinearLayout>

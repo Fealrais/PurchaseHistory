@@ -5,13 +5,30 @@
     android:layout_height="match_parent"
     android:minWidth="350dp">
 
+    <include layout="@layout/dialog_title" android:id="@+id/dialogTitle"/>
+
+    <Button
+        android:id="@+id/purchaseFilter_fromDate"
+        style="@style/Bordered"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:autofillHints=""
+        android:hint="@string/date"
+        app:layout_constraintEnd_toStartOf="@+id/purchaseFilter_toDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogTitle" />
 
     <Button
         android:id="@+id/purchaseFilter_toDate"
+        style="@style/Bordered"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:textSize="16sp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/date"
@@ -19,36 +36,108 @@
         app:layout_constraintStart_toEndOf="@+id/purchaseFilter_fromDate"
         app:layout_constraintTop_toTopOf="@+id/purchaseFilter_fromDate" />
 
-    <Button
-        android:id="@+id/purchaseFilter_fromDate"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/date"
-        app:layout_constraintEnd_toStartOf="@+id/purchaseFilter_toDate"
+    <LinearLayout
+        android:id="@+id/dateButtonsRow1"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/purchaseFilter_fromDate">
+
+        <Button
+            android:id="@+id/filter_week"
+            style="@style/Bordered"
+            android:background="@drawable/button_rc_top_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/this_week"/>
+
+        <Button
+            android:id="@+id/filter_month"
+            style="@style/Bordered"
+            android:background="@drawable/button_block"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/this_month" />
+
+        <Button
+            android:id="@+id/filter_3month"
+            style="@style/Bordered"
+            android:background="@drawable/button_rc_top_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="16sp"
+            android:layout_weight="1"
+            android:text="@string/three_months" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dateButtonsRow2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateButtonsRow1">
+
+        <Button
+            android:id="@+id/filter_6month"
+            style="@style/Bordered"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_rc_bottom_left"
+            android:layout_weight="1"
+            android:text="@string/six_months" />
+
+        <Button
+            android:id="@+id/filter_year"
+            style="@style/Bordered"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_block"
+
+            android:layout_weight="1"
+            android:text="@string/this_year" />
+
+        <Button
+            android:id="@+id/filter_last_year"
+            style="@style/Bordered"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_rc_bottom_right"
+
+            android:layout_weight="1"
+            android:text="@string/last_year" />
+    </LinearLayout>
 
     <Spinner
         android:id="@+id/purchaseFilter_categorySpinner"
+        style="@style/BorderedDropdown"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:paddingBottom="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+        app:layout_constraintTop_toBottomOf="@+id/dateButtonsRow2" />
 
     <Button
         android:id="@+id/purchase_filter_submit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        style="@style/Primary"
         android:text="@string/filterButton"
         app:layout_constraintEnd_toStartOf="@+id/purchaseFilter_clearButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,78 +147,10 @@
         android:id="@+id/purchaseFilter_clearButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/Borderless"
         android:text="@string/reset_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/purchase_filter_submit_button"
         app:layout_constraintTop_toTopOf="@+id/purchase_filter_submit_button" />
 
-    <HorizontalScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:fadingEdge="horizontal"
-        android:fadingEdgeLength="60dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/purchaseFilter_fromDate">
-
-        <LinearLayout
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:dividerPadding="18dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/filter_week"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/this_week" />
-
-            <Button
-                android:id="@+id/filter_month"
-
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/this_month" />
-
-            <Button
-                android:id="@+id/filter_3month"
-
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/three_months" />
-
-            <Button
-                android:id="@+id/filter_6month"
-
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/six_months" />
-
-            <Button
-                android:id="@+id/filter_year"
-
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/this_year" />
-
-            <Button
-                android:id="@+id/filter_last_year"
-
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/last_year" />
-        </LinearLayout>
-    </HorizontalScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,11 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.angelp.purchasehistory.R;
-import com.angelp.purchasehistory.databinding.CategorySpinnerItemBinding;
-import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 
 import java.util.List;
@@ -18,29 +18,41 @@ import java.util.List;
 import static com.angelp.purchasehistory.util.Utils.COLOR_REGEX;
 
 public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
-    //    private final List<CategoryView> items;
-    CategorySpinnerItemBinding binding;
+    public static final int SIZE_SMALL = 1;
+    public static final int SIZE_NORMAL = 2;
+    private int size = SIZE_NORMAL;
 
     public CategorySpinnerAdapter(@NonNull Context context, List<CategoryView> items) {
         super(context, R.layout.category_spinner_item, items);
-//        this.items = items;
+    }
+    public CategorySpinnerAdapter(@NonNull Context context,  int size, List<CategoryView> items) {
+        this(context,items);
+        this.size = size;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = initView(convertView, parent);
-        binding = CategorySpinnerItemBinding.bind(view);
+        View categoryColor = view.findViewById(R.id.categoryColor);
+        TextView categoryName = view.findViewById(R.id.categoryTitle);
         CategoryView item = getItem(position);
-        binding.categoryName.setText(item.getName());
+        if (item.getId() == null) categoryColor.setVisibility(View.GONE);
+        else {
+            categoryColor.setVisibility(View.VISIBLE);
+            String color = COLOR_REGEX.matcher(item.getColor()).find() ? item.getColor() : "#c4c4c4";
+            int parsedColor = Color.parseColor(color);
+            categoryColor.getBackground().setTint(parsedColor);
+        }
+        categoryName.setText(item.getName());
+        if (SIZE_SMALL == size) {
+            categoryName.setTextSize(11);
+            view.setPadding(8,4,4,4);
+            categoryColor.setLayoutParams(new LinearLayout.LayoutParams(8, 8));
+            categoryName.setPadding(8,4,4,0);
+        }
 
-        String color = COLOR_REGEX.matcher(item.getColor()).find() ? item.getColor() : "#c4c4c4";
-        int parsedColor = Color.parseColor(color);
-        int textColor = AndroidUtils.getTextColor(parsedColor);
-        binding.categoryName.setBackgroundColor(parsedColor);
-        binding.categoryName.setTextColor(textColor);
-
-        return binding.getRoot();
+        return view;
     }
 
 
@@ -59,22 +71,10 @@ public class CategorySpinnerAdapter extends ArrayAdapter<CategoryView> {
         return convertView;
     }
 
-//    @Nullable
-//    @Override
-//    public CategoryView getItem(int position) {
-//        if(items.size() <= position) return null;
-//        return items.get(position);
-//    }
-//
-//    @Override
-//    public int getCount() {
-//        return items.size();
-//    }
-
     @Override
     public long getItemId(int position) {
         CategoryView item = getItem(position);
-        if (item == null) return Long.MIN_VALUE;
+        if (item == null || item.getId() == null) return Long.MIN_VALUE;
         return item.getId();
     }
 }

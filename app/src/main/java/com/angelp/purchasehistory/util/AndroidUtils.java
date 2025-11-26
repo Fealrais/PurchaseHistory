@@ -15,19 +15,25 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.ListView;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
 import androidx.core.content.pm.ShortcutManagerCompat;
 import com.angelp.purchasehistory.MainActivity;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
 import com.angelp.purchasehistory.data.Constants;
+import com.angelp.purchasehistory.receivers.scheduled.NotificationHelper;
 import com.angelp.purchasehistory.ui.home.dashboard.graph.DayAxisValueFormatter;
+import com.angelp.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import org.jetbrains.annotations.NotNull;
@@ -35,10 +41,13 @@ import org.jetbrains.annotations.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public final class AndroidUtils {
     public static final List<String> SCHEDULED_PERIOD_LIST = Arrays.stream(ScheduledPeriod.values()).map(Enum::toString).collect(Collectors.toList());
@@ -63,9 +72,13 @@ public final class AndroidUtils {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         ShortcutManagerCompat.removeAllDynamicShortcuts(context);
+        NotificationHelper.cancelAllScheduledNotifications(context);
+        SharedPreferences player = context.getSharedPreferences("player", MODE_PRIVATE);
+        player.edit().clear().apply();
         context.startActivity(intent);
     }
 
+    @ColorInt
     public static int getColor(CategoryView category) {
         if (category == null || category.getColor() == null || category.getColor().isBlank())
             return Color.GRAY;
@@ -73,6 +86,7 @@ public final class AndroidUtils {
         return getColor(colorHex);
     }
 
+    @ColorInt
     public static int getColor(String colorHex) {
         try {
             return Color.parseColor(colorHex);
@@ -162,7 +176,8 @@ public final class AndroidUtils {
 
     @NotNull
     public static String formatCurrency(BigDecimal price, Context context) {
-        return formatCurrency(price.floatValue(), context);
+        float f = price == null ? 0f : price.floatValue();
+        return formatCurrency(f, context);
     }
 
     @NotNull
@@ -171,56 +186,61 @@ public final class AndroidUtils {
     }
 
     public static String getCurrencySymbol(Context context) {
-        SharedPreferences appPreferences = context.getSharedPreferences(Constants.Preferences.APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences appPreferences = context.getSharedPreferences(Constants.Preferences.APP_PREFERENCES, MODE_PRIVATE);
         return appPreferences.getString(Constants.Preferences.PREFERRED_CURRENCY, "");
     }
 
     public static void initChart(BarLineChartBase<?> chart, AppColorCollection colors, String format, Typeface tf) {
-//        chart.setBackgroundColor(colors.getBackgroundColor());
-        chart.getXAxis().setTextColor(colors.getForegroundColor());
-        chart.getLegend().setTextColor(colors.getForegroundColor());
-        // Grid and Borders
-        chart.getXAxis().setGridColor(colors.getMiddleColor());
-        chart.getLegend().setTextColor(colors.getForegroundColor());
-        chart.getDescription().setTextColor(colors.getForegroundColor());
-        chart.getDescription().setTypeface(tf);
+
         chart.setExtraOffsets(5, 10, 5, 5);
         chart.setDragDecelerationFrictionCoef(0.95f);
         chart.setHighlightPerTapEnabled(true);
         chart.setHighlightPerDragEnabled(false);
         chart.getDescription().setEnabled(false);
+//        chart.setDrawGridBackground(false);
+        chart.setPinchZoom(true);
+        chart.setScaleEnabled(true);
         chart.setMinimumHeight(Constants.GRAPH_MIN_HEIGHT);
-        DayAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(format);
-        // change the position of the y-labels
+
+
+        if (chart instanceof BarChart barChart) {
+            barChart.setDrawBarShadow(false);
+            barChart.setDrawValueAboveBar(true);
+        }
+
         YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         leftAxis.setTextColor(colors.getForegroundColor());
         leftAxis.setTypeface(tf);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setAxisMinimum(0f); // fallback
+
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
 
+        DayAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(format);
         XAxis xLabels = chart.getXAxis();
         xLabels.setPosition(XAxis.XAxisPosition.BOTTOM);
         xLabels.setValueFormatter(xAxisFormatter);
         xLabels.setGranularity(1f);
         xLabels.setTextColor(colors.getForegroundColor());
         xLabels.setTypeface(tf);
+
         Legend l = chart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setTextColor(colors.getForegroundColor());
-        l.setDrawInside(true);
-        l.setFormSize(8f);
-        l.setFormToTextSpace(4f);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setTypeface(tf);
-        l.setXEntrySpace(6f);
+        l.setTextColor(colors.getForegroundColor());
+        l.setDrawInside(false);
+        l.setXEntrySpace(4f);
+        l.setYEntrySpace(0f);
+        l.setWordWrapEnabled(true);
 
     }
 
     public static void showSuccessAnimation(View view) {
         if (view == null) return;
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext(), R.style.BaseDialogStyle);
         LayoutInflater inflater = LayoutInflater.from(view.getContext());
         View customView = inflater.inflate(R.layout.success_toast, null);
         builder.setView(customView);
@@ -265,6 +285,32 @@ public final class AndroidUtils {
             }
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid number: " + string);
+        }
+    }
+
+    /**
+     * Sets the provided legend onto the ListView.
+     *
+     * @return true if successful
+     */
+    public static boolean setLegendList(Legend legend, ListView listView) {
+        try {
+            if (listView == null) return false;
+            List<CategoryView> legendItems = new ArrayList<>();
+            LegendEntry[] entries = legend.getEntries();
+            for (int j = 0; j < entries.length; j++) {
+                LegendEntry item = entries[j];
+                String color = String.format("#%06X", (0xFFFFFF & item.formColor));
+                CategoryView categoryView = new CategoryView((long) j, item.label, color);
+                new Handler(Looper.getMainLooper()).post(() -> legendItems.add(categoryView));
+            }
+            CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(listView.getContext(), CategorySpinnerAdapter.SIZE_SMALL, legendItems);
+            new Handler(Looper.getMainLooper()).post(() -> listView.setAdapter(adapter));
+
+            return true;
+        } catch (NullPointerException e) {
+            Log.e("Legend", "Failed to fetch legend list");
+            return false;
         }
     }
 }

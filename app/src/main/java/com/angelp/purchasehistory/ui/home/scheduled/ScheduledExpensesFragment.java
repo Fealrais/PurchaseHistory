@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.model.ScheduledNotification;
 import com.angelp.purchasehistory.databinding.FragmentScheduledExpensesBinding;
 import com.angelp.purchasehistory.receivers.scheduled.InitiateNotificationReceiver;
+import com.angelp.purchasehistory.receivers.scheduled.NotificationHelper;
 import com.angelp.purchasehistory.web.clients.ScheduledExpenseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import com.google.gson.Gson;
@@ -87,7 +89,7 @@ public class ScheduledExpensesFragment extends Fragment {
                         if (context == null) return;
                         SharedPreferences preferences = context.getSharedPreferences(Constants.Preferences.SILENCED_NOTIFICATIONS, MODE_PRIVATE);
                         preferences.edit().putBoolean(item.getId().toString(), silenced).apply();
-                        addNotificationAlarm(context, item);
+                        NotificationHelper.addNotificationAlarm(context, item);
                         String message = getString(silenced ? R.string.notification_silenced : R.string.notification_un_silenced, item.getNote());
                         PurchaseHistoryApplication.getInstance().alert(message);
                     }).start();
@@ -115,10 +117,12 @@ public class ScheduledExpensesFragment extends Fragment {
                 public void onDeleteClick(ScheduledExpenseView item) {
                     new Thread(() -> {
                         try {
+                            Log.i("ScheduledExpense", "onDeleteClick: Deleting item"+item.getId());
                             boolean success = scheduledExpenseClient.deleteScheduledExpense(item.getId());
                             new Handler(Looper.getMainLooper()).post(() -> {
                                 if (success) {
                                     int index = adapter.getScheduledExpenses().indexOf(item);
+                                    NotificationHelper.deleteAlarm(requireContext(), item);
                                     adapter.getScheduledExpenses().remove(index);
                                     adapter.notifyItemRemoved(index);
                                     binding.emptyScheduledExpenses.setVisibility(adapter.getScheduledExpenses().isEmpty() ? View.VISIBLE : View.GONE);
@@ -206,19 +210,8 @@ public class ScheduledExpensesFragment extends Fragment {
         }
     }
 
-    private void addNotificationAlarm(Context context, ScheduledExpenseView newExpense) {
-        if (context == null) return;
-        ScheduledNotification scheduledNotification = new ScheduledNotification(newExpense);
-        Intent intent = new Intent(context, InitiateNotificationReceiver.class);
-        ArrayList<ScheduledNotification> list = new ArrayList<>();
-        list.add(scheduledNotification);
-        intent.putParcelableArrayListExtra(Constants.Arguments.NOTIFICATION_EXTRA_ARG, list);
-        context.sendBroadcast(intent);
-
-    }
-
     private void acceptCreateScheduledExpenseResult(ScheduledExpenseView newExpense) {
-        addNotificationAlarm(getContext(), newExpense);
+        NotificationHelper.addNotificationAlarm(getContext(), newExpense);
         adapter.getScheduledExpenses().add(newExpense);
         adapter.notifyItemInserted(adapter.getItemCount() - 1);
     }

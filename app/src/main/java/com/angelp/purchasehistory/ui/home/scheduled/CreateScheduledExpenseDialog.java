@@ -10,9 +10,9 @@ import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -20,6 +20,7 @@ import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.components.form.TimePickerFragment;
 import com.angelp.purchasehistory.databinding.DialogEditScheduledExpenseBinding;
+import com.angelp.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.util.Utils;
@@ -56,7 +57,7 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
     private DialogEditScheduledExpenseBinding binding;
     private DatePickerFragment datePicker;
     private TimePickerFragment timePicker;
-    private ArrayAdapter<CategoryView> categoryAdapter;
+    private CategorySpinnerAdapter categoryAdapter;
     private List<CategoryView> categoryOptions;
     private ScheduledExpenseView scheduledExpense = new ScheduledExpenseView();
     private ArrayAdapter<String> periodAdapter;
@@ -72,43 +73,32 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
         scheduledExpense = new ScheduledExpenseView();
         scheduledExpense.setEnabled(true);
         scheduledExpense.setTimestamp(LocalDateTime.now());
+        LayoutInflater layoutInflater = getLayoutInflater();
+        binding = DialogEditScheduledExpenseBinding.inflate(layoutInflater);
 
-        binding = DialogEditScheduledExpenseBinding.inflate(getLayoutInflater());
-        datePicker = new DatePickerFragment(LocalDate.now());
-        timePicker = new TimePickerFragment(LocalTime.now());
         periodAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, SCHEDULED_PERIOD_LIST);
+        setupDateTimePickers();
         setupCategoryAdapter();
         setupTextWatchers();
         setupSpinner();
-        setupDateTimePickers();
         setupCancelButton();
         setupSaveButton();
-        return createAlertDialog();
+        View title = layoutInflater.inflate(R.layout.dialog_title, null);
+        ((TextView) title.findViewById(R.id.dialogTitle)).setText(R.string.create_schedule);
+        return createDialog(title);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        datePicker.getDateResult().observe(getViewLifecycleOwner(), (v) -> {
-            LocalDateTime localDateTime = scheduledExpense.getTimestamp() != null ? scheduledExpense.getTimestamp() : LocalDateTime.now();
-            scheduledExpense.setTimestamp(localDateTime.with(v));
-            binding.editScheduledExpenseButtonShowDate.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
-            AndroidUtils.setNextTimestampString(binding.editScheduledExpenseTextViewNextDate, scheduledExpense);
-        });
-        timePicker.getTimeResult().observe(getViewLifecycleOwner(), (v) -> {
-            LocalDateTime localDateTime = scheduledExpense.getTimestamp() != null ? scheduledExpense.getTimestamp() : LocalDateTime.now();
-            scheduledExpense.setTimestamp(localDateTime.with(v));
-            binding.editScheduledExpenseButtonShowTime.setText(v.format(DateTimeFormatter.ofPattern("HH:mm")));
-            AndroidUtils.setNextTimestampString(binding.editScheduledExpenseTextViewNextDate, scheduledExpense);
-        });
-        return binding.getRoot();
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     private void setupCategoryAdapter() {
         new Thread(() -> {
             categoryOptions = purchaseClient.getAllCategories();
-            categoryOptions.add(0, new CategoryView(null, "None", "#fff"));
-            categoryAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, categoryOptions);
+            categoryOptions.add(0, new CategoryView(null, getString(R.string.choose_category), "#ffffff"));
+            categoryAdapter = new CategorySpinnerAdapter(requireContext(), categoryOptions);
             new Handler(Looper.getMainLooper()).post(() -> binding.editScheduledExpenseSpinnerCategory.setAdapter(categoryAdapter));
         }).start();
     }
@@ -121,12 +111,11 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
             }
         });
         binding.editScheduledExpenseEditTextPrice.addTextChangedListener(new AfterTextChangedWatcher() {
-
             @Override
             public void afterTextChanged(Editable s) {
                 String current = s.toString();
                 if (Utils.isInvalidCurrency(current)) {
-                    binding.editScheduledExpenseEditTextPrice.setError("Invalid price!");
+                    binding.editScheduledExpenseEditTextPrice.setError(getString(R.string.error_invalid_price));
                     binding.editScheduledExpenseSaveButton.setEnabled(false);
                 } else {
                     if (current.trim().isEmpty()) scheduledExpense.setPrice(new BigDecimal(BigInteger.ZERO));
@@ -167,13 +156,22 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
     }
 
     private void setupDateTimePickers() {
-        binding.editScheduledExpenseToggleButtonEnabled.setChecked(true);
-        binding.editScheduledExpenseToggleButtonEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            scheduledExpense.setEnabled(isChecked);
-            AndroidUtils.setNextTimestampString(binding.editScheduledExpenseTextViewNextDate, scheduledExpense);
-        });
+        datePicker = new DatePickerFragment(LocalDate.now());
+        timePicker = new TimePickerFragment(LocalTime.now());
         binding.editScheduledExpenseButtonShowDate.setOnClickListener(v -> datePicker.show(getParentFragmentManager(), "datePicker"));
         binding.editScheduledExpenseButtonShowTime.setOnClickListener(v -> timePicker.show(getParentFragmentManager(), "timePicker"));
+        datePicker.getDateResult().observe(this, (v) -> {
+            LocalDateTime localDateTime = scheduledExpense.getTimestamp() != null ? scheduledExpense.getTimestamp() : LocalDateTime.now();
+            scheduledExpense.setTimestamp(localDateTime.with(v));
+            binding.editScheduledExpenseButtonShowDate.setText(v.format(DateTimeFormatter.ISO_LOCAL_DATE));
+            AndroidUtils.setNextTimestampString(binding.editScheduledExpenseTextViewNextDate, scheduledExpense);
+        });
+        timePicker.getTimeResult().observe(this, (v) -> {
+            LocalDateTime localDateTime = scheduledExpense.getTimestamp() != null ? scheduledExpense.getTimestamp() : LocalDateTime.now();
+            scheduledExpense.setTimestamp(localDateTime.with(v));
+            binding.editScheduledExpenseButtonShowTime.setText(v.format(DateTimeFormatter.ofPattern("HH:mm")));
+            AndroidUtils.setNextTimestampString(binding.editScheduledExpenseTextViewNextDate, scheduledExpense);
+        });
     }
 
     private void setupSaveButton() {
@@ -185,10 +183,10 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
     }
 
 
-    private Dialog createAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.title_scheduled_expenses);
+    private Dialog createDialog(View title) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.BaseDialogStyle);
         builder.setView(binding.getRoot());
+        builder.setCustomTitle(title);
         return builder.create();
     }
 

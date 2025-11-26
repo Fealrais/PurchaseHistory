@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="?attr/colorSurface"
+    android:background="@color/surfaceA10"
     android:clipToPadding="false"
     android:elevation="4dp"
     android:orientation="vertical"
@@ -15,8 +15,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
         android:text="@string/tour_prompt_title"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="?attr/colorOnSurface" />
+        android:textColor="@color/text" />
 
     <TextView
         android:id="@+id/tour_guide_description"
@@ -25,8 +24,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="sans-serif"
         android:text="@string/tour_prompt_message"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="?attr/colorOnSurface" />
+        android:textColor="@color/text" />
 
     <TextView
         android:id="@+id/tour_guide_description2"
@@ -35,8 +33,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="sans-serif"
         android:text="@string/tour_prompt_message2"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="?attr/colorOnSurface" />
+        android:textColor="@color/text" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,23 +47,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:background="?attr/selectableItemBackground"
+            style="@style/Primary"
             android:fontFamily="sans-serif-medium"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
-            android:text="@string/yes"
-            android:textColor="?attr/colorPrimary" />
+            android:text="@string/yes" />
 
         <Button
             android:id="@+id/tour_guide_skip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackground"
+            style="@style/Borderless"
             android:fontFamily="sans-serif-medium"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
             android:text="@string/skip"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/text" />
     </LinearLayout>
 </LinearLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center|start"
+    android:paddingVertical="6dp"
+    android:paddingHorizontal="8dp">
+
+    <View
+        android:id="@+id/categoryColor"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="#ff0000"
+        android:background="@drawable/circle"
+
+        />
+    <TextView
+        android:id="@+id/categoryTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lorem"
+        />
+</LinearLayout>

@@ -30,6 +30,7 @@ public class DashboardComponent implements Parcelable {
     private transient int cardIconId;
     private transient int description;
     private transient int infoDescription;
+    private transient boolean landscapeOnly =false;
     private transient RefreshablePurchaseFragment fragment;
 
     public DashboardComponent(String fragment) {
@@ -53,7 +54,7 @@ public class DashboardComponent implements Parcelable {
     private void setupResources(String fragmentName) {
         switch (fragmentName) {
             case "PieChartFragment" -> {
-                title = R.string.title_pie_chart;
+                title = R.string.pie_chart;
                 cardIconId = R.mipmap.piechart;
                 infoDescription = R.string.help_info_pie_chart;
                 description = R.string.description_pie_chart;
@@ -63,18 +64,21 @@ public class DashboardComponent implements Parcelable {
                 cardIconId = R.mipmap.linechart;
                 infoDescription = R.string.help_info_line_chart;
                 description = R.string.description_line_chart;
+                landscapeOnly = true;
             }
             case "AccumulativeChartFragment" -> {
                 title = R.string.title_accumulative_line_chart;
                 cardIconId = R.mipmap.linechart;
                 infoDescription = R.string.help_info_accumulative_line_chart;
                 description = R.string.description_accumulative_line_chart;
+                landscapeOnly = true;
             }
             case "BarChartFragment" -> {
                 title = R.string.title_stacked_bar_chart;
                 cardIconId = R.mipmap.barchart;
                 infoDescription = R.string.help_info_stacked_bar_chart;
                 description = R.string.description_bar_chart;
+                landscapeOnly = true;
             }
             case "PurchaseListPurchaseFragment" -> {
                 title = R.string.title_purchases_list;
