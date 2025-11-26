@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
 import androidx.core.content.pm.ShortcutManagerCompat;
 import com.angelp.purchasehistory.MainActivity;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
@@ -77,6 +78,7 @@ public final class AndroidUtils {
         context.startActivity(intent);
     }
 
+    @ColorInt
     public static int getColor(CategoryView category) {
         if (category == null || category.getColor() == null || category.getColor().isBlank())
             return Color.GRAY;
@@ -84,6 +86,7 @@ public final class AndroidUtils {
         return getColor(colorHex);
     }
 
+    @ColorInt
     public static int getColor(String colorHex) {
         try {
             return Color.parseColor(colorHex);
@@ -173,7 +176,8 @@ public final class AndroidUtils {
 
     @NotNull
     public static String formatCurrency(BigDecimal price, Context context) {
-        return formatCurrency(price.floatValue(), context);
+        float f = price == null ? 0f : price.floatValue();
+        return formatCurrency(f, context);
     }
 
     @NotNull

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
@@ -58,16 +57,11 @@ public class ProfileFragment extends Fragment {
                 CategoryAnalyticsEntry category = userAnalytics.getMostFrequentlyPurchasedCategory();
                 if (category != null) {
                     int color = AndroidUtils.getColor(category.getCategory());
-                    Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.card_background);
-                    if (drawable != null) {
-                        int textColor = AndroidUtils.getTextColor(color);
-                        drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.ADD));
-                        binding.categoryAnalytics.setBackground(drawable);
-                        binding.mostFrequentlyPurchasedCategoryLabel.setTextColor(textColor);
-                        binding.mostFrequentlyPurchasedCategoryName.setTextColor(textColor);
-                        binding.mostFrequentlyPurchasedCategoryCount.setTextColor(textColor);
-                        binding.mostFrequentlyPurchasedCategorySum.setTextColor(textColor);
-                    }
+                    int textColor = AndroidUtils.getTextColor(color);
+                    Drawable background = binding.mostFrequentlyPurchasedCategoryName.getBackground();
+                    background.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SCREEN));
+                    binding.mostFrequentlyPurchasedCategoryName.setTextColor(textColor);
+
                     binding.mostFrequentlyPurchasedCategoryName.setText(category.getCategory().getName());
                     binding.mostFrequentlyPurchasedCategoryCount.setText(getString(R.string.most_frequently_purchased_category_count, category.getCount().toString()));
                     binding.mostFrequentlyPurchasedCategorySum.setText(getString(R.string.most_frequently_purchased_category_sum, AndroidUtils.formatCurrency(category.getSum(), getContext())));
