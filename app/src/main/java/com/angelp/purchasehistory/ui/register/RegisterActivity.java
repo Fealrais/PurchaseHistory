@@ -7,6 +7,8 @@ import android.os.LocaleList;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 import androidx.annotation.StringRes;
@@ -42,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText emailEditText = binding.email;
         final Button registerButton = binding.registerRegisterButton;
         final ProgressBar loadingProgressBar = binding.loading;
+        final TextView errorLabel = binding.errorLabel;
         final CheckBox acceptTermsCheckBox = binding.acceptTerms;
 
         binding.registerBackButton.setOnClickListener((view) -> onBackPressed());
@@ -53,6 +56,9 @@ public class RegisterActivity extends AppCompatActivity {
             registerButton.setEnabled(registerFormState.isDataValid() && acceptTermsCheckBox.isChecked());
             if (registerFormState.getUsernameError() != null) {
                 usernameEditText.setError(getString(registerFormState.getUsernameError()));
+            }
+            if (registerFormState.getEmailError() != null) {
+                emailEditText.setError(getString(registerFormState.getEmailError()));
             }
             if (registerFormState.getPasswordError() != null) {
                 if (registerFormState.getPasswordError().equals(R.string.invalid_password_match))
@@ -71,10 +77,11 @@ public class RegisterActivity extends AppCompatActivity {
                 showRegisterFailed(registerResult.getError());
             }
             if (registerResult.getSuccess() != null) {
+                binding.errorLabel.setVisibility(View.INVISIBLE);
                 updateUiWithUser(registerResult.getSuccess());
+                setResult(Activity.RESULT_OK);
+                finish();
             }
-            setResult(Activity.RESULT_OK);
-            finish();
         });
 
         checkIfLoggedIn();
@@ -137,7 +144,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void showRegisterFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+        binding.errorLabel.setText(errorString);
+        binding.errorLabel.setVisibility(View.VISIBLE);
+        Animation jump = AnimationUtils.loadAnimation(this, R.anim.jump);
+        binding.errorLabel.startAnimation(jump);
     }
 
 

@@ -31,9 +31,11 @@
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_navigation_profile_to_navigation_edit_profile"
+            app:popUpTo="@id/navigation_profile"
             app:destination="@id/navigation_edit_profile" />
         <action
             android:id="@+id/action_navigation_profile_to_navigation_change_password"
+            app:popUpTo="@id/navigation_profile"
             app:destination="@id/navigation_change_password" />
     </fragment>
     <fragment

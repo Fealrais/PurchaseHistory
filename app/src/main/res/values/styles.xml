@@ -38,8 +38,9 @@
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
-    <style name="AppBarStyle" parent="ThemeOverlay.AppCompat.ActionBar">
+    <style name="AppBarStyle" parent="Widget.Material3.Toolbar">
         <item name="android:background">@color/surfaceA10</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="BorderedDropdown" parent="Widget.AppCompat.Spinner.DropDown">
@@ -59,4 +60,10 @@
     <style name="App_MaterialTimePicker_Theme" parent="ThemeOverlay.Material3.MaterialTimePicker">
         <item name="android:background">@drawable/bordered_bg</item>
     </style>
+    <style name="AppCardView">
+        <item name="elevation">5dp</item>
+        <item name="android:background">@drawable/bordered_bg</item>
+        <item name="android:backgroundTint">@color/surfaceA10</item>
+    </style>
+
 </resources>

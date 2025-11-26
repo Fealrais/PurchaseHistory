@@ -60,12 +60,13 @@
 
     <Button
         android:id="@+id/see_all_button"
+        style="@style/Bordered"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:visibility="gone"
-        app:icon="@drawable/baseline_keyboard_arrow_right_24"
+        android:drawableEnd="@drawable/baseline_keyboard_arrow_right_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -1,15 +1,19 @@
 <resources>
-    <style name="Theme.PurchaseHistory" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="android:colorBackground">@color/surfaceA0</item>
+    <style name="Theme.PurchaseHistory" parent="Theme.AppCompat.DayNight">
         <item name="android:navigationBarColor">@color/surfaceA20</item>
         <item name="fontFamily">@font/falling_sky</item>
         <item name="alertDialogTheme">@style/BaseDialogStyle</item>
         <item name="dialogTheme">@style/BaseDialogStyle</item>
         <item name="colorPrimary">@color/primaryA0</item>
         <item name="colorOnPrimary">@color/black</item>
-        <item name="colorSurface">@color/surfaceA20</item>
+        <item name="colorSurface">@color/surfaceA0</item>
+        <item name="android:windowBackground">@color/surfaceA0</item>
+        <item name="colorContainer">@color/surfaceA10</item>
+        <item name="colorOutline">@color/primaryA10</item>
         <item name="actionBarTheme">@style/AppBarStyle</item>
         <item name="materialCalendarTheme">@style/App_MaterialCalendar_Theme</item>
         <item name="materialTimePickerTheme">@style/App_MaterialTimePicker_Theme</item>
+        <item name="materialCardViewStyle">@style/AppCardView</item>
     </style>
+
 </resources>

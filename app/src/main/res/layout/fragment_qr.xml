@@ -155,6 +155,7 @@
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/add_note"
+        android:layout_marginHorizontal="8dp"
         android:inputType="text"
         android:nextFocusDown="@id/qr_submitButton"
         app:layout_constraintEnd_toEndOf="@+id/qr_priceInputFrame"
