@@ -65,5 +65,4 @@
         <item name="android:background">@drawable/bordered_bg</item>
         <item name="android:backgroundTint">@color/surfaceA10</item>
     </style>
-
 </resources>

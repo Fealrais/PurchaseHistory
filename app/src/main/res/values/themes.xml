@@ -15,5 +15,4 @@
         <item name="materialTimePickerTheme">@style/App_MaterialTimePicker_Theme</item>
         <item name="materialCardViewStyle">@style/AppCardView</item>
     </style>
-
 </resources>
