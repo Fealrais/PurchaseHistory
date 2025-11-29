@@ -55,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
     private int tourStep = 0;
     private NavController navController;
     private final Gson gson = new Gson();
+    private Menu menu;
 
     /**
      *
@@ -142,6 +143,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
+        this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
