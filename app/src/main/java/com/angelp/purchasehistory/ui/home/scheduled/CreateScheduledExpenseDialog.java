@@ -192,11 +192,11 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
     }
 
     private void onSubmit(DialogInterface dialog) {
-        if (StringUtils.isEmpty(scheduledExpense.getNote()) || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()) {
+        if (StringUtils.isEmpty(scheduledExpense.getPrice().toString()) || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()) {
             binding.editScheduledExpenseEditTextPrice.setError(getText(R.string.error_price_empty));
             return;
         }
-        if (scheduledExpense.getPrice() == null || binding.editScheduledExpenseEditTextName.getText().toString().isBlank()) {
+        if (scheduledExpense.getNote() == null || binding.editScheduledExpenseEditTextName.getText().toString().isBlank()) {
             binding.editScheduledExpenseEditTextName.setError(getText(R.string.error_must_not_be_empty));
             return;
         }

@@ -107,10 +107,9 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
             for (Map.Entry<LocalDate, List<Entry>> entry : entriesMap.entrySet()) {
                 List<Entry> entries = entry.getValue();
                 LineDataSet lineDataSet = new LineDataSet(entries, "Purchases");
-//                lineDataSet.setDrawIcons(false);
                 lineDataSet.setDrawCircleHole(false);
                 lineDataSet.setValueTypeface(tf);
-                lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                lineDataSet.setMode(LineDataSet.Mode.LINEAR);
                 lineDataSet.setDrawFilled(true);
                 Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.fade_red);
 

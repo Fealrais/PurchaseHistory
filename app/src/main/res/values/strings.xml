@@ -37,8 +37,6 @@
     <string name="time">Time</string>
     <string name="reset_text">Reset</string>
     <string name="qr_open_camera_button_hint">Open Camera for QR code</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="currency_zero">0.00</string>
     <string name="edit_text">Edit</string>
     <string name="add_button_text">Add</string>
@@ -156,7 +154,27 @@
     <string name="privacy">Privacy Policy</string>
     <string name="privacy_text">Your privacy is important to us. This application collects and stores your purchase history data on a secure server. No personal data is shared with third parties without your explicit consent.\nYou have full control over your data and can delete it at any time. For any questions or concerns, please contact the developer at:\n<a href="mailto:purchase.history.bg@gmail.com">purchase.history.bg@gmail.com</a>.\nBy using this application, you consent to the collection and use of your data as described in this policy.</string>
     <string name="tour_prompt_message2">Would you like a quick tour to get familiar with the features and functionalities of the application?</string>
-
+    <string name="help_dashboard">The Dashboard gives you a quick look at your spending and helps you spot habits.\n\n
+- Want it your way?\n
+Tap the ⚙️ settings icon at the top to add, remove or reorder cards.\n\n
+- Want to see a chart bigger?\n
+Just tap the > arrow in the top-right corner of any card.\n\n
+- Need to focus on a category or month?\n
+Use the filter at the very top of the screen.
+    </string>
+    <string name="help_schedule">
+        Scheduled Expenses let you plan recurring payments so you never forget them.\n\n
+• Tap the + button to create a new planned expense\n
+• Tap the three dots ⋮ to edit, delete or manually trigger a payment right now\n
+• Turn notifications on/off for each expense individually\n
+• When a notification appears, tap “Add Purchase” to record it instantly or dismiss to skip
+    </string>
+    <string name="help_qrscanner">This is where you add a new purchase to your history.\n\nFastest way: tap the camera button and scan a QR receipt — the app will automatically fill in shop, amount, date and items for you.\nYou can also pick a photo from your gallery if you already have the QR saved.\n\nIf there’s no QR, just type the details manually — everything is optional except the amount.\n\nTap Save when you’re done!</string>
+    <string name="help_profile">This is your Profile page.\n\n
+Here you can:\n
+• See your personal stats — total purchases, favorite categories, spending over time\n
+• Download all your data as a file (Excel/CSV) — tap the Download button\n
+• Edit your name, email or other details</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="skip">Skip</string>

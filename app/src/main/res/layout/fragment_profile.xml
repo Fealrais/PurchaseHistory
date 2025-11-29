@@ -177,6 +177,9 @@
 
                 <Button
                     style="@style/Borderless"
+                    android:enabled="false"
+                    android:textColor="#808080"
+                    android:backgroundTint="@color/surfaceA30"
                     android:id="@+id/share_link_button"
                     android:layout_width="0dp"
                     android:layout_height="48dp"

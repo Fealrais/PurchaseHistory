@@ -51,7 +51,7 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
         Log.d(TAG, "Sending notification with ID: " + id);
         manager.notify(id.intValue(), notification);
         if (scheduledNotification.isRepeating()) {
-            NotificationHelper.reschedule(scheduledNotification, context);
+            NotificationHelper.rescheduleNextAttempt(scheduledNotification, context);
         }
     }
 

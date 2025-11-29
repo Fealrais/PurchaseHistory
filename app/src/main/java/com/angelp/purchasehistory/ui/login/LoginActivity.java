@@ -16,18 +16,16 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistory.R;
-import com.angelp.purchasehistory.data.Constants;
-import com.angelp.purchasehistory.data.model.ScheduledNotification;
 import com.angelp.purchasehistory.databinding.ActivityLoginBinding;
-import com.angelp.purchasehistory.receivers.scheduled.InitiateNotificationReceiver;
+import com.angelp.purchasehistory.receivers.scheduled.NotificationHelper;
 import com.angelp.purchasehistory.ui.forgotpassword.ForgotPasswordEmailActivity;
+import com.angelp.purchasehistory.ui.home.HomeActivity;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
 import com.angelp.purchasehistory.web.clients.ScheduledExpenseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 @AndroidEntryPoint
@@ -77,7 +75,9 @@ public class LoginActivity extends AppCompatActivity {
                 scheduleNotificationsFromUser(this);
                 updateUiWithUser(loginResult.getSuccess().getUsername());
                 setResult(Activity.RESULT_OK);
-                finish();
+                Intent intent = new Intent(this, HomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 
@@ -113,15 +113,7 @@ public class LoginActivity extends AppCompatActivity {
         new Thread(() -> {
             List<ScheduledExpenseView> all = scheduledExpenseClient.findAllForUser();
             if (all.isEmpty()) return;
-
-            ArrayList<ScheduledNotification> list = new ArrayList<>();
-            for (ScheduledExpenseView v : all) {
-                list.add(new ScheduledNotification(v));
-            }
-
-            Intent intent = new Intent(context, InitiateNotificationReceiver.class);
-            intent.putParcelableArrayListExtra(Constants.Arguments.NOTIFICATION_EXTRA_ARG, list);
-            context.sendBroadcast(intent);
+            NotificationHelper.setupAllAlarms(context, all);
         }).start();
     }
 
