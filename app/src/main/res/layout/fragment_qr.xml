@@ -76,7 +76,7 @@
             android:layout_gravity="end|center"
             android:layout_marginEnd="20dp"
             android:contentDescription="@string/qr_open_camera_button_hint"
-            android:src="@drawable/baseline_add_photo_24"/>
+            android:src="@drawable/image"/>
 
         <ImageButton
             android:id="@+id/qrFloatingQrButton"
@@ -86,7 +86,7 @@
             android:layout_gravity="end|center"
             android:layout_marginEnd="78dp"
             android:contentDescription="@string/qr_open_camera_button_hint"
-            android:src="@drawable/qr_code_outline_icon" />
+            android:src="@drawable/qr" />
     </FrameLayout>
 
     <LinearLayout

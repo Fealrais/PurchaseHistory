@@ -313,4 +313,9 @@ public final class AndroidUtils {
             return false;
         }
     }
+
+    public static boolean isFirstTimeOpen(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.Preferences.APP_PREFERENCES, MODE_PRIVATE);
+        return preferences.getBoolean(Constants.Preferences.IS_FIRST_TIME_OPEN, true);
+    }
 }

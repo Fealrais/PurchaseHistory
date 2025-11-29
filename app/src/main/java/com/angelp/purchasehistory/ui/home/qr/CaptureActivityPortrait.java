@@ -65,7 +65,7 @@ public class CaptureActivityPortrait extends Activity implements CompoundBarcode
 
     @Override
     public void onTorchOn() {
-        switchFlashlightButton.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.baseline_flashlight_off_24));
+        switchFlashlightButton.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.flash_off));
         switchFlashlightButton.setContentDescription(getString(R.string.turn_off_flashlight));
         isTorchOn= false;
 
@@ -73,7 +73,7 @@ public class CaptureActivityPortrait extends Activity implements CompoundBarcode
 
     @Override
     public void onTorchOff() {
-        switchFlashlightButton.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.baseline_flashlight_on_24));
+        switchFlashlightButton.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.flash));
         switchFlashlightButton.setContentDescription(getString(R.string.turn_on_flashlight));
         isTorchOn= true;
 

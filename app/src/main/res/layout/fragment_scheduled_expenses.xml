@@ -43,7 +43,7 @@
         android:textColor="@color/text"
         android:visibility="gone"
         app:drawableTint="@color/text"
-        app:drawableTopCompat="@drawable/no_data" />
+        app:drawableTopCompat="@drawable/missing" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddScheduledExpense"
@@ -53,5 +53,5 @@
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="40dp"
         android:contentDescription="@string/add_scheduled_expense"
-        android:src="@drawable/baseline_add_alarm_24" />
+        android:src="@drawable/timer" />
 </FrameLayout>

@@ -30,7 +30,7 @@
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_keyboard_arrow_right_24"
+        app:srcCompat="@drawable/arrow_right"
         app:tint="@color/text" />
 
 

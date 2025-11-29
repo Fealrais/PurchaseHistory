@@ -77,8 +77,8 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentPieChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
-        tf = ResourcesCompat.getFont(inflater.getContext(), R.font.falling_sky);
-        tfBold = ResourcesCompat.getFont(inflater.getContext(), R.font.falling_sky_boldplus);
+        tf = ResourcesCompat.getFont(inflater.getContext(), R.font.inter);
+        tfBold = ResourcesCompat.getFont(inflater.getContext(), R.font.inter_bold);
         super.setLoadingScreen(binding.loadingBar);
 
         return binding.getRoot();
