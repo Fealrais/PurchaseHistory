@@ -12,39 +12,70 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseV
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.angelp.purchasehistory.data.Constants.Arguments.NOTIFICATION_EXTRA_ARG;
 
 public class NotificationHelper {
     private static final String TAG = "SchaeduledExpenseNotification";
+    public static final String SCHEDULED_NOTIFY = "com.angelp.purchasehistory.SCHEDULED_NOTIFY_";
 
-    public static void cancelAllScheduledNotifications(Context context) {
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, ScheduledNotificationReceiver.class);
+    public static void addNotificationAlarm(Context context, ScheduledExpenseView newExpense, boolean silenced) {
+        if (context == null) return;
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.Preferences.SILENCED_NOTIFICATIONS, MODE_PRIVATE);
-        for (String id : sharedPreferences.getAll().keySet()) {
-            intent.setIdentifier("com.angelp.purchasehistory.SCHEDULED_NOTIFY_" + id);
-            try {
-                PendingIntent pi = PendingIntent.getBroadcast(
-                        context,
-                        Integer.parseInt(id),
-                        intent,
-                        PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE
-                );
-                if (pi != null) {
-                    Log.i("ScheduledExpense", "cancelAllScheduledNotifications: Cancelling notification with id"+id );
-
-                    am.cancel(pi);
-                    pi.cancel();
-                }
-            } catch (NumberFormatException e) {
-                Log.e("ScheduledExpense", "cancelAllScheduledNotifications: Invalid number format in id!" );
-            }
-        }
-        sharedPreferences.edit().clear().apply();
+        sharedPreferences.edit().putBoolean(newExpense.getId().toString(), silenced).apply();
+        ScheduledNotification scheduledNotification = new ScheduledNotification(newExpense);
+        reschedule(scheduledNotification, context);
     }
 
     public static void reschedule(ScheduledNotification notification, Context context) {
+        Intent intent = new Intent(context, InitiateNotificationReceiver.class);
+        ArrayList<ScheduledNotification> list = new ArrayList<>();
+        list.add(notification);
+        intent.putParcelableArrayListExtra(Constants.Arguments.NOTIFICATION_EXTRA_ARG, list);
+        context.sendBroadcast(intent);
+    }
+
+    public static void cancelAllScheduledNotifications(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.Preferences.SILENCED_NOTIFICATIONS, MODE_PRIVATE);
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        for (String id : sharedPreferences.getAll().keySet()) {
+            cancelNotification(context, id, am);
+        }
+    }
+
+    public static void deleteAlarm(Context context, Long id) {
+        if (context == null) return;
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        ScheduledNotification n = new ScheduledNotification(id);
+        cancelNotification(context, id.toString(), am);
+        Log.i(TAG, "deleteAlarm: Deleted scheduled notification for item" + n.getId());
+    }
+
+    private static void cancelNotification(Context context, String id, AlarmManager am) {
+        Intent intent = new Intent(context, ScheduledNotificationReceiver.class);
+        intent.setIdentifier(SCHEDULED_NOTIFY + id);
+        try {
+            PendingIntent pi = PendingIntent.getBroadcast(
+                    context,
+                    Integer.parseInt(id),
+                    intent,
+                    PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE
+            );
+            if (pi != null) {
+                Log.i(TAG, "cancelAllScheduledNotifications: Cancelling notification with id" + id);
+
+                am.cancel(pi);
+                pi.cancel();
+            }
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "cancelAllScheduledNotifications: Invalid number format in id!");
+        }
+    }
+
+    public static void rescheduleNextAttempt(ScheduledNotification notification, Context context) {
         Log.i(TAG, "Notification is repeating.");
         long period = notification.getPeriod();
         long now = System.currentTimeMillis();
@@ -53,41 +84,34 @@ public class NotificationHelper {
             nextTrigger += period;
         }
         notification.setTimestamp(nextTrigger);
-        Intent reschedule = new Intent(context, InitiateNotificationReceiver.class);
-        ArrayList<ScheduledNotification> list = new ArrayList<>();
-        list.add(notification);
-        reschedule.putParcelableArrayListExtra(Constants.Arguments.NOTIFICATION_EXTRA_ARG, list);
-        context.sendBroadcast(reschedule);
+        reschedule(notification, context);
         Log.i(TAG, "reschedule: Rescheduled notification" + notification.getId() + " to " + Instant.ofEpochMilli(nextTrigger));
     }
 
-    public static void deleteAlarm(Context context, ScheduledExpenseView newExpense) {
-        if (context == null) return;
-        ScheduledNotification n = new ScheduledNotification(newExpense);
-        Intent intent = new Intent(context, ScheduledNotificationReceiver.class);
-        int requestCode = Math.toIntExact(n.getId());
 
-        intent.putExtra(ScheduledNotificationReceiver.SCHEDULED_NOTIFICATION_EXTRA, n);
-        intent.setAction("com.angelp.purchasehistory.SCHEDULED_NOTIFY_" + n.getId());
-
-        PendingIntent pi = PendingIntent.getBroadcast(
-                context,
-                requestCode,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-        pi.cancel();
-        Log.i("ScheduledExpense", "deleteAlarm: Deleted scheduled notification for item" + n.getId());
-    }
-
-    public static void addNotificationAlarm(Context context, ScheduledExpenseView newExpense) {
-        if (context == null) return;
-        Log.i("ScheduledExpense", "createAlarm: Deleted scheduled notification for item" + newExpense.getId());
-        ScheduledNotification scheduledNotification = new ScheduledNotification(newExpense);
+    public static void setupAllAlarms(Context context, List<ScheduledExpenseView> scheduledExpenses) {
         Intent intent = new Intent(context, InitiateNotificationReceiver.class);
+        SharedPreferences preferences = context.getSharedPreferences(Constants.Preferences.SILENCED_NOTIFICATIONS, MODE_PRIVATE);
+
         ArrayList<ScheduledNotification> list = new ArrayList<>();
-        list.add(scheduledNotification);
-        intent.putParcelableArrayListExtra(Constants.Arguments.NOTIFICATION_EXTRA_ARG, list);
+        SharedPreferences.Editor editor = preferences.edit();
+        for (ScheduledExpenseView s : scheduledExpenses) {
+            ScheduledNotification notification = new ScheduledNotification(s);
+            list.add(notification);
+        }
+        for (Map.Entry<String, ?> entry : preferences.getAll().entrySet()) {
+            String key = entry.getKey();
+            Long id = Long.valueOf(key);
+            if (scheduledExpenses.stream().noneMatch(s -> s.getId().equals(id))) {
+                editor.remove(key);
+                NotificationHelper.deleteAlarm(context, id);
+            } else {
+                boolean shouldSilence = preferences.getBoolean(key, true);
+                editor.putBoolean(key, shouldSilence);
+            }
+        }
+        editor.apply();
+        intent.putParcelableArrayListExtra(NOTIFICATION_EXTRA_ARG, list);
         context.sendBroadcast(intent);
 
     }

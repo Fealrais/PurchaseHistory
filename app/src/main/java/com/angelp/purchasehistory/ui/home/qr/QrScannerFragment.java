@@ -141,7 +141,8 @@ public class QrScannerFragment extends Fragment {
         new Thread(() -> {
             allCategories = qrScannerViewModel.getAllCategories();
             categoryAdapter = new CategorySpinnerAdapter(this.getContext(), allCategories);
-            new Handler(Looper.getMainLooper()).post(() -> binding.qrCategorySpinner.setAdapter(categoryAdapter));
+            new Handler(Looper.getMainLooper()).post(() -> {if(binding==null) return;
+            binding.qrCategorySpinner.setAdapter(categoryAdapter);});
         }).start();
         return binding.getRoot();
     }

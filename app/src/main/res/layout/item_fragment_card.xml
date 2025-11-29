@@ -49,17 +49,19 @@
             android:paddingHorizontal="8dp" />
 
         <ImageButton
+            style="@style/Bordered"
             android:id="@+id/buttonMoveUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:contentDescription="@string/move_up"
             android:src="@drawable/baseline_arrow_up_24" />
 
         <ImageButton
             android:id="@+id/buttonMoveDown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Bordered"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:contentDescription="@string/move_down"
             android:src="@drawable/baseline_arrow_down_24" />

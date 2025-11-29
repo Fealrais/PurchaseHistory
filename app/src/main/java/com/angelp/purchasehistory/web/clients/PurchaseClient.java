@@ -39,12 +39,7 @@ public class PurchaseClient extends HttpClient {
 
     public PurchaseView createPurchase(PurchaseDTO purchaseDTO) {
         try (Response res = post(BACKEND_URL + "/purchase", purchaseDTO)) {
-            ResponseBody body = res.body();
-            if (res.isSuccessful() && body != null) {
-                String json = body.string();
-                Log.i("httpResponse", "Create Purchase: " + json);
-                return gson.fromJson(json, PurchaseResponse.class).toPurchaseView();
-            } else throw new IOException("Failed to create purchase");
+            return utils.getBody(res, PurchaseView.class);
         } catch (IOException ignored) {
         }
         return null;

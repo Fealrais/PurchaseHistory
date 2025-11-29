@@ -58,6 +58,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="10dp"
+            android:selectAllOnFocus="true"
             android:autofillHints="The total cost of the bill"
             android:ems="10"
             android:hint="@string/price"

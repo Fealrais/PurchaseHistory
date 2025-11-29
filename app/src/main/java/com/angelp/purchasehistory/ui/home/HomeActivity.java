@@ -53,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
     private int tourStep = 0;
     private NavController navController;
     private final Gson gson = new Gson();
+    private Menu menu;
 
     /**
      *
@@ -74,7 +75,12 @@ public class HomeActivity extends AppCompatActivity {
                 .findFragmentById(R.id.nav_host_fragment_user_activity);
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
-
+            navController.addOnDestinationChangedListener((controller, currentDest, c) -> {
+                if (menu!=null){
+                    MenuItem item = menu.findItem(R.id.menu_dashboard_settings);
+                    if (item != null) item.setVisible(Objects.equals(currentDest.getId(), R.id.navigation_dashboard));
+                }
+            });
             NavigationUI.setupWithNavController(binding.navView, navController);
             NavigationUI.setupActionBarWithNavController(this, navHostFragment.getNavController(), appBarConfiguration);
         }
@@ -82,6 +88,7 @@ public class HomeActivity extends AppCompatActivity {
             showTourPrompt();
         }
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         return navController.navigateUp() || super.onSupportNavigateUp();
@@ -140,30 +147,21 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         getMenuInflater().inflate(R.menu.home_menu, menu);
+        this.menu = menu;
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (navController!=null && navController.getCurrentDestination()!=null) {
-            MenuItem item = menu.findItem(R.id.menu_dashboard_settings);
-            if (item!=null) item.setVisible(Objects.equals(navController.getCurrentDestination().getId(), R.id.navigation_dashboard));
-        }
-        return super.onPrepareOptionsMenu(menu);
     }
 
     private String getCurrentHelpPrompt(NavDestination currentDestination) {
         int id = currentDestination.getId();
-        if (Objects.equals(id,R.id.navigation_dashboard))
-            return getString(R.string.tour_navigation_dashboard_secondary); // Todo: replace the temporary string
-        if (Objects.equals(id,R.id.navigation_qrscanner))
-            return getString(R.string.tour_navigation_qrscanner_secondary); // Todo: replace the temporary string
-        if (Objects.equals(id,R.id.navigation_profile))
-            return getString(R.string.tour_navigation_profile_secondary); // Todo: replace the temporary string
-        if (Objects.equals(id,R.id.navigation_scheduled_expenses))
-            return getString(R.string.tour_navigation_scheduled_expenses_secondary); // Todo: replace the temporary string
+        if (Objects.equals(id, R.id.navigation_dashboard))
+            return getString(R.string.help_dashboard);
+        if (Objects.equals(id, R.id.navigation_qrscanner))
+            return getString(R.string.help_schedule);
+        if (Objects.equals(id, R.id.navigation_profile))
+            return getString(R.string.help_qrscanner);
+        if (Objects.equals(id, R.id.navigation_scheduled_expenses))
+            return getString(R.string.help_profile);
         return "";
     }
 
@@ -173,7 +171,7 @@ public class HomeActivity extends AppCompatActivity {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_dashboard_settings) {
             openCustomizationDialog();
-        } else if (itemId == R.id.menu_help && navController!=null) {
+        } else if (itemId == R.id.menu_help && navController != null) {
             showHelp(navController.getCurrentDestination());
         }
         return super.onOptionsItemSelected(item);
@@ -181,7 +179,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showHelp(NavDestination currentDestination) {
         String currentHelpPrompt = getCurrentHelpPrompt(currentDestination);
-        new AlertDialog.Builder(this,R.style.BaseDialogStyle)
+        new AlertDialog.Builder(this, R.style.BaseDialogStyle)
                 .setMessage(currentHelpPrompt)
                 .create().show();
     }
@@ -192,13 +190,14 @@ public class HomeActivity extends AppCompatActivity {
 
             saveFragmentsSetupToPreferences(updatedFragments);
             Fragment dashboard = binding.navHostFragmentUserActivity.getFragment();
-            if(dashboard!=null){
+            if (dashboard != null) {
                 getSupportFragmentManager().beginTransaction().detach(dashboard).commit();
                 getSupportFragmentManager().beginTransaction().attach(dashboard).commit();
             }
         });
         dialog.show(getSupportFragmentManager(), "customizationDialog");
     }
+
     private List<DashboardComponent> getFragmentsFromPreferences() {
         SharedPreferences preferences = getSharedPreferences("dashboard_prefs", Context.MODE_PRIVATE);
         String savedFragmentsJson = preferences.getString("saved_fragments", "[]");
@@ -208,6 +207,7 @@ public class HomeActivity extends AppCompatActivity {
         List<DashboardComponent> dashboardComponents = gson.fromJson(savedFragmentsJson, type);
         return dashboardComponents.stream().map(DashboardComponent::fillFromName).collect(Collectors.toList());
     }
+
     private void saveFragmentsSetupToPreferences(List<DashboardComponent> selectedFragments) {
         SharedPreferences preferences = PurchaseHistoryApplication.getContext()
                 .getSharedPreferences(Constants.Preferences.DASHBOARD_PREFS, Context.MODE_PRIVATE);
@@ -217,6 +217,7 @@ public class HomeActivity extends AppCompatActivity {
         editor.putString("saved_fragments", fragmentsJson);
         editor.apply();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

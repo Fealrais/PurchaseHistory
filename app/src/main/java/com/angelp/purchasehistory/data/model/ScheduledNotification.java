@@ -16,6 +16,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -42,6 +43,9 @@ public class ScheduledNotification implements Parcelable {
     private Boolean enabled;
     private String note;
 
+    public ScheduledNotification(Long id) {
+        this.id = id;
+    }
     public ScheduledNotification(ScheduledExpenseView expense) {
         this.id = expense.getId();
         this.timestamp = getEpochMilli(expense);
@@ -110,5 +114,20 @@ public class ScheduledNotification implements Parcelable {
         purchaseDTO.setCategoryId(this.categoryId);
         purchaseDTO.setTimestamp(LocalDateTime.now());
         return purchaseDTO;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        ScheduledNotification that = (ScheduledNotification) object;
+
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }
