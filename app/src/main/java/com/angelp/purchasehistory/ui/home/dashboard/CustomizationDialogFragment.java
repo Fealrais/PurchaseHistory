@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.DialogCustomizationBinding;
 
@@ -24,6 +25,7 @@ public class CustomizationDialogFragment extends DialogFragment {
 
     public CustomizationDialogFragment(List<DashboardComponent> selectedFragments, Consumer<List<DashboardComponent>> onSave) {
         this.selectedFragments = selectedFragments;
+        setStyle(STYLE_NO_TITLE, R.style.BaseDialogStyle);
         this.onSave = onSave;
     }
 

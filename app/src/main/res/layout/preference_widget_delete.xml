@@ -6,6 +6,6 @@
     android:layout_height="48dp"
     android:layout_gravity="center"
     android:background="?attr/selectableItemBackgroundBorderless"
-    android:src="@drawable/baseline_delete_24"
+    android:src="@drawable/trash"
     app:tint="@color/dangerA10"
     android:contentDescription="@string/delete" />

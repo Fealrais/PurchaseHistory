@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:icon="@drawable/baseline_settings_24"
+    <item android:icon="@drawable/settings_chart"
         android:id="@+id/menu_dashboard_settings"
         app:showAsAction="ifRoom"
         android:title="@string/action_settings" />
-    <item android:icon="@drawable/baseline_help_outline_24"
+    <item android:icon="@drawable/question"
         android:id="@+id/menu_help"
         app:showAsAction="ifRoom"
         android:title="@string/action_settings" />

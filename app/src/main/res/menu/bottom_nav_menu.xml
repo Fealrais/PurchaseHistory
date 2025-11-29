@@ -3,19 +3,19 @@
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_24dp"
+        android:icon="@drawable/dashboard"
         android:title="@string/title_dashboard" />
     <item
         android:id="@+id/navigation_scheduled_expenses"
-        android:icon="@drawable/baseline_repeat_24"
+        android:icon="@drawable/loop"
         android:title="@string/title_scheduled_expenses" />
     <item
         android:id="@+id/navigation_qrscanner"
-        android:icon="@drawable/qr_code_outline_icon"
+        android:icon="@drawable/qr"
         android:title="@string/title_activity_qrscanner" />
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@drawable/baseline_account_box_24"
+        android:icon="@drawable/profile"
         android:title="@string/title_activity_profile" />
 
 </menu>

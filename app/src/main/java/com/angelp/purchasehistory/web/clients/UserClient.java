@@ -1,6 +1,7 @@
 package com.angelp.purchasehistory.web.clients;
 
 import android.util.Log;
+import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistorybackend.models.views.incoming.ErrorFeedback;
@@ -73,6 +74,9 @@ public class UserClient extends HttpClient {
     public UserAnalytics getUserAnalytics(PurchaseFilter filter) {
         try (Response res = get(BACKEND_URL + "/users/self/analytics?" + filter)) {
             return utils.getBody(res, UserAnalytics.class);
+        } catch (WebException e) {
+            PurchaseHistoryApplication.getInstance().alert(R.string.failed);
+            return new UserAnalytics();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

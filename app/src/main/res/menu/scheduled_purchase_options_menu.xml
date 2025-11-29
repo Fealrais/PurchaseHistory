@@ -6,10 +6,10 @@
         android:title="@string/submit_new_payment" />
     <item
         android:id="@+id/menu_edit"
-        android:icon="@drawable/baseline_edit_24"
+        android:icon="@drawable/edit"
         android:title="@string/edit_text" />
     <item
         android:id="@+id/menu_delete"
-        android:icon="@drawable/baseline_delete_24"
+        android:icon="@drawable/trash"
         android:title="@string/delete" />
 </menu>

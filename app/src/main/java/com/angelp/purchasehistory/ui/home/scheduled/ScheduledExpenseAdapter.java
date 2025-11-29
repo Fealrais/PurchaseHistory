@@ -127,9 +127,9 @@ public class ScheduledExpenseAdapter extends RecyclerView.Adapter<ScheduledExpen
 
         private void setSilencedState(boolean isSilenced) {
             if (isSilenced) {
-                silenceIcon.setImageResource(R.drawable.baseline_notifications_off_24);
+                silenceIcon.setImageResource(R.drawable.bell_silent);
             } else {
-                silenceIcon.setImageResource(R.drawable.ic_notifications_black_24dp);
+                silenceIcon.setImageResource(R.drawable.bell_ring);
             }
         }
 

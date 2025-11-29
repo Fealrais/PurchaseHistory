@@ -26,6 +26,7 @@
 
                 <TextView
                     android:id="@+id/username"
+                    android:textColor="@color/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/prompt_username"
@@ -33,6 +34,7 @@
 
                 <TextView
                     android:id="@+id/email"
+                    android:textColor="@color/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/prompt_email"
@@ -70,7 +72,7 @@
                         android:contentDescription="@string/edit_text"
                         android:elevation="5dp"
                         style="@style/Primary"
-                        android:src="@drawable/baseline_edit_24" />
+                        android:src="@drawable/edit" />
                 </LinearLayout>
 
                 <View
@@ -172,7 +174,7 @@
                     android:layout_height="48dp"
                     android:drawablePadding="8dp"
 
-                    android:drawableStart="@drawable/baseline_download_24"
+                    android:drawableStart="@drawable/download"
                     android:text="@string/download_data"/>
 
                 <Button
@@ -187,7 +189,7 @@
                     android:contentDescription="@string/share_token_description"
                     android:text="@string/share_token"
 
-                    android:drawableStart="@drawable/baseline_share_24" />
+                    android:drawableStart="@drawable/share" />
 
             </LinearLayout>
             </LinearLayout>
@@ -202,7 +204,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/application_settings"
-            android:drawableStart="@drawable/baseline_settings_24"
+            android:drawableStart="@drawable/settings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_info_card" />
@@ -214,7 +216,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/logout"
-            android:drawableStart="@drawable/baseline_logout_24"
+            android:drawableStart="@drawable/logout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/settings_button" />
@@ -227,9 +229,9 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/dangerA10"
             android:text="@string/delete_account"
-            android:textColor="@color/white"
+            android:textColor="@color/text"
             android:textStyle="bold"
-            android:drawableStart="@drawable/baseline_delete_24"
+            android:drawableStart="@drawable/trash"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/logout_button" />

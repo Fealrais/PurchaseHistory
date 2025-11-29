@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:background="@drawable/card_background"
-    android:elevation="4dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="6dp">
+    android:layout_height="60dp"
+    android:background="@drawable/roundcorner_5"
+    android:padding="0dp"
+    >
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginEnd="120dp">
-
-        <ImageView
-            android:id="@+id/fragmentIcon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:alpha="70"
-            android:src="@mipmap/barchart" />
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/fragmentIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="-20dp"
+        android:alpha="70"
+        android:padding="0dp"
+        android:src="@mipmap/barchart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:gravity="center|end"
+        android:paddingHorizontal="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="0dp"
+        android:paddingEnd="8dp"
+        >
 
         <TextView
             android:id="@+id/fragmentName"
@@ -38,8 +40,7 @@
             android:layout_gravity="center|end"
             android:layout_marginStart="40dp"
             android:layout_weight="1"
-            android:textAlignment="textEnd"
-            android:textAppearance="?attr/textAppearanceListItem" />
+            android:textAlignment="textEnd" />
 
         <CheckBox
             android:id="@+id/displayCheckbox"
@@ -49,8 +50,8 @@
             android:paddingHorizontal="8dp" />
 
         <ImageButton
-            style="@style/Bordered"
             android:id="@+id/buttonMoveUp"
+            style="@style/Bordered"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
@@ -67,4 +68,4 @@
             android:src="@drawable/baseline_arrow_down_24" />
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
