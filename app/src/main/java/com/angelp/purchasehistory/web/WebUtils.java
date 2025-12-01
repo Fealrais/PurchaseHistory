@@ -24,6 +24,7 @@ public class WebUtils {
         if (body == null) throw new WebException(R.string.error_web_response);
         try {
             String json = body.string();
+            body.close();
             if (!response.isSuccessful()) {
                 getError(json);
             }

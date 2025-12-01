@@ -17,6 +17,7 @@ import com.angelp.purchasehistory.ui.home.settings.SettingsActivity;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.AuthClient;
 import com.angelp.purchasehistory.web.clients.ObserverClient;
+import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import dagger.hilt.android.AndroidEntryPoint;
 
 import javax.inject.Inject;
@@ -27,6 +28,8 @@ public class SpectatorHomeActivity extends AppCompatActivity {
     ObserverClient observerClient;
     @Inject
     AuthClient authClient;
+    @Inject
+    PurchaseClient purchaseClient;
     private ActivitySpectatorBinding binding;
 
     @Override
@@ -74,7 +77,7 @@ public class SpectatorHomeActivity extends AppCompatActivity {
         } else if (itemId == R.id.menu_item_logout) {
             new Thread(() -> {
                 authClient.logout();
-                AndroidUtils.logout(this);
+                AndroidUtils.logout(this, purchaseClient);
             }).start();
         }
         return false;

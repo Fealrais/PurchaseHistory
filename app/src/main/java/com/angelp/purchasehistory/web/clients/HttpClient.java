@@ -9,6 +9,7 @@ import com.angelp.purchasehistory.web.interceptors.AuthInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -26,7 +27,12 @@ public class HttpClient {
     private final String TAG = this.getClass().getSimpleName();
 
     public HttpClient() {
-        client = new OkHttpClient().newBuilder()
+        client = getHttpClient();
+    }
+
+    @NotNull
+    protected OkHttpClient getHttpClient() {
+        return new OkHttpClient().newBuilder()
                 .hostnameVerifier((hostname, session) -> true)
                 .addInterceptor(authInterceptor)
                 .build();

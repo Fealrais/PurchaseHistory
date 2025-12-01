@@ -2,7 +2,9 @@ package com.angelp.purchasehistory.web.clients;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.storage.StorageManager;
 import android.util.Log;
+import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.model.Category;
@@ -17,30 +19,61 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.Categor
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.PurchaseListView;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Singleton
 public class PurchaseClient extends HttpClient {
     private final String TAG = this.getClass().getSimpleName();
+    private Cache cache;
 
     @Inject
     public PurchaseClient() {
+    }
+
+    @Override
+    protected @NotNull OkHttpClient getHttpClient() {
+        Context context = PurchaseHistoryApplication.getContext();
+        long cacheQuotaBytes = getCacheQuotaBytes(context);
+        File cacheFile = new File(context.getCacheDir(), "/purchases");
+        this.cache = new Cache(cacheFile, cacheQuotaBytes);
+        return new OkHttpClient().newBuilder()
+                .hostnameVerifier((hostname, session) -> true)
+                .addInterceptor(authInterceptor)
+                .cache(cache)
+                .build();
+    }
+
+    private long getCacheQuotaBytes(Context context) {
+        long cacheQuotaBytes = 1024*1024*5;
+        try {
+            StorageManager storageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
+            UUID id = storageManager.getUuidForPath(context.getCacheDir());
+            cacheQuotaBytes = storageManager.getCacheQuotaBytes(id);
+            if (cacheQuotaBytes > 1024*1024*2) cacheQuotaBytes-=512; // to stay under the quota
+        } catch (IOException e) {
+            Log.e(TAG, "PurchaseClient: failed to get cache quota. Using Default 5 MB");
+        }
+        return cacheQuotaBytes;
     }
 
     public PurchaseView createPurchase(PurchaseDTO purchaseDTO) {
         try (Response res = post(BACKEND_URL + "/purchase", purchaseDTO)) {
             return utils.getBody(res, PurchaseView.class);
         } catch (IOException ignored) {
+        } finally {
+            cleanCache(BACKEND_URL + "/purchase");
         }
         return null;
     }
@@ -58,10 +91,13 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
                 String json = body.string();
+                body.close();
                 Log.i("httpResponse", "Edit Purchase: " + json);
                 return gson.fromJson(json, PurchaseResponse.class).toPurchaseView();
             } else throw new IOException("Failed to edit purchase");
         } catch (IOException ignored) {
+        } finally {
+            cleanCache(BACKEND_URL + "/purchase");
         }
         return null;
     }
@@ -71,6 +107,7 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (body != null) {
                 String json = body.string();
+                body.close();
                 Log.i("httpResponse", "Get all purchases: " + json);
                 if (res.isSuccessful())
                     return Arrays.stream(gson.fromJson(json, PurchaseResponse[].class)).map(PurchaseResponse::toPurchaseView).collect(Collectors.toList());
@@ -99,6 +136,7 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (body != null) {
                 String json = body.string();
+                body.close();
                 Log.i("httpResponse", "Get all purchases: " + json);
                 if (res.isSuccessful()) {
                     return gson.fromJson(json, new TypeToken<PageView<PurchaseView>>() {
@@ -119,6 +157,7 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (body != null) {
                 String json = body.string();
+                body.close();
                 Log.i("httpResponse", "Get all purchases: " + json);
                 if (res.isSuccessful()) {
                     return gson.fromJson(json, CalendarReport.class);
@@ -138,6 +177,7 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (body != null) {
                 String json = body.string();
+                body.close();
                 Log.i("httpResponse", "Get all purchases: " + json);
                 if (res.isSuccessful()) {
                     return gson.fromJson(json, CalendarReport.class);
@@ -158,6 +198,7 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (body != null) {
                 String json = body.string();
+                body.close();
                 Log.i("httpResponse", "Get all categories: " + json);
                 if (res.isSuccessful())
                     return Arrays.stream(gson.fromJson(json, CategoryView[].class)).collect(Collectors.toList());
@@ -177,10 +218,13 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
                 String json = body.string();
+                body.close();
                 Log.i("httpResponse", "Created Category: " + json);
                 return gson.fromJson(json, Category.class);
             } else throw new IOException("Failed to create category");
         } catch (IOException ignored) {
+        } finally {
+            cleanCache(BACKEND_URL + "/category");
         }
         return null;
     }
@@ -190,10 +234,13 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
                 String json = body.string();
+                body.close();
                 Log.i("httpResponse", "Edited Category: " + json);
                 return gson.fromJson(json, Category.class);
             } else throw new IOException("Failed to edit category");
         } catch (IOException ignored) {
+        } finally {
+            cleanCache(BACKEND_URL + "/category");
         }
         return null;
     }
@@ -203,9 +250,12 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (res.isSuccessful() && body != null) {
                 String json = body.string();
+                body.close();
                 Log.i("httpResponse", "Delete Category: " + json);
             } else throw new IOException("Failed to delete category");
         } catch (IOException ignored) {
+        } finally {
+            cleanCache(BACKEND_URL + "/category");
         }
     }
 
@@ -217,6 +267,7 @@ public class PurchaseClient extends HttpClient {
             } else {
                 if (body != null) {
                     ErrorResponse errorResponse = gson.fromJson(body.string(), ErrorResponse.class);
+                    body.close();
                     if ("NO_PURCHASES_TO_SHOW".equals(errorResponse.getDetail()))
                         throw new WebException(R.string.no_purchases_to_show);
                 }
@@ -249,9 +300,11 @@ public class PurchaseClient extends HttpClient {
             ResponseBody body = res.body();
             if (body != null) {
                 String json = body.string();
+                body.close();
                 Log.i("httpResponse", "getCategoryAnalyticsReport : " + json);
-                if (res.isSuccessful())
+                if (res.isSuccessful()) {
                     return gson.fromJson(json, CategoryAnalyticsReport.class);
+                }
                 else {
                     ErrorResponse errorResponse = gson.fromJson(json, ErrorResponse.class);
                     throw new IOException(String.valueOf(errorResponse));
@@ -271,11 +324,35 @@ public class PurchaseClient extends HttpClient {
             }
             if (res.body() != null && res.body().contentLength() > 0) {
                 ErrorResponse errorResponse = gson.fromJson(res.body().string(), ErrorResponse.class);
+                res.body().close();
                 throw new IOException(errorResponse.getDetail());
             }
         } catch (IOException | JsonParseException e) {
             Log.e(TAG, "ERROR: " + e.getMessage());
+        } finally {
+            cleanCache(BACKEND_URL + "/purchase");
         }
         return false;
+    }
+    public void cleanCache(){
+        try {
+            cache.evictAll();
+            Log.i(TAG, "cleanCache: SUCCESS");
+        } catch (IOException e) {
+            Log.e(TAG, "cleanCache: ", e);
+        }
+    }
+    public void cleanCache(String url){
+        try {
+            Iterator<String> urlIterator = cache.urls();
+            while (urlIterator.hasNext()) {
+                if (urlIterator.next().startsWith(url)) {
+                    urlIterator.remove();
+                }
+            }
+            Log.i(TAG, "cleanCache:"+url+" SUCCESS");
+        } catch (IOException e) {
+            Log.e(TAG, "cleanCache: ", e);
+        }
     }
 }

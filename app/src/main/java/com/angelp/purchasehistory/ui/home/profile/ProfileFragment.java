@@ -82,7 +82,7 @@ public class ProfileFragment extends Fragment {
 
         binding.downloadSvgButton.setOnClickListener(v -> downloadUserData());
         binding.shareLinkButton.setOnClickListener(v -> shareToken());
-        binding.logoutButton.setOnClickListener(v -> AndroidUtils.logout(v.getContext()));
+        binding.logoutButton.setOnClickListener(v -> AndroidUtils.logout(v.getContext(), purchaseClient));
 
         binding.settingsButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), SettingsActivity.class);
@@ -117,7 +117,7 @@ public class ProfileFragment extends Fragment {
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     new Thread(() -> {
                         boolean b = userClient.deleteAccount();
-                        if (b) AndroidUtils.logout(getContext());
+                        if (b) AndroidUtils.logout(getContext(), purchaseClient);
                     }).start();
                 })
                 .setNegativeButton(R.string.no, null)

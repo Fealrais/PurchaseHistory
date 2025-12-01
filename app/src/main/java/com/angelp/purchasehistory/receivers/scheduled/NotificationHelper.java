@@ -76,6 +76,13 @@ public class NotificationHelper {
     }
 
     public static void rescheduleNextAttempt(ScheduledNotification notification, Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.Preferences.SILENCED_NOTIFICATIONS, MODE_PRIVATE);
+        boolean isSilenced = preferences.getBoolean(notification.getId().toString(), false);
+
+        if (isSilenced) {
+            Log.i(TAG, "rescheduleNextAttempt: notification reschedule canceled. Missing or silenced.");
+            return;
+        }
         Log.i(TAG, "Notification is repeating.");
         long period = notification.getPeriod();
         long now = System.currentTimeMillis();

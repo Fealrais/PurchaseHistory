@@ -155,12 +155,14 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
     @NotNull
     private Map<LocalDate, List<Entry>> getEntries(CalendarReport calendarReport) {
         Map<LocalDate, List<Entry>> map = new HashMap<>();
-        for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
-            LocalDate key = calendarReportEntry.getLocalDate().withDayOfMonth(1);
-            List<Entry> entries = map.computeIfAbsent(key, (k) -> new ArrayList<>());
-            Entry entry = parseEntries(calendarReportEntry);
-            entries.add(entry);
-            map.put(key, entries);
+        if(calendarReport!=null){
+            for (CalendarReportEntry calendarReportEntry : calendarReport.getContent()) {
+                LocalDate key = calendarReportEntry.getLocalDate().withDayOfMonth(1);
+                List<Entry> entries = map.computeIfAbsent(key, (k) -> new ArrayList<>());
+                Entry entry = parseEntries(calendarReportEntry);
+                entries.add(entry);
+                map.put(key, entries);
+            }
         }
         return map;
     }

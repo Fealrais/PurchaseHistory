@@ -27,6 +27,7 @@ import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.receivers.scheduled.NotificationHelper;
 import com.angelp.purchasehistory.ui.home.dashboard.graph.DayAxisValueFormatter;
 import com.angelp.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
+import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.enums.ScheduledPeriod;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
@@ -37,6 +38,7 @@ import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -66,13 +68,14 @@ public final class AndroidUtils {
         context.startActivity(shareIntent);
     }
 
-    public static void logout(Context context) {
+    public static void logout(Context context, @Nullable PurchaseClient purchaseClient) {
         PurchaseHistoryApplication.getInstance().userToken.postValue(null);
         PurchaseHistoryApplication.getInstance().loggedUser.postValue(null);
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         ShortcutManagerCompat.removeAllDynamicShortcuts(context);
         NotificationHelper.cancelAllScheduledNotifications(context);
+        if (purchaseClient!=null) purchaseClient.cleanCache();
         SharedPreferences player = context.getSharedPreferences("player", MODE_PRIVATE);
         player.edit().clear().apply();
         context.startActivity(intent);
