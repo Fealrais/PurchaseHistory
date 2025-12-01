@@ -45,7 +45,7 @@
         android:layout_marginBottom="40dp"
         android:contentDescription="@string/edit_limit"
         android:elevation="5dp"
-        android:src="@drawable/baseline_money_off_24"
+        android:src="@drawable/limit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

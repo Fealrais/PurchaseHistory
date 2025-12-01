@@ -90,7 +90,7 @@
             android:layout_marginBottom="8dp"
             android:visibility="gone"
             style="@style/Bordered"
-            android:drawableEnd="@drawable/baseline_keyboard_arrow_right_24"
+            android:drawableEnd="@drawable/arrow_right"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -105,7 +105,7 @@
             android:textColor="@color/text"
 
             app:drawableTint="@color/text"
-            app:drawableTopCompat="@drawable/no_data"
+            app:drawableTopCompat="@drawable/missing"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

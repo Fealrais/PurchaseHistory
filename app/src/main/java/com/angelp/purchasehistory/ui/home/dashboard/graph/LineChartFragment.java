@@ -76,7 +76,7 @@ public class LineChartFragment extends RefreshablePurchaseFragment implements On
         Log.i(TAG, "onCreateView: View created");
         binding = FragmentLineChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
-        tf = ResourcesCompat.getFont(inflater.getContext(), R.font.ibmplexmono_regular);
+        tf = ResourcesCompat.getFont(inflater.getContext(), R.font.inter);
         super.setLoadingScreen(binding.loadingBar);
         return binding.getRoot();
     }

@@ -14,6 +14,7 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -38,6 +39,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import javax.inject.Inject;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -70,21 +72,19 @@ public class HomeActivity extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_dashboard, R.id.navigation_qrscanner, R.id.navigation_scheduled_expenses, R.id.navigation_profile)
                 .build();
-        ActionBar actionBar = getSupportActionBar();
+
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_user_activity);
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
-            navController.addOnDestinationChangedListener((controller, currentDest, c) -> {
-                if (menu!=null){
-                    MenuItem item = menu.findItem(R.id.menu_dashboard_settings);
-                    if (item != null) item.setVisible(Objects.equals(currentDest.getId(), R.id.navigation_dashboard));
-                }
-            });
+            navController.addOnDestinationChangedListener((controller, currentDest, c) -> invalidateOptionsMenu());
             NavigationUI.setupWithNavController(binding.navView, navController);
             NavigationUI.setupActionBarWithNavController(this, navHostFragment.getNavController(), appBarConfiguration);
         }
-        if (isFirstTimeOpen()) {
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null)
+            actionBar.setBackgroundDrawable( AppCompatResources.getDrawable(this, R.drawable.action_bar_bg));
+        if (AndroidUtils.isFirstTimeOpen(this)) {
             showTourPrompt();
         }
     }
@@ -117,11 +117,6 @@ public class HomeActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private boolean isFirstTimeOpen() {
-        SharedPreferences preferences = getSharedPreferences("app_preferences", MODE_PRIVATE);
-        return preferences.getBoolean(Constants.Preferences.IS_FIRST_TIME_OPEN, true);
-    }
-
     private void showNextTourStep() {
         if (tourStep < Constants.tourSteps.size()) {
             TourStep step = Constants.tourSteps.get(tourStep);
@@ -150,6 +145,15 @@ public class HomeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.home_menu, menu);
         this.menu = menu;
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem dashboardEditButton = menu.findItem(R.id.menu_dashboard_settings);
+        if (navController != null && navController.getCurrentDestination() != null)
+            dashboardEditButton.setVisible(Objects.equals(navController.getCurrentDestination().getId(), R.id.navigation_dashboard));
+        return super.onPrepareOptionsMenu(menu);
+
     }
 
     private String getCurrentHelpPrompt(NavDestination currentDestination) {
@@ -205,6 +209,10 @@ public class HomeActivity extends AppCompatActivity {
         }.getType();
 
         List<DashboardComponent> dashboardComponents = gson.fromJson(savedFragmentsJson, type);
+        List<DashboardComponent> allComponents = new ArrayList<>(Constants.DEFAULT_COMPONENTS);
+        for (DashboardComponent all : allComponents) {
+            if (!dashboardComponents.contains(all)) dashboardComponents.add(all);
+        }
         return dashboardComponents.stream().map(DashboardComponent::fillFromName).collect(Collectors.toList());
     }
 

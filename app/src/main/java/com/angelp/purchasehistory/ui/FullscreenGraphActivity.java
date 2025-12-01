@@ -48,7 +48,7 @@ public class FullscreenGraphActivity extends AppCompatActivity {
         if (dashboardComponent != null) {
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setIcon(R.drawable.baseline_arrow_back_24);
+                actionBar.setIcon(R.drawable.arrow_turn_left);
                 actionBar.setTitle(dashboardComponent.getTitle());
 
             }

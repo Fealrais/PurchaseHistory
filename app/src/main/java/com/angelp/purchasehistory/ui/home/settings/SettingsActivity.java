@@ -25,7 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setIcon(R.drawable.baseline_arrow_back_24);
+            actionBar.setIcon(R.drawable.arrow_turn_left);
         }
         if (savedInstanceState == null) {
             String fragmentName = getIntent().getStringExtra("fragment_name");

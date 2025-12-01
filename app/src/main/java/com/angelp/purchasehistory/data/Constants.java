@@ -76,5 +76,6 @@ public final class Constants {
         String ARG_FILTER = "purchases_filter";
         String OPEN_CAMERA = "open_camera";
         String EXTERNAL_LEGEND = "external_legend";
+        String IN_TOUR = "tour_on";
     }
 }

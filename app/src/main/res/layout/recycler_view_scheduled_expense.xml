@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:background="@drawable/roundcorner_10"
     android:padding="8dp"
@@ -20,12 +21,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="6dp"
         android:layout_marginEnd="4dp"
-        android:background="@drawable/card_background"
-        android:backgroundTint="@color/primaryA30"
+        android:padding="4dp"
+        android:background="@drawable/roundcorner_15"
+        android:backgroundTint="@color/primaryA20"
+        app:tint="@color/black"
         android:contentDescription="@string/notification_toggleButton"
-        android:src="@drawable/ic_notifications_black_24dp" />
+        android:src="@drawable/bell_ring" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/silenceButton"
@@ -34,8 +37,7 @@
         android:layout_gravity="center_vertical"
         android:paddingHorizontal="4dp"
         android:layout_marginEnd="8dp"
-        android:contentDescription="@string/notification_toggleButton"
-        android:src="@drawable/ic_notifications_black_24dp" />
+        android:contentDescription="@string/notification_toggleButton"/>
 
     <LinearLayout
         android:layout_width="0dp"

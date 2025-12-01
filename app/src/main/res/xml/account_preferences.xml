@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory app:title="@string/application_settings">
         <Preference
-            android:icon="@drawable/baseline_edit_24"
+            android:icon="@drawable/edit"
             android:key="edit_category_preference"
             android:title="@string/edit_categories"
             app:iconTint="@color/primaryA10" />
@@ -12,14 +12,14 @@
             android:defaultValue="1"
             android:entries="@array/currency_list"
             android:entryValues="@array/currency_list_values"
-            android:icon="@drawable/baseline_currency_exchange_24"
+            android:icon="@drawable/currency_search"
             android:key="currency_preference"
             android:summary="@string/edit_currency_summary"
             android:title="@string/edit_currency"
             app:iconTint="@color/primaryA10" />
     </PreferenceCategory>
     <Preference
-        android:icon="@drawable/baseline_money_off_24"
+        android:icon="@drawable/limit"
         android:key="monthly_limit_preference"
         android:summary="@string/monthly_limit_summary"
         android:title="@string/edit_limits"
@@ -36,7 +36,7 @@
             android:id="@+id/report_problem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:icon="@drawable/baseline_bug_report_24"
+            android:icon="@drawable/bug"
             android:key="report_problem"
             android:title="@string/report_problem" />
         <Preference
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:icon="@drawable/baseline_help_outline_24"
+            android:icon="@drawable/question"
             android:iconTint="@color/primaryA10"
 
             android:key="help_preference"

@@ -31,7 +31,6 @@ import com.angelp.purchasehistorybackend.models.views.incoming.ScheduledExpenseD
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.ScheduledExpenseView;
 import dagger.hilt.android.AndroidEntryPoint;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -192,7 +191,7 @@ public class CreateScheduledExpenseDialog extends DialogFragment {
     }
 
     private void onSubmit(DialogInterface dialog) {
-        if (StringUtils.isEmpty(scheduledExpense.getPrice().toString()) || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()) {
+        if (scheduledExpense.getPrice() == null || BigDecimal.ZERO.compareTo(scheduledExpense.getPrice())>=0 || binding.editScheduledExpenseEditTextPrice.getText().toString().isBlank()) {
             binding.editScheduledExpenseEditTextPrice.setError(getText(R.string.error_price_empty));
             return;
         }

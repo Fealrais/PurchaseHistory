@@ -41,9 +41,9 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
         NotificationChannel channel = getOrCreateChannel(manager);
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_scheduled_payment)
+                .setSmallIcon(R.drawable.loop)
                 .setContentText(context.getString(R.string.scheduled_notification_content, scheduledNotification.getPrice()))
-                .addAction(R.drawable.baseline_attach_money_24, context.getString(R.string.add_purchase_action), triggerPendingIntent)
+                .addAction(R.drawable.currency_search, context.getString(R.string.add_purchase_action), triggerPendingIntent)
 //                .addAction(R.drawable.baseline_money_off_24, context.getString(R.string.cancel), null)
                 .setContentTitle(context.getString(R.string.scheduled_notification_title, scheduledNotification.getNote()))
                 .setColor(scheduledNotification.getColor())

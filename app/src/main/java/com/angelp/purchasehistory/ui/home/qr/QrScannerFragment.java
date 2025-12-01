@@ -63,7 +63,6 @@ import java.util.List;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 //import static com.google.android.gms.ads.AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize;
-
 @AndroidEntryPoint
 public class QrScannerFragment extends Fragment {
     private static final String TAG = "QRCodeFragment";
@@ -141,8 +140,10 @@ public class QrScannerFragment extends Fragment {
         new Thread(() -> {
             allCategories = qrScannerViewModel.getAllCategories();
             categoryAdapter = new CategorySpinnerAdapter(this.getContext(), allCategories);
-            new Handler(Looper.getMainLooper()).post(() -> {if(binding==null) return;
-            binding.qrCategorySpinner.setAdapter(categoryAdapter);});
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (binding == null) return;
+                binding.qrCategorySpinner.setAdapter(categoryAdapter);
+            });
         }).start();
         return binding.getRoot();
     }
@@ -151,16 +152,18 @@ public class QrScannerFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Bundle arguments = getArguments();
+
         if (arguments != null && arguments.getBoolean(Constants.Arguments.OPEN_CAMERA)) {
             arguments.putBoolean(Constants.Arguments.OPEN_CAMERA, false);
             openCameraFlow(getLayoutInflater());
-        } else {
+        } else if (!AndroidUtils.isFirstTimeOpen(requireContext())) {
             if (binding.qrPriceInput.requestFocus(View.FOCUS_DOWN) && getContext() != null) {
                 InputMethodManager imm = getSystemService(getContext(), InputMethodManager.class);
                 if (imm != null)
                     imm.showSoftInput(binding.qrPriceInput, InputMethodManager.SHOW_IMPLICIT);
             }
         }
+
 
     }
 
@@ -174,7 +177,8 @@ public class QrScannerFragment extends Fragment {
                 if (purchaseDTO.getStoreId() != null) binding.qrStoreIdValue.setText(purchaseDTO.getStoreId());
                 if (index >= 0) binding.qrCategorySpinner.setSelection(index);
                 if (purchaseDTO.getBillId() != null) binding.qrBillIdValue.setText(purchaseDTO.getBillId());
-                if (purchaseDTO.getPrice() != null) binding.qrPriceInput.setText(AndroidUtils.formatCurrency(purchaseDTO.getPrice()));
+                if (purchaseDTO.getPrice() != null)
+                    binding.qrPriceInput.setText(AndroidUtils.formatCurrency(purchaseDTO.getPrice()));
                 if (purchaseDTO.getTimestamp() != null) {
                     binding.qrDateInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_DATE));
                     binding.qrTimeInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_TIME));
@@ -403,7 +407,7 @@ public class QrScannerFragment extends Fragment {
     private void onInvalidPurchase(Integer errorCode) {
         new Handler(Looper.getMainLooper()).post(() ->
                 new AlertDialog.Builder(getContext(), R.style.BaseDialogStyle)
-                        .setIcon(R.drawable.baseline_money_off_24)
+                        .setIcon(R.drawable.warning)
                         .setTitle(R.string.invalid_purchase_title)
                         .setMessage(errorCode)
                         .setPositiveButton(android.R.string.ok, (dialog, which) -> resetForm())
