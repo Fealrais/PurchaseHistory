@@ -44,7 +44,7 @@ public class FullscreenGraphActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         ActionBar actionBar = getSupportActionBar();
 
-        dashboardComponent = getIntent().getParcelableExtra(Constants.ARG_COMPONENT);
+        dashboardComponent = getIntent().getParcelableExtra(Constants.Arguments.ARG_COMPONENT);
         if (dashboardComponent != null) {
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);

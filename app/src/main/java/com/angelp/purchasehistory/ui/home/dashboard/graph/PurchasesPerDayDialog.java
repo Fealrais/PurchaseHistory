@@ -130,7 +130,7 @@ public class PurchasesPerDayDialog extends DialogFragment {
         binding.seeAllButton.setOnClickListener((v) -> {
             Intent intent = new Intent(getActivity(), FullscreenGraphActivity.class);
             DashboardComponent dashboardComponent = new DashboardComponent("PurchaseListPurchaseFragment");
-            intent.putExtra(Constants.ARG_COMPONENT, dashboardComponent);
+            intent.putExtra(Constants.Arguments.ARG_COMPONENT, dashboardComponent);
             startActivity(intent);
         });
         updateSeeAllButton(purchaseSize, maxSize);

@@ -11,6 +11,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.ui.feedback.FeedbackActivity;
+import com.angelp.purchasehistory.ui.legal.AboutUsActivity;
 import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistory.web.clients.UserClient;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -27,6 +28,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private ListPreference currencyPreference;
     private Preference editCategoryPreference;
     private Preference monthlyLimitPreference;
+    private Preference creditsPreference;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -40,6 +42,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         editCategoryPreference.setOnPreferenceClickListener(p1 -> navigate(CategorySettingsFragment.class));
         SharedPreferences appPreferences = getContext().getSharedPreferences(Constants.Preferences.APP_PREFERENCES, Context.MODE_PRIVATE);
         String preferredCurrency = appPreferences.getString(Constants.Preferences.PREFERRED_CURRENCY, "");
+        creditsPreference = findPreference("credits_preference");
+        creditsPreference.setOnPreferenceClickListener((p)-> {
+            Intent intent = new Intent(getActivity(), AboutUsActivity.class);
+            startActivity(intent);
+            return false;
+        });
         currencyPreference = findPreference("currency_preference");
         currencyPreference.setValue(preferredCurrency);
         currencyPreference.setOnPreferenceChangeListener((a, value) -> appPreferences.edit()

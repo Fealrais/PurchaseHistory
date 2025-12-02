@@ -55,10 +55,13 @@ public class LoginViewModel extends ViewModel {
 
     public Runnable checkIfLoggedIn() {
         return () -> {
-            Optional<UserView> loggedUser = authClient.getLoggedUser();
-            if (loggedUser.isPresent()) {
-                UserView userView = loggedUser.get();
-                loginResult.postValue(new LoginResult(userView));
+            try {
+                Optional<UserView> loggedUser = authClient.getLoggedUser();
+                if (loggedUser.isPresent()) {
+                    UserView userView = loggedUser.get();
+                    loginResult.postValue(new LoginResult(userView));
+                }
+            } catch (WebException ignored) {
             }
         };
     }

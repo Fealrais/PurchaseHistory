@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/bordered_bg" />
+    <item
+        android:gravity="center|end"
+        android:right="8dp"
+        android:width="40dp"
+        android:height="40dp">
+        <shape android:shape="oval"
+            android:color="#4DFFFFFF"
+            android:width="36dp"
+            android:height="36dp"/>
+    </item>
     <item android:drawable="@drawable/baseline_arrow_down_24"
         android:gravity="center|end"
         android:right="10dp"

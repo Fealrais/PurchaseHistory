@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import androidx.fragment.app.Fragment;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.factories.DashboardComponentsFactory;
@@ -19,6 +20,7 @@ public class DashboardCardFragment extends Fragment {
 
     private DashboardComponent component;
     private int generatedId;
+    private Integer marginBottom;
     private FragmentDashboardCardBinding binding;
     private RefreshablePurchaseFragment fragment;
 
@@ -26,8 +28,8 @@ public class DashboardCardFragment extends Fragment {
         this.component = dashboardComponent;
         generatedId = View.generateViewId();
         Bundle args = new Bundle();
-        args.putParcelable(Constants.ARG_COMPONENT, dashboardComponent);
-        args.putInt("viewId", generatedId);
+        args.putParcelable(Constants.Arguments.ARG_COMPONENT, dashboardComponent);
+        args.putInt(Constants.Arguments.VIEW_ID, generatedId);
         setArguments(args);
     }
 
@@ -35,8 +37,9 @@ public class DashboardCardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            component = getArguments().getParcelable(Constants.ARG_COMPONENT);
-            generatedId = getArguments().getInt("viewId");
+            component = getArguments().getParcelable(Constants.Arguments.ARG_COMPONENT);
+            generatedId = getArguments().getInt(Constants.Arguments.VIEW_ID);
+            marginBottom = getArguments().getInt(Constants.Arguments.MARGIN_BOTTOM);
         }
     }
 
@@ -48,7 +51,7 @@ public class DashboardCardFragment extends Fragment {
         binding.title.setText(component.getTitle());
         binding.imageButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), FullscreenGraphActivity.class);
-            intent.putExtra(Constants.ARG_COMPONENT, component);
+            intent.putExtra(Constants.Arguments.ARG_COMPONENT, component);
             startActivity(intent);
         });
         fragment = DashboardComponentsFactory.createFragment(component.getFragmentName());
@@ -59,7 +62,15 @@ public class DashboardCardFragment extends Fragment {
         getChildFragmentManager().beginTransaction()
                 .replace(binding.fragmentContainerView.getId(), fragment)
                 .commit();
+        setMarginBottomIfLast();
         return binding.getRoot();
+    }
+
+    private void setMarginBottomIfLast() {
+        if (marginBottom == 0) return;
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(16, 0, 16, marginBottom);
+        binding.getRoot().setLayoutParams(params);
     }
 
     /**

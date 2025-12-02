@@ -78,7 +78,7 @@ public class SpectatorDashboardFragment extends Fragment {
                 fragment.refresh(purchaseFilter);
             } else {
                 DashboardFragment dashboardFragment = new DashboardFragment();
-                dashboardFragment.getArguments().putParcelable(Constants.DASHBOARD_FILTER, purchaseFilter);
+                dashboardFragment.getArguments().putParcelable(Constants.Arguments.DASHBOARD_FILTER, purchaseFilter);
                 getParentFragmentManager()
                         .beginTransaction()
                         .replace(binding.fragmentContainerView.getId(), dashboardFragment)

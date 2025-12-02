@@ -121,6 +121,9 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
             DashboardComponent selectedFragment = newFragments.get(i);
             if (selectedFragment.isVisible()) {
                 DashboardCardFragment dashboardCardFragment = new DashboardCardFragment(selectedFragment);
+                if (i == newFragments.size() - 1 && dashboardCardFragment.getArguments()!=null) {
+                    dashboardCardFragment.getArguments().putInt("marginBottom", 200);
+                }
                 transaction.add(binding.dashboardFragmentsLinearLayout.getId(), dashboardCardFragment, "dashboardFragment" + i);
             }
         }

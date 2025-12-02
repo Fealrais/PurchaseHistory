@@ -11,6 +11,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.databinding.FragmentChangePasswordBinding;
 import com.angelp.purchasehistory.util.AndroidUtils;
@@ -51,7 +52,7 @@ public class ChangePasswordFragment extends Fragment {
             userClient.updatePassword(new UpdatePasswordDTO(oldPassword, newPassword));
             Log.i("ChangePasswordFragment", "Password changed successfully");
             AndroidUtils.showSuccessAnimation(getView());
-            new Handler(Looper.getMainLooper()).postDelayed(() -> getParentFragmentManager().popBackStack(), 1500);
+            NavHostFragment.findNavController(this).popBackStack();
         } catch (WebException e) {
             Log.e("ChangePasswordFragment", "Password change failed: " + e.getMessage());
             showError(binding.currentPasswordEdit, getResources().getString(e.getErrorResource()));

@@ -13,6 +13,7 @@ import okhttp3.Response;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Locale;
 import java.util.Optional;
@@ -64,7 +65,9 @@ public class AuthClient extends HttpClient {
                 Log.e("Login", hostException.getMessage());
                 throw new WebException(R.string.error_hostException);
             }
-            throw new WebException(R.string.server_connection_failed_500);
+            else if (e instanceof SocketTimeoutException) {
+                throw new WebException(R.string.server_connection_failed_long);
+            }
         }
         return Optional.ofNullable(result);
     }
@@ -79,9 +82,11 @@ public class AuthClient extends HttpClient {
                 PurchaseHistoryApplication.getInstance().getLoggedUser().postValue(result);
                 Log.d("jwt_valid", "JWT Valid, user is logged in");
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
             Log.d("no_user", "JWT is invalid or missing. Redirected to login");
-//            throw new RuntimeException("Session ended. Please log in again");
+            if(e instanceof SocketTimeoutException) {
+                throw new WebException(R.string.server_connection_failed_long);
+            }
         }
         return Optional.ofNullable(result);
     }

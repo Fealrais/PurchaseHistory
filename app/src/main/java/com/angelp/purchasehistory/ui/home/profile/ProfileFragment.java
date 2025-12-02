@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
@@ -72,12 +73,17 @@ public class ProfileFragment extends Fragment {
         }).start();
 
         // Set up button click listeners
-        binding.editButton.setOnClickListener(v ->
-                NavHostFragment.findNavController(this).navigate(R.id.action_navigation_profile_to_navigation_edit_profile)
+        NavController navController = NavHostFragment.findNavController(this);
+        binding.editButton.setOnClickListener(v -> {
+                    if (navController.getCurrentDestination() !=null && navController.getCurrentDestination().getId() == R.id.navigation_profile)
+                        navController.navigate(R.id.action_navigation_profile_to_navigation_edit_profile);
+                }
         );
         // Set up button click listeners
-        binding.btnChangePassword.setOnClickListener(v ->
-                NavHostFragment.findNavController(this).navigate(R.id.action_navigation_profile_to_navigation_change_password)
+        binding.btnChangePassword.setOnClickListener(v -> {
+            if (navController.getCurrentDestination() !=null && navController.getCurrentDestination().getId() == R.id.navigation_profile)
+                navController.navigate(R.id.action_navigation_profile_to_navigation_change_password);
+                }
         );
 
         binding.downloadSvgButton.setOnClickListener(v -> downloadUserData());

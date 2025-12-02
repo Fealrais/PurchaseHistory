@@ -108,8 +108,8 @@ public class PurchaseEditDialog extends DialogFragment {
         binding.purchaseEditCategoryAddButton.setOnClickListener((v) -> categoryDialog.show(getParentFragmentManager(), "createCategoryDialog"));
         new Thread(() -> {
             allCategories = purchaseClient.getAllCategories();
-            categoryAdapter = new CategorySpinnerAdapter(getContext(), allCategories);
-            getActivity().runOnUiThread(() -> {
+            categoryAdapter = new CategorySpinnerAdapter(requireContext(), allCategories);
+            requireActivity().runOnUiThread(() -> {
                 binding.purchaseEditCategorySpinner.setAdapter(categoryAdapter);
                 int index = Utils.findIndex(allCategories, (category) -> category.getId().equals(purchase.getCategoryId()));
                 if (index >= 0)

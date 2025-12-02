@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
 import com.angelp.purchasehistory.components.form.TimePickerFragment;
+import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.databinding.DialogEditScheduledExpenseBinding;
 import com.angelp.purchasehistory.ui.home.qr.CategorySpinnerAdapter;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
@@ -84,7 +85,7 @@ public class EditScheduledExpenseDialog extends DialogFragment {
     private void setupCategoryOptions() {
         new Thread(() -> {
             categoryOptions = purchaseClient.getAllCategories();
-            categoryOptions.add(0, new CategoryView(null, getString(R.string.choose_category), "#ffffff"));
+            categoryOptions.add(0, Constants.getDefaultCategory(requireContext()));
             categoryAdapter = new CategorySpinnerAdapter(requireContext(), categoryOptions);
             new Handler(Looper.getMainLooper()).post(() -> {
                 binding.editScheduledExpenseSpinnerCategory.setAdapter(categoryAdapter);

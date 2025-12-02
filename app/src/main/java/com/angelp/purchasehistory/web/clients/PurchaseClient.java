@@ -240,7 +240,7 @@ public class PurchaseClient extends HttpClient {
             } else throw new IOException("Failed to edit category");
         } catch (IOException ignored) {
         } finally {
-            cleanCache(BACKEND_URL + "/category");
+            cleanCache();
         }
         return null;
     }
@@ -255,7 +255,7 @@ public class PurchaseClient extends HttpClient {
             } else throw new IOException("Failed to delete category");
         } catch (IOException ignored) {
         } finally {
-            cleanCache(BACKEND_URL + "/category");
+            cleanCache();
         }
     }
 

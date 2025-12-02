@@ -1,9 +1,12 @@
 package com.angelp.purchasehistory.data;
 
+import android.content.Context;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.data.tour.TourStep;
+import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,9 +17,7 @@ public final class Constants {
     public static final int GRAPH_MIN_HEIGHT = 1000;
     public final static List<DashboardComponent> DEFAULT_COMPONENTS = new ArrayList<>();
     public static final String APP_BOOT_RECEIVER = "APP_BOOT_RECEIVER";
-    public static final String ARG_COMPONENT = "component";
     public static final List<TourStep> tourSteps = new ArrayList<>();
-    public static final String DASHBOARD_FILTER = "dashboard_filter";
     public static HashMap<String, Integer> errorsMap = new HashMap<>();
 
     static {
@@ -31,6 +32,7 @@ public final class Constants {
         tourSteps.add(new TourStep(R.id.navigation_dashboard, R.string.tour_navigation_dashboard, R.string.tour_navigation_dashboard_secondary));
         tourSteps.add(new TourStep(R.id.filter_btn, R.string.tour_filter_button, R.string.tour_filter_button_secondary));
         tourSteps.add(new TourStep(R.id.navigation_qrscanner, R.string.tour_navigation_qrscanner, R.string.tour_navigation_qrscanner_secondary));
+        tourSteps.add(new TourStep(R.id.qr_categoryAddButton, R.string.tour_navigation_category, R.string.tour_navigation_category_secondary));
         tourSteps.add(new TourStep(R.id.navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses, R.string.tour_navigation_scheduled_expenses_secondary));
         tourSteps.add(new TourStep(R.id.navigation_profile, R.string.tour_navigation_profile, R.string.tour_navigation_profile_secondary));
     }
@@ -76,6 +78,13 @@ public final class Constants {
         String ARG_FILTER = "purchases_filter";
         String OPEN_CAMERA = "open_camera";
         String EXTERNAL_LEGEND = "external_legend";
-        String IN_TOUR = "tour_on";
+        String MARGIN_BOTTOM = "marginBottom";
+        String VIEW_ID = "viewId";
+        String ARG_COMPONENT = "component";
+        String DASHBOARD_FILTER = "dashboard_filter";
+    }
+    @NotNull
+    public static CategoryView getDefaultCategory(Context context) {
+        return new CategoryView(null, context.getString(R.string.choose_category), "#ffffff");
     }
 }

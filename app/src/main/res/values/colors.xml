@@ -11,6 +11,8 @@
     <color name="primaryA20">#34b5ac</color>
     <color name="primaryA30">#309991</color>
 
+    <color name="primaryA50">#9BF8F1</color>
+
     <!--    /** Theme surface colors */-->
     <color name="surfaceA0">#ffffff</color>
     <color name="surfaceA10">#f0f0f0</color>

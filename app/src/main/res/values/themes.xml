@@ -7,12 +7,12 @@
         <item name="colorPrimary">@color/primaryA10</item>
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorAccent">@color/primaryA20</item>
-        <item name="colorSurface">@color/surfaceA0</item>
         <item name="colorOnSurface">@color/text</item>
-        <item name="android:windowBackground">@color/surfaceA0</item>
         <item name="colorContainer">@color/surfaceA10</item>
         <item name="colorOutline">@color/primaryA20</item>
-        <item name="actionBarTheme">@style/AppBarStyle</item>
+        <item name="toolbarStyle">@style/AppBarStyle</item>
+        <item name="colorSurface">@color/surfaceA0</item>
+        <item name="android:windowBackground">@color/surfaceA0</item>
         <item name="materialCalendarTheme">@style/App_MaterialCalendar_Theme</item>
         <item name="materialTimePickerTheme">@style/App_MaterialTimePicker_Theme</item>
         <item name="materialCardViewStyle">@style/AppCardView</item>

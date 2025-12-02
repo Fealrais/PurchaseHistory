@@ -23,6 +23,7 @@
 
         <ProgressBar
             style="?android:attr/progressBarStyle"
+            android:background="@drawable/loading_dimmed"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center" />

@@ -54,10 +54,13 @@ public class RegisterViewModel extends ViewModel {
 
     public Runnable checkIfLoggedIn() {
         return () -> {
-            Optional<UserView> loggedUser = authClient.getLoggedUser();
-            if (loggedUser.isPresent()) {
-                UserView userView = loggedUser.get();
-                registerResult.postValue(new LoginResult(userView));
+            try {
+                Optional<UserView> loggedUser = authClient.getLoggedUser();
+                if (loggedUser.isPresent()) {
+                    UserView userView = loggedUser.get();
+                    registerResult.postValue(new LoginResult(userView));
+                }
+            } catch (WebException ignored) {
             }
         };
     }

@@ -49,14 +49,15 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/filterBar"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        tools:layout_editor_absoluteX="0dp"
+        >
 
         <LinearLayout
             android:id="@+id/dashboardFragmentsLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp" />
+            android:padding="24dp" />
     </ScrollView>
 
 

@@ -12,9 +12,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -55,7 +53,6 @@ public class HomeActivity extends AppCompatActivity {
     private int tourStep = 0;
     private NavController navController;
     private final Gson gson = new Gson();
-    private Menu menu;
 
     /**
      *
@@ -81,9 +78,6 @@ public class HomeActivity extends AppCompatActivity {
             NavigationUI.setupWithNavController(binding.navView, navController);
             NavigationUI.setupActionBarWithNavController(this, navHostFragment.getNavController(), appBarConfiguration);
         }
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null)
-            actionBar.setBackgroundDrawable( AppCompatResources.getDrawable(this, R.drawable.action_bar_bg));
         if (AndroidUtils.isFirstTimeOpen(this)) {
             showTourPrompt();
         }
@@ -143,7 +137,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
-        this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -161,11 +154,11 @@ public class HomeActivity extends AppCompatActivity {
         if (Objects.equals(id, R.id.navigation_dashboard))
             return getString(R.string.help_dashboard);
         if (Objects.equals(id, R.id.navigation_qrscanner))
-            return getString(R.string.help_schedule);
-        if (Objects.equals(id, R.id.navigation_profile))
             return getString(R.string.help_qrscanner);
-        if (Objects.equals(id, R.id.navigation_scheduled_expenses))
+        if (Objects.equals(id, R.id.navigation_profile))
             return getString(R.string.help_profile);
+        if (Objects.equals(id, R.id.navigation_scheduled_expenses))
+            return getString(R.string.help_schedule);
         return "";
     }
 

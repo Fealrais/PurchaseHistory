@@ -1,6 +1,7 @@
 package com.angelp.purchasehistory.ui.login;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -132,7 +133,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(this, R.style.BaseDialogStyle)
+                .setTitle(R.string.login_failed)
+                .setMessage(errorString).create().show();
     }
 
 

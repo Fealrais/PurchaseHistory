@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:minWidth="350dp">
     <include layout="@layout/dialog_title" android:id="@+id/title"/>
     <TextView
@@ -105,15 +106,16 @@
             style="@style/BorderedDropdown"
             android:layout_height="match_parent"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:nextFocusDown="@id/qr_noteInput"/>
-
+            android:layout_weight="5"
+            android:nextFocusDown="@id/qr_noteInput"
+            tools:listitem="@layout/category_spinner_item"/>
         <Button
-            style="@style/Bordered"
+            style="@style/Primary"
             android:id="@+id/purchaseEdit_categoryAddButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:drawableStart="@drawable/plus_add"
+            android:layout_weight="3"
             android:layout_marginStart="10dp"
             android:text="@string/create_category"/>
     </LinearLayout>

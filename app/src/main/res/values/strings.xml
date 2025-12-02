@@ -15,6 +15,7 @@
     <string name="invalid_email">Must be a valid email</string>
     <string name="login_failed">"Login failed"</string>
     <string name="server_connection_failed_500">"Could not reach server. Try again later"</string>
+    <string name="server_connection_failed_long">We\'re sorry, we couldn’t reach the server right now. Please check your internet connection and try again.</string>
     <string name="login_failed_401">"Invalid username or password"</string>
     <string name="failed">"Something went wrong"</string>
     <string name="invalid_credentials">Combination of username and password does not exist</string>
@@ -40,7 +41,7 @@
     <string name="currency_zero">0.00</string>
     <string name="edit_text">Edit</string>
     <string name="add_button_text">Add</string>
-    <string name="create_category">Create a category</string>
+    <string name="create_category">New category</string>
     <string name="cancel">Cancel</string>
     <string name="name">Name</string>
     <string name="color">Color</string>
@@ -142,6 +143,7 @@
     <string name="tour_navigation_scheduled_expenses">Schedule your expenses ahead of time!</string>
     <string name="tour_navigation_profile">Profile</string>
     <string name="tour_filter_button">Filter purchases</string>
+    <string name="tour_navigation_category">Let\'s make your stats more useful! ✨</string>
     <string name="tour_prompt_title">Welcome!</string>
     <string name="tour_navigation_dashboard_secondary">This is the dashboard. You can see an overview of your recent purchases and spending trends here.</string>
     <string name="tour_navigation_qrscanner_secondary">Use this to scan QR codes on your receipts to quickly add purchases to your history.</string>
@@ -149,6 +151,7 @@
     <string name="tour_navigation_profile_secondary">Manage your profile settings and view your activity history here.</string>
     <string name="tour_filter_button_secondary">You can always change the time period or the category of purchases displayed from here.</string>
     <string name="tour_prompt_message">Welcome to PurchaseHistory!\nThis is a project made by a solo developer in his free time, inspired by the Bulgarian QR code receipt system and by my will to see my monthly spending. Feel free to reach out for suggestions and issues on my email <a href="@mailto:purchase.history.bg@gmail.com">purchase.history.bg@gmail.com</a></string>
+    <string name="tour_navigation_category_secondary">Create categories for your purchases (like Bills, Groceries or Coffee) and give each a color.\nThis way you\'ll instantly see where your money goes.</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="terms_of_service_text">By using this application, you agree to the terms and conditions outlined here.\nThe application is provided as-is, without any guarantees or warranties. The developer is not responsible for any data loss, damages, or any other issues that may arise from using the application.\nYou agree to use the application at your own risk and to comply with all applicable laws and regulations.\nThe developer reserves the right to modify these terms at any time without prior notice.</string>
     <string name="privacy">Privacy Policy</string>
@@ -169,7 +172,10 @@ Use the filter at the very top of the screen.
 • Turn notifications on/off for each expense individually\n
 • When a notification appears, tap “Add Purchase” to record it instantly or dismiss to skip
     </string>
-    <string name="help_qrscanner">This is where you add a new purchase to your history.\n\nFastest way: tap the camera button and scan a QR receipt — the app will automatically fill in shop, amount, date and items for you.\nYou can also pick a photo from your gallery if you already have the QR saved.\n\nIf there’s no QR, just type the details manually — everything is optional except the amount.\n\nTap Save when you’re done!</string>
+    <string name="help_qrscanner">This is where you add a new purchase to your history.\n\nFastest way:
+        tap the QR button and scan a QR receipt — the app will automatically fill in the amount, date and time for you.\nYou can also pick a photo from your gallery
+        if you already have the QR saved.\n\nIf there’s no QR, just type the details manually —
+        everything is optional except the amount.\n\nTap Save when you’re done!</string>
     <string name="help_profile">This is your Profile page.\n\n
 Here you can:\n
 • See your personal stats — total purchases, favorite categories, spending over time\n
@@ -293,9 +299,16 @@ Here you can:\n
     <string name="delete_category">Delete category</string>
     <string name="delete_category_confirmation">Are you sure you want ot delete %s?\nAll purchases in this category will be left without one.</string>
     <string name="edit_purchase_id">Editing purchase #%s</string>
-    <string name="choose_category">Choose category</string>
+    <string name="choose_category">Category</string>
     <string name="edit_schedule_id">Editing scheduled expense №%s</string>
     <string name="create_schedule">Create a scheduled expense</string>
     <string name="error_invalid_price">Invalid price!</string>
 
+    <string name="about_us_desc">Hello!\n\tThis app was created and is maintained by two developers who wanted to track their own expenses — and came up with the idea of using Bulgarian fiscal receipts.</string>
+
+    <string name="about_us_desc2">\tIf you have ideas for improvement or spot a bug,</string>
+    <string name="about_us_desc_feedback">please let us know through our  <a href="#">feedback form</a>,</string>
+    <string name="about_us_desc_email">or write us at <a href="mailto:purchase.history.bg@gmail.com">purchase.history.bg@gmail.com"</a></string>
+
+    <string name="about_us_conclusion">\tThank you for using our app! We hope it helps you save money.\n\n\tHappy spending (and saving)! ☻</string>
 </resources>
