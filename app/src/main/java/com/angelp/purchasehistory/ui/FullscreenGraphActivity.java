@@ -56,7 +56,8 @@ public class FullscreenGraphActivity extends AppCompatActivity {
 
             if (dashboardComponent.isLandscapeOnly()) {
                 setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                fragment.getArguments().putInt(Constants.Arguments.EXTERNAL_LEGEND, R.id.legendList);
+                if (fragment.getArguments()!=null)
+                    fragment.getArguments().putInt(Constants.Arguments.EXTERNAL_LEGEND, R.id.legendList);
             }
 
             binding.verticalFilterBar.filterBtn.setOnClickListener(v -> openFilter());
@@ -89,7 +90,7 @@ public class FullscreenGraphActivity extends AppCompatActivity {
     private void applyFilter(PurchaseFilter newFilter) {
         if (binding == null || newFilter == null) return;
 
-        int color = newFilter.getCategoryId() == null ? getResources().getColor(R.color.surfaceA20) : AndroidUtils.getColor(newFilter.getCategoryColor());
+        int color = newFilter.getCategoryId() == null ? getResources().getColor(R.color.surfaceA20, getTheme()) : AndroidUtils.getColor(newFilter.getCategoryColor());
         binding.filterBar.filterCategoryBtn.getBackground().setTint(color);
         binding.filterBar.filterCategoryBtn.setTextColor(AndroidUtils.getTextColor(color));
         binding.filterBar.filterCategoryBtn.setText(newFilter.getCategoryName() == null ? getString(R.string.category) : newFilter.getCategoryName());

@@ -5,18 +5,18 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import org.jetbrains.annotations.NotNull;
 
 public class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
     private final Context context;
-    private final Thread.UncaughtExceptionHandler defaultHandler;
 
     public GlobalExceptionHandler(Context context) {
         this.context = context;
-        this.defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.UncaughtExceptionHandler defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
     }
 
     @Override
-    public void uncaughtException(Thread thread, Throwable throwable) {
+    public void uncaughtException(@NotNull Thread thread, Throwable throwable) {
         Log.e("GlobalExceptionHandler", "Uncaught exception. Attempting to display feedback screen" + throwable.getClass().getSimpleName());
         new Handler(Looper.getMainLooper()).post(() -> {
             Intent intent = new Intent(context, ErrorFallbackActivity.class);

@@ -16,9 +16,8 @@ import java.util.List;
 public final class Constants {
     public static final int GRAPH_MIN_HEIGHT = 1000;
     public final static List<DashboardComponent> DEFAULT_COMPONENTS = new ArrayList<>();
-    public static final String APP_BOOT_RECEIVER = "APP_BOOT_RECEIVER";
     public static final List<TourStep> tourSteps = new ArrayList<>();
-    public static HashMap<String, Integer> errorsMap = new HashMap<>();
+    public static final HashMap<String, Integer> errorsMap = new HashMap<>();
 
     static {
         DEFAULT_COMPONENTS.add(new DashboardComponent("PieChartFragment"));
@@ -66,8 +65,6 @@ public final class Constants {
         String APP_PREFERENCES = "app_preferences";
         String SILENCED_NOTIFICATIONS = "silenced_notifications";
         String PREFERRED_CURRENCY = "preferred_currency";
-        String MONTHLY_LIMIT_VALUE = "monthly_limit_value";
-        String MONTHLY_LIMIT_LABEL = "monthly_limit_label";
     }
 
     public interface Arguments {

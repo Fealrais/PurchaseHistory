@@ -49,8 +49,7 @@ public class ScheduledExpensesFragment extends Fragment {
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentScheduledExpensesBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -111,7 +110,7 @@ public class ScheduledExpensesFragment extends Fragment {
                 public void onDeleteClick(ScheduledExpenseView item) {
                     new Thread(() -> {
                         try {
-                            Log.i("ScheduledExpense", "onDeleteClick: Deleting item"+item.getId());
+                            Log.i("ScheduledExpense", "onDeleteClick: Deleting item" + item.getId());
                             boolean success = scheduledExpenseClient.deleteScheduledExpense(item.getId());
                             new Handler(Looper.getMainLooper()).post(() -> {
                                 if (success) {
@@ -150,7 +149,7 @@ public class ScheduledExpensesFragment extends Fragment {
     private void sendToQRPage(ScheduledExpenseView item) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("scheduledNotification", new ScheduledNotification(item));
-        NavOptions navOptions = new NavOptions.Builder().setLaunchSingleTop(true).build();
+        NavOptions navOptions = new NavOptions.Builder().setLaunchSingleTop(false).build();
         new Handler(Looper.getMainLooper()).post(() -> NavHostFragment.findNavController(this).navigate(R.id.action_navigation_scheduled_expenses_to_navigation_qrscanner, bundle, navOptions));
     }
 

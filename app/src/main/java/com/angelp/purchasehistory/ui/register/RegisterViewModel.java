@@ -20,7 +20,7 @@ public class RegisterViewModel extends ViewModel {
 
     private final MutableLiveData<RegisterFormState> registerFormState = new MutableLiveData<>();
     private final MutableLiveData<LoginResult> registerResult = new MutableLiveData<>();
-    AuthClient authClient;
+    final AuthClient authClient;
 
     @Inject
     public RegisterViewModel(AuthClient authClient) {
@@ -66,11 +66,11 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public void registerDataChanged(String username, String password, String confirmPassword, String email) {
-        if (!AndroidUtils.isUserNameValid(username)) {
+        if (AndroidUtils.isUserNameInvalid(username)) {
             registerFormState.setValue(new RegisterFormState(R.string.invalid_username, null, null));
-        } else if (!AndroidUtils.isPasswordValid(password)) {
+        } else if (AndroidUtils.isPasswordInvalid(password)) {
             registerFormState.setValue(new RegisterFormState(null, R.string.invalid_password, null));
-        } else if (!AndroidUtils.isEmailValid(email)) {
+        } else if (AndroidUtils.isEmailInvalid(email)) {
             registerFormState.setValue(new RegisterFormState(null, null, R.string.invalid_email));
         }
         if (!password.equals(confirmPassword)) {

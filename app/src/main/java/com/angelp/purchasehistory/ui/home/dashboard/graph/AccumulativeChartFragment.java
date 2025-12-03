@@ -191,7 +191,7 @@ public class AccumulativeChartFragment extends RefreshablePurchaseFragment imple
                 if (legendId != null && getActivity()!=null) {
                     Legend legend = binding.lineChartView.getLegend();
                     ListView listView = getActivity().findViewById(legendId);
-                    legend.setEnabled(!AndroidUtils.setLegendList(legend,listView));
+                    legend.setEnabled(AndroidUtils.setLegendList(legend, listView));
                 }
             }).start();
         });

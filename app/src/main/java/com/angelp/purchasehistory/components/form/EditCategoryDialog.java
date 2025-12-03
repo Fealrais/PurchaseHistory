@@ -37,8 +37,8 @@ public class EditCategoryDialog extends DialogFragment {
     private final String TAG = this.getClass().getSimpleName();
     @Inject
     PurchaseClient purchaseClient;
-    List<String> defaultCategories = List.of("Groceries", "Medicine", "Travel", "Gifts", "Fast food", "Hobbies", "Bills", "Investments", "Essentials");
-    List<String> defaultColors = List.of("#FADADD", "#AECBFA", "#D4EED1", "#FFF9C4", "#E6E6FA", "#FFDAB9", "#F5FFFA", "#F08080");
+    final List<String> defaultCategories = List.of("Groceries", "Medicine", "Travel", "Gifts", "Fast food", "Hobbies", "Bills", "Investments", "Essentials");
+    final List<String> defaultColors = List.of("#FADADD", "#AECBFA", "#D4EED1", "#FFF9C4", "#E6E6FA", "#FFDAB9", "#F5FFFA", "#F08080");
     private CategoryView defaultValue;
     private Long categoryId;
     private Consumer<CategoryView> consumer;
@@ -114,12 +114,10 @@ public class EditCategoryDialog extends DialogFragment {
         new AlertDialog.Builder(requireContext(), R.style.BaseDialogStyle)
                 .setCustomTitle(title)
                 .setMessage(getString(R.string.delete_category_confirmation, defaultValue.getName()))
-                .setPositiveButton(R.string.delete, (dialog, which) -> {
-                    new Thread(() -> {
-                        purchaseClient.deleteCategory(categoryId);
-                        onDelete.run();
-                    }).start();
-                })
+                .setPositiveButton(R.string.delete, (dialog, which) -> new Thread(() -> {
+                    purchaseClient.deleteCategory(categoryId);
+                    onDelete.run();
+                }).start())
 
                 .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)

@@ -37,8 +37,8 @@ public class CreateCategoryDialog extends DialogFragment {
     private final String TAG = this.getClass().getSimpleName();
     @Inject
     PurchaseClient purchaseClient;
-    List<String> defaultCategories = List.of("Groceries", "Medicine", "Travel", "Gifts", "Fast food", "Hobbies", "Bills", "Investments", "Essentials");
-    List<String> defaultColors = List.of("#FADADD", "#AECBFA", "#D4EED1", "#FFF9C4", "#E6E6FA", "#FFDAB9", "#F5FFFA", "#F08080");
+    final List<String> defaultCategories = List.of("Groceries", "Medicine", "Travel", "Gifts", "Fast food", "Hobbies", "Bills", "Investments", "Essentials");
+    final List<String> defaultColors = List.of("#FADADD", "#AECBFA", "#D4EED1", "#FFF9C4", "#E6E6FA", "#FFDAB9", "#F5FFFA", "#F08080");
     private Consumer<CategoryView> consumer;
     private CategoryDialogBinding binding;
 

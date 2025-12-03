@@ -120,12 +120,10 @@ public class ProfileFragment extends Fragment {
         new AlertDialog.Builder(requireContext(), R.style.BaseDialogStyle)
                 .setTitle(R.string.delete_account)
                 .setMessage(R.string.delete_account_description)
-                .setPositiveButton(R.string.yes, (dialog, which) -> {
-                    new Thread(() -> {
-                        boolean b = userClient.deleteAccount();
-                        if (b) AndroidUtils.logout(getContext(), purchaseClient);
-                    }).start();
-                })
+                .setPositiveButton(R.string.yes, (dialog, which) -> new Thread(() -> {
+                    boolean b = userClient.deleteAccount();
+                    if (b) AndroidUtils.logout(getContext(), purchaseClient);
+                }).start())
                 .setNegativeButton(R.string.no, null)
                 .show();
     }

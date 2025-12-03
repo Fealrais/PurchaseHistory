@@ -29,15 +29,17 @@ public class MonthlyLimitSettingsFragment extends PreferenceFragmentCompat {
         PreferenceCategory monthlyLimitCategory = findPreference("monthly_limit_preference_category");
         setupMonthlyLimitEdit(monthlyLimitCategory);
 
-        addLimitPreference.setOnPreferenceClickListener((v) -> {
-            addMonthlyLimitDialog = new AddMonthlyLimitDialog((newMonthlyLimit) -> {
-                Preference monthlyLimitPreference = new Preference(getContext());
-                setupMonthlyLimit(newMonthlyLimit, monthlyLimitPreference);
-                monthlyLimitCategory.addPreference(monthlyLimitPreference);
+        if (addLimitPreference != null)
+            addLimitPreference.setOnPreferenceClickListener((v) -> {
+                addMonthlyLimitDialog = new AddMonthlyLimitDialog((newMonthlyLimit) -> {
+                    Preference monthlyLimitPreference = new Preference(requireContext());
+                    setupMonthlyLimit(newMonthlyLimit, monthlyLimitPreference);
+                    if (monthlyLimitCategory != null)
+                        monthlyLimitCategory.addPreference(monthlyLimitPreference);
+                });
+                addMonthlyLimitDialog.show(getParentFragmentManager(), "Add_monthly_limit");
+                return false;
             });
-            addMonthlyLimitDialog.show(getParentFragmentManager(), "Add_monthly_limit");
-            return false;
-        });
 
 
     }
@@ -46,7 +48,7 @@ public class MonthlyLimitSettingsFragment extends PreferenceFragmentCompat {
         new Thread(() -> {
             List<MonthlyLimitView> monthlyLimits = settingsClient.getMonthlyLimits();
             for (MonthlyLimitView monthlyLimit : monthlyLimits) {
-                Preference monthlyLimitPreference = new Preference(getContext());
+                Preference monthlyLimitPreference = new Preference(requireContext());
                 setupMonthlyLimit(monthlyLimit, monthlyLimitPreference);
                 monthlyLimitPreference.setOnPreferenceClickListener((p) -> {
                     editMonthlyLimitDialog = new EditMonthlyLimitDialog(monthlyLimit.getId(), monthlyLimit,

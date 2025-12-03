@@ -47,16 +47,10 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="BorderedDropdown" parent="Widget.AppCompat.Spinner.DropDown">
+    <style name="BorderedDropdown" parent="Widget.AppCompat.Spinner">
         <item name="android:textColor">@color/text</item>
         <item name="android:background">@drawable/bordered_dropdown_bg</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
-        <item name="android:spinnerItemStyle">@style/spinnerItemStyle</item>
-        <item name="android:paddingStart">8dp</item>
-    </style>
-
-    <style name="spinnerItemStyle">
-        <item name="android:paddingVertical">8dp</item>
     </style>
     <style name="App_MaterialCalendar_Theme" parent="ThemeOverlay.Material3.MaterialCalendar">
         <item name="android:background">@drawable/bordered_bg</item>
@@ -69,6 +63,4 @@
         <item name="android:background">@drawable/bordered_bg</item>
         <item name="android:backgroundTint">@color/surfaceA10</item>
     </style>
-
-    <style name="toolbarBackground"></style>
 </resources>

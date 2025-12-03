@@ -37,7 +37,7 @@ public class CategorySettingsFragment extends PreferenceFragmentCompat {
         new Thread(() -> {
             List<CategoryView> allCategories = purchaseClient.getAllCategories();
             for (CategoryView categoryView : allCategories) {
-                Preference categoryPreference = new Preference(getContext());
+                Preference categoryPreference = new Preference(requireContext());
                 setupCategory(categoryView, categoryPreference);
                 categoryPreference.setOnPreferenceClickListener((p) -> {
                     editCategoryDialog = new EditCategoryDialog(categoryView.getId(), categoryView,
@@ -55,7 +55,7 @@ public class CategorySettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void setupCategory(CategoryView category, Preference categoryPreference) {
-        Drawable unwrappedDrawable = AppCompatResources.getDrawable(getContext(), R.drawable.circle);
+        Drawable unwrappedDrawable = AppCompatResources.getDrawable(requireContext(), R.drawable.circle);
         Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
         DrawableCompat.setTint(wrappedDrawable, AndroidUtils.getColor(category));
         new Handler(Looper.getMainLooper()).post(() -> {

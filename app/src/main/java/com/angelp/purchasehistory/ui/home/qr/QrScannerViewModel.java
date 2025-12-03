@@ -22,7 +22,7 @@ public class QrScannerViewModel extends ViewModel {
     @Getter
     private final PurchaseDTO purchaseDTO = new PurchaseDTO();
 
-    PurchaseClient purchaseClient;
+    final PurchaseClient purchaseClient;
 
     @Inject
     public QrScannerViewModel(PurchaseClient purchaseClient) {

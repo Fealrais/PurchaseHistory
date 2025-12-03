@@ -88,7 +88,7 @@ public class DashboardFragment extends RefreshablePurchaseFragment implements Cu
     }
 
     private void applyFilter(PurchaseFilter newFilter) {
-        int color = newFilter.getCategoryId() == null ? getResources().getColor(R.color.surfaceA20) :AndroidUtils.getColor(newFilter.getCategoryColor());
+        int color = newFilter.getCategoryId() == null ? getResources().getColor(R.color.surfaceA20, requireContext().getTheme()) :AndroidUtils.getColor(newFilter.getCategoryColor());
         binding.filterBar.filterCategoryBtn.getBackground().setTint(color);
         binding.filterBar.filterCategoryBtn.setTextColor(AndroidUtils.getTextColor(color));
         binding.filterBar.filterCategoryBtn.setText(newFilter.getCategoryName() == null ? getString(R.string.category) : newFilter.getCategoryName());

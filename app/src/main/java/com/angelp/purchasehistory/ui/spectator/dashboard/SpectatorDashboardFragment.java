@@ -61,9 +61,7 @@ public class SpectatorDashboardFragment extends Fragment {
                     changeObservedUser(null);
                 }
             });
-            new Handler(Looper.getMainLooper()).post(() -> {
-                binding.spectatorHomeUserSpinner.setAdapter(observedUserAdapter);
-            });
+            new Handler(Looper.getMainLooper()).post(() -> binding.spectatorHomeUserSpinner.setAdapter(observedUserAdapter));
 
         }).start();
 

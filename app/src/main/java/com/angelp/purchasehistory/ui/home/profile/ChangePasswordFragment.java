@@ -52,7 +52,7 @@ public class ChangePasswordFragment extends Fragment {
             userClient.updatePassword(new UpdatePasswordDTO(oldPassword, newPassword));
             Log.i("ChangePasswordFragment", "Password changed successfully");
             AndroidUtils.showSuccessAnimation(getView());
-            NavHostFragment.findNavController(this).popBackStack();
+            new Handler(Looper.getMainLooper()).post(() -> NavHostFragment.findNavController(this).popBackStack());
         } catch (WebException e) {
             Log.e("ChangePasswordFragment", "Password change failed: " + e.getMessage());
             showError(binding.currentPasswordEdit, getResources().getString(e.getErrorResource()));
@@ -61,11 +61,11 @@ public class ChangePasswordFragment extends Fragment {
     }
 
     private boolean validateInputs(String newPassword, String newPasswordConfirm, String oldPassword) {
-        if (!newPassword.isEmpty() && !AndroidUtils.isPasswordValid(newPassword)) {
+        if (!newPassword.isEmpty() && AndroidUtils.isPasswordInvalid(newPassword)) {
             showError(binding.newPassword, getResources().getString(R.string.invalid_password));
             return false;
         }
-        if (!newPasswordConfirm.isEmpty() && !AndroidUtils.isPasswordValid(newPasswordConfirm)) {
+        if (!newPasswordConfirm.isEmpty() && AndroidUtils.isPasswordInvalid(newPasswordConfirm)) {
             showError(binding.newPasswordConfirm, getResources().getString(R.string.invalid_password));
             return false;
         }
@@ -73,7 +73,7 @@ public class ChangePasswordFragment extends Fragment {
             showError(binding.newPasswordConfirm, getResources().getString(R.string.invalid_password_match));
             return false;
         }
-        if (!oldPassword.isEmpty() && !AndroidUtils.isPasswordValid(oldPassword)) {
+        if (!oldPassword.isEmpty() && AndroidUtils.isPasswordInvalid(oldPassword)) {
             showError(binding.currentPasswordEdit, getResources().getString(R.string.invalid_password));
             return false;
         }

@@ -21,7 +21,6 @@ import java.util.function.Consumer;
 public class CustomizationDialogFragment extends DialogFragment {
     private final List<DashboardComponent> selectedFragments;
     private final Consumer<List<DashboardComponent>> onSave;
-    private DialogCustomizationBinding binding;
 
     public CustomizationDialogFragment(List<DashboardComponent> selectedFragments, Consumer<List<DashboardComponent>> onSave) {
         this.selectedFragments = selectedFragments;
@@ -32,7 +31,7 @@ public class CustomizationDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DialogCustomizationBinding.inflate(inflater, container, false);
+        com.angelp.purchasehistory.databinding.DialogCustomizationBinding binding = DialogCustomizationBinding.inflate(inflater, container, false);
         RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         CustomizationAdapter adapter = new CustomizationAdapter(selectedFragments);

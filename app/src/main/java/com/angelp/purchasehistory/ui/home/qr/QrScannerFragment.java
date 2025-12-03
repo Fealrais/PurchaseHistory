@@ -122,12 +122,6 @@ public class QrScannerFragment extends Fragment {
         qrScannerViewModel = new ViewModelProvider(this).get(QrScannerViewModel.class);
         binding = FragmentQrBinding.inflate(inflater, container, false);
         initQRForm(inflater);
-        if (getArguments() != null) {
-            ScheduledNotification scheduledNotification = getArguments().getParcelable("scheduledNotification");
-            if (scheduledNotification != null) {
-                fillQRForm(scheduledNotification.getPurchaseDTO());
-            }
-        }
 //        mAdView = new AdView(getContext());
 //        mAdView.setAdSize(getCurrentOrientationAnchoredAdaptiveBannerAdSize(getContext(), R.id.adView));
 //        mAdView.setAdUnitId("myAdUnitId");
@@ -139,11 +133,17 @@ public class QrScannerFragment extends Fragment {
 
         new Thread(() -> {
             allCategories = qrScannerViewModel.getAllCategories();
-            if (allCategories.isEmpty()) allCategories.add(Constants.getDefaultCategory(requireContext()));
+            allCategories.add(0, Constants.getDefaultCategory(requireContext()));
             categoryAdapter = new CategorySpinnerAdapter(requireContext(), allCategories);
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (binding == null) return;
                 binding.qrCategorySpinner.setAdapter(categoryAdapter);
+                if (getArguments() != null) {
+                    ScheduledNotification scheduledNotification = getArguments().getParcelable("scheduledNotification");
+                    if (scheduledNotification != null) {
+                        fillQRForm(scheduledNotification.getPurchaseDTO());
+                    }
+                }
             });
         }).start();
         return binding.getRoot();
@@ -173,7 +173,7 @@ public class QrScannerFragment extends Fragment {
             qrScannerViewModel.updatePurchaseDTO(purchaseDTO);
             datePicker.setValue(purchaseDTO.getDate());
             timePicker.setValue(purchaseDTO.getTime());
-            int index = purchaseDTO.getCategoryId() != null ? Utils.findIndex(allCategories, (category) -> category.getId().equals(purchaseDTO.getCategoryId())) : -1;
+            int index = purchaseDTO.getCategoryId() != null ? Utils.findIndex(allCategories, (category) -> category.getId()!=null && category.getId().equals(purchaseDTO.getCategoryId())) : -1;
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (purchaseDTO.getStoreId() != null) binding.qrStoreIdValue.setText(purchaseDTO.getStoreId());
                 if (index >= 0) binding.qrCategorySpinner.setSelection(index);
@@ -181,8 +181,8 @@ public class QrScannerFragment extends Fragment {
                 if (purchaseDTO.getPrice() != null)
                     binding.qrPriceInput.setText(AndroidUtils.formatCurrency(purchaseDTO.getPrice()));
                 if (purchaseDTO.getTimestamp() != null) {
-                    binding.qrDateInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_DATE));
-                    binding.qrTimeInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ISO_LOCAL_TIME));
+                    binding.qrDateInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+                    binding.qrTimeInput.setText(purchaseDTO.getTimestamp().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)));
                 }
                 if (!StringUtils.isEmpty(purchaseDTO.getNote())) binding.qrNoteInput.setText(purchaseDTO.getNote());
             });
@@ -252,7 +252,7 @@ public class QrScannerFragment extends Fragment {
             qrScannerViewModel.validatePurchaseView(purchaseDTO, this::onInvalidPurchase);
             fillQRForm(purchaseDTO);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "readQRFromImage: Fail", e);
         }
     }
 

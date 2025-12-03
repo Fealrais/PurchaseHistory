@@ -14,6 +14,7 @@ import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.databinding.FragmentDashboardCardBinding;
 import com.angelp.purchasehistory.ui.FullscreenGraphActivity;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @NoArgsConstructor
 public class DashboardCardFragment extends Fragment {
@@ -22,7 +23,6 @@ public class DashboardCardFragment extends Fragment {
     private int generatedId;
     private Integer marginBottom;
     private FragmentDashboardCardBinding binding;
-    private RefreshablePurchaseFragment fragment;
 
     public DashboardCardFragment(DashboardComponent dashboardComponent) {
         this.component = dashboardComponent;
@@ -44,7 +44,7 @@ public class DashboardCardFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentDashboardCardBinding.inflate(inflater, container, false);
         binding.fragmentContainerView.setId(generatedId);
@@ -54,7 +54,7 @@ public class DashboardCardFragment extends Fragment {
             intent.putExtra(Constants.Arguments.ARG_COMPONENT, component);
             startActivity(intent);
         });
-        fragment = DashboardComponentsFactory.createFragment(component.getFragmentName());
+        RefreshablePurchaseFragment fragment = DashboardComponentsFactory.createFragment(component.getFragmentName());
         if (fragment.getArguments() != null) {
             fragment.getArguments().putInt(Constants.Arguments.ARG_MAX_SIZE, 6);
             fragment.getArguments().putBoolean(Constants.Arguments.ARG_SHOW_FILTER, false);

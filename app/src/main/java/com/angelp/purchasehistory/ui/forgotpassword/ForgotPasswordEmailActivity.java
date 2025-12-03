@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.web.clients.AuthClient;
@@ -25,7 +26,6 @@ public class ForgotPasswordEmailActivity extends AppCompatActivity {
 
     private EditText etEmail;
     private Button btnSendEmail;
-    private Button btnAlreadyHaveCode;
     private TextView tvFeedback;
 
     @Override
@@ -36,11 +36,13 @@ public class ForgotPasswordEmailActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         btnSendEmail = findViewById(R.id.btnSendEmail);
         tvFeedback = findViewById(R.id.tvFeedback);
-        btnAlreadyHaveCode = findViewById(R.id.btnAlreadyHaveCode);
+        Button btnAlreadyHaveCode = findViewById(R.id.btnAlreadyHaveCode);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar!=null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowHomeEnabled(true);
+        }
 
         btnAlreadyHaveCode.setOnClickListener(v -> startPasswordChangeActivity());
         btnSendEmail.setOnClickListener(v -> {

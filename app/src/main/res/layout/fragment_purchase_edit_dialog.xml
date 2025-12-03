@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:minWidth="350dp">
+    xmlns:tools="http://schemas.android.com/tools">
     <include layout="@layout/dialog_title" android:id="@+id/title"/>
     <TextView
         android:id="@+id/purchaseEdit_billLabel"
@@ -65,8 +64,7 @@
         android:layout_height="48dp"
         android:paddingHorizontal="10dp"
         android:layout_marginTop="8dp"
-
-        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingVertical="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/purchaseEdit_priceInput">
         <Button
@@ -94,20 +92,20 @@
     <LinearLayout
         android:id="@+id/category_row"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-
         android:paddingHorizontal="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingVertical="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateTimeButtons">
         <Spinner
             android:id="@+id/purchaseEdit_categorySpinner"
-            style="@style/BorderedDropdown"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="5"
             android:nextFocusDown="@id/qr_noteInput"
+            android:paddingVertical="0dp"
+            style="@style/BorderedDropdown"
             tools:listitem="@layout/category_spinner_item"/>
         <Button
             style="@style/Primary"
@@ -125,7 +123,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-style="@style/Borderless"
+        style="@style/Borderless"
         android:text="@string/reset_text"
         app:layout_constraintEnd_toStartOf="@+id/purchaseEdit_deleteButton"
         app:layout_constraintStart_toEndOf="@+id/purchaseEdit_saveButton"

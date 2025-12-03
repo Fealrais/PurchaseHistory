@@ -25,10 +25,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     UserClient userClient;
     @Inject
     PurchaseClient purchaseClient;
-    private ListPreference currencyPreference;
-    private Preference editCategoryPreference;
-    private Preference monthlyLimitPreference;
-    private Preference creditsPreference;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -38,21 +34,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void loadAppSettings() {
-        editCategoryPreference = findPreference("edit_category_preference");
+        Preference editCategoryPreference = findPreference("edit_category_preference");
         editCategoryPreference.setOnPreferenceClickListener(p1 -> navigate(CategorySettingsFragment.class));
         SharedPreferences appPreferences = getContext().getSharedPreferences(Constants.Preferences.APP_PREFERENCES, Context.MODE_PRIVATE);
         String preferredCurrency = appPreferences.getString(Constants.Preferences.PREFERRED_CURRENCY, "");
-        creditsPreference = findPreference("credits_preference");
+        Preference creditsPreference = findPreference("credits_preference");
         creditsPreference.setOnPreferenceClickListener((p)-> {
             Intent intent = new Intent(getActivity(), AboutUsActivity.class);
             startActivity(intent);
             return false;
         });
-        currencyPreference = findPreference("currency_preference");
+        ListPreference currencyPreference = findPreference("currency_preference");
         currencyPreference.setValue(preferredCurrency);
         currencyPreference.setOnPreferenceChangeListener((a, value) -> appPreferences.edit()
                 .putString(Constants.Preferences.PREFERRED_CURRENCY, value.toString()).commit());
-        monthlyLimitPreference = findPreference("monthly_limit_preference");
+        Preference monthlyLimitPreference = findPreference("monthly_limit_preference");
         monthlyLimitPreference.setOnPreferenceClickListener((p) -> navigate(MonthlyLimitSettingsFragment.class));
         Preference reportProblemPreference = findPreference("report_problem");
         reportProblemPreference.setOnPreferenceClickListener((p) -> {

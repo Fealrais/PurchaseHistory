@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.components.form.DatePickerFragment;
+import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.filters.PurchaseFilterSingleton;
 import com.angelp.purchasehistory.databinding.FragmentPurchaseFilterDialogBinding;
@@ -162,7 +163,7 @@ public class PurchaseFilterDialog extends DialogFragment {
         }
         new Thread(() -> {
             categoryOptions = purchaseClient.getAllCategories();
-            categoryOptions.add(0, new CategoryView(null, getString(R.string.show_all), "#ffffff"));
+            categoryOptions.add(0, Constants.getDefaultCategory(requireContext()));
             categoryAdapter = new CategorySpinnerAdapter(requireContext(), categoryOptions);
             new Handler(Looper.getMainLooper()).post(() -> {
                 binding.purchaseFilterCategorySpinner.setAdapter(categoryAdapter);

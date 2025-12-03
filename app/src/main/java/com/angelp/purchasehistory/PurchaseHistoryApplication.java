@@ -14,9 +14,9 @@ public class PurchaseHistoryApplication extends Application {
     @Getter
     private static PurchaseHistoryApplication instance;
     @Getter
-    public MutableLiveData<UserView> loggedUser = new MutableLiveData<>();
+    public final MutableLiveData<UserView> loggedUser = new MutableLiveData<>();
     @Getter
-    public MutableLiveData<String> userToken = new MutableLiveData<>();
+    public final MutableLiveData<String> userToken = new MutableLiveData<>();
 
     public static Context getContext() {
         return instance;

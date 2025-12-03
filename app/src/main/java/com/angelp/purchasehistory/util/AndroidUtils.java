@@ -107,25 +107,25 @@ public final class AndroidUtils {
     }
 
     // A placeholder username validation check
-    public static boolean isUserNameValid(String username) {
+    public static boolean isUserNameInvalid(String username) {
         if (username == null || username.trim().length() <= 5) {
-            return false;
+            return true;
         } else {
-            return !username.trim().isEmpty();
+            return username.trim().isEmpty();
         }
     }
 
     // A placeholder email validation check
-    public static boolean isEmailValid(String email) {
+    public static boolean isEmailInvalid(String email) {
         if (email == null) {
-            return false;
-        } else return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+            return true;
+        } else return !Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
 
     // A placeholder password validation check
-    public static boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
+    public static boolean isPasswordInvalid(String password) {
+        return password == null || password.trim().length() <= 5;
     }
 
     public static void openCsvFile(Activity context, String name) {
@@ -294,11 +294,11 @@ public final class AndroidUtils {
     /**
      * Sets the provided legend onto the ListView.
      *
-     * @return true if successful
+     * @return true if it failed and normal Legend should be used
      */
     public static boolean setLegendList(Legend legend, ListView listView) {
         try {
-            if (listView == null) return false;
+            if (listView == null) return true;
             List<CategoryView> legendItems = new ArrayList<>();
             LegendEntry[] entries = legend.getEntries();
             for (int j = 0; j < entries.length; j++) {
@@ -310,10 +310,10 @@ public final class AndroidUtils {
             CategorySpinnerAdapter adapter = new CategorySpinnerAdapter(listView.getContext(), CategorySpinnerAdapter.SIZE_SMALL, legendItems);
             new Handler(Looper.getMainLooper()).post(() -> listView.setAdapter(adapter));
 
-            return true;
+            return false;
         } catch (NullPointerException e) {
             Log.e("Legend", "Failed to fetch legend list");
-            return false;
+            return true;
         }
     }
 

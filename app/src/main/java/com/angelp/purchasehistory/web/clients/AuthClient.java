@@ -97,8 +97,8 @@ public class AuthClient extends HttpClient {
             SharedPreferences.Editor editor = player.edit();
             editor.clear(); //clear all stored data
             editor.apply();
-        } catch (IOException ignored) {
-            Log.i("logout", "logout: " + ignored.getMessage());
+        } catch (IOException e) {
+            Log.i("logout", "logout: " + e.getMessage());
         }
     }
 

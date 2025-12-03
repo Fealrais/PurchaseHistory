@@ -93,8 +93,6 @@ public class PurchaseFilter implements Parcelable {
             builder.append("categoryId=").append(categoryId).append("&");
         if (userId != null)
             builder.append("userId=").append(userId).append("&");
-//        if (pageRequest != null)
-//            builder.append(pageRequest);
         return builder.toString();
     }
 

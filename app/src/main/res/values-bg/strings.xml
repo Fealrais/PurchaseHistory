@@ -4,6 +4,7 @@
     <string name="title_dashboard">Табло</string>
     <string name="title_notifications">Известия</string>
     <string name="prompt_email">Имейл</string>
+    <string name="prompt_username_email">Потребителско име или Имейл</string>
     <string name="prompt_username">Потребителско име</string>
     <string name="prompt_password">Парола</string>
     <string name="action_register">Регистрация</string>
@@ -305,4 +306,5 @@
     <string name="about_us_desc_feedback">чрез <a href="#">формата ни за обратна връзка</a></string>
     <string name="about_us_desc_email">или ни пишете на <a href="mailto:purchase.history.bg@gmail.com">:purchase.history.bg@gmail.com"</a></string>
     <string name="about_us_conclusion">\tБлагодяра Ви за това че използвате приложението ни. Надяваме се че ще Ви бъде от полза\n\n\tПриятно спестяване! ☻</string>
+    <string name="loading_login">Зареждане на профил…</string>
 </resources>

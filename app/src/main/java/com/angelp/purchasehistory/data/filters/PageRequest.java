@@ -30,7 +30,8 @@ public class PageRequest {
     }
 
     public HttpUrl buildURL(String url) {
-        return HttpUrl.parse(url).newBuilder()
+        HttpUrl parse = HttpUrl.parse(url);
+        return parse.newBuilder()
                 .addQueryParameter("pageNumber", pageNumber.toString())
                 .addQueryParameter("pageSize", pageSize.toString())
                 .addQueryParameter("sort", sort.asQueryParam()).build();

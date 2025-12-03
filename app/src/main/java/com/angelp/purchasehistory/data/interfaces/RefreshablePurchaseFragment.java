@@ -19,7 +19,7 @@ public abstract class RefreshablePurchaseFragment extends Fragment {
     @Inject
     protected PurchaseFilterSingleton filterViewModel;
     @Getter
-    protected MutableLiveData<Boolean> isRefreshing = new MutableLiveData<>(false);
+    protected final MutableLiveData<Boolean> isRefreshing = new MutableLiveData<>(false);
     @Setter
     private View loadingScreen;
 

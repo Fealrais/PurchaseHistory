@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.ui.login.LoginActivity;
@@ -27,7 +28,6 @@ public class ForgotPasswordChangeActivity extends AppCompatActivity {
     private EditText etCode;
     private EditText etNewPassword;
     private EditText etConfirmPassword;
-    private Button btnChangePassword;
     private TextView tvFeedback;
 
     @Override
@@ -39,11 +39,14 @@ public class ForgotPasswordChangeActivity extends AppCompatActivity {
         etCode = findViewById(R.id.etCode);
         etNewPassword = findViewById(R.id.etNewPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
-        btnChangePassword = findViewById(R.id.btnChangePassword);
+        Button btnChangePassword = findViewById(R.id.btnChangePassword);
         tvFeedback = findViewById(R.id.tvFeedback);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar!=null){
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowHomeEnabled(true);
+        }
 
         // Button click listener
         btnChangePassword.setOnClickListener(v -> {
@@ -93,7 +96,7 @@ public class ForgotPasswordChangeActivity extends AppCompatActivity {
             showError(getResources().getString(R.string.invalid_password_match));
             return false;
         }
-        if (!AndroidUtils.isPasswordValid(newPassword)) {
+        if (AndroidUtils.isPasswordInvalid(newPassword)) {
             showError(getResources().getString(R.string.invalid_password));
             return false;
         }

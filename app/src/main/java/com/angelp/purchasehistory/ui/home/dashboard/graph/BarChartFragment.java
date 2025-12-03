@@ -174,7 +174,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
                 if (legendId != null && getActivity()!=null) {
                     Legend legend = binding.barChartView.getLegend();
                     ListView listView = getActivity().findViewById(legendId);
-                    legend.setEnabled(!AndroidUtils.setLegendList(legend,listView));
+                    legend.setEnabled(AndroidUtils.setLegendList(legend, listView));
                 }
             }).start();
         });
@@ -192,9 +192,7 @@ public class BarChartFragment extends RefreshablePurchaseFragment implements OnC
     }
     public void refresh(PurchaseFilter filter) {
         if (binding == null) return;
-        new Thread(() -> {
-            setData(filter);
-        }).start();
+        new Thread(() -> setData(filter)).start();
     }
 
     @Override

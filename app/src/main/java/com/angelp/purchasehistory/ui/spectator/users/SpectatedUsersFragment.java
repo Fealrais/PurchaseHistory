@@ -12,6 +12,7 @@ import com.angelp.purchasehistory.databinding.FragmentSpectatedUsersBinding;
 import com.angelp.purchasehistory.web.clients.ObserverClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
 import dagger.hilt.android.AndroidEntryPoint;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -30,7 +31,7 @@ public class SpectatedUsersFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSpectatedUsersBinding.inflate(inflater, container, false);
         init();

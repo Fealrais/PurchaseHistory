@@ -36,16 +36,11 @@ public class UserClient extends HttpClient {
 
     public UserView editUser(UserDTO user) {
         try (Response res = put(BACKEND_URL + "/users/self/edit", user)) {
-            if (res.isSuccessful() && res.body() != null) {
-                String json = res.body().string();
-                Log.i("httpResponse", "register: " + json);
-                return gson.fromJson(json, UserView.class);
-            }
+            return utils.getBody(res, UserView.class);
         } catch (IOException e) {
             Log.e("registerResult", "failed:" + e.getMessage());
             throw new WebException(R.string.server_connection_failed_500);
         }
-        return null;
     }
 
     public boolean deleteAccount() {
@@ -66,6 +61,8 @@ public class UserClient extends HttpClient {
 
     public void sendFeedback(ErrorFeedback errorFeedback) {
         try (Response res = post(BACKEND_URL + "/feedback/error", errorFeedback)) {
+            if (res.body() != null)
+                Log.i("feedback", "sendFeedback: " + res.body().string());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

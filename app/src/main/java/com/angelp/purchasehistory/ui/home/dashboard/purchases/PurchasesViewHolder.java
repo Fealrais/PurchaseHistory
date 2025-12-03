@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
+import com.angelp.purchasehistory.data.filters.PurchaseFilterSingleton;
 import com.angelp.purchasehistory.data.interfaces.ViewHolder;
 import com.angelp.purchasehistory.databinding.RecyclerViewPurchaseBinding;
 import com.angelp.purchasehistory.util.AndroidUtils;
@@ -15,6 +16,7 @@ import com.angelp.purchasehistorybackend.models.views.outgoing.PurchaseView;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
@@ -25,8 +27,10 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
     private final String TAG = this.getClass().getSimpleName();
     private final DateTimeFormatter readableFormatter = DateTimeFormatter.ofPattern("dd.MM.yy hh:mm:ss");
 
-    RecyclerViewPurchaseBinding binding;
+    final RecyclerViewPurchaseBinding binding;
     private PurchaseEditDialog editDialog;
+    @Inject
+    PurchaseFilterSingleton purchaseFilter;
     private FragmentManager fragmentManager;
 
     public PurchasesViewHolder(@NonNull @NotNull View itemView) {
@@ -76,8 +80,10 @@ public class PurchasesViewHolder extends ViewHolder<PurchaseView> {
                     editDialog.setArguments(bundle);
                     editDialog.show(fragmentManager, "editDialog" + purchaseView.getBillId());
                     editDialog.setOnSuccess((newView) -> {
-                        if (newView != null)
+                        if (newView != null) {
                             this.bind(newView, fragmentManager);
+                        }
+
                     });
                 } else PurchaseHistoryApplication.getInstance().alert("Purchase does not have an id");
 

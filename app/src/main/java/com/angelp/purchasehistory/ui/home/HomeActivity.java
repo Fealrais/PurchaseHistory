@@ -22,6 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.Constants;
+import com.angelp.purchasehistory.data.filters.PurchaseFilterSingleton;
 import com.angelp.purchasehistory.data.model.DashboardComponent;
 import com.angelp.purchasehistory.data.tour.TourStep;
 import com.angelp.purchasehistory.databinding.ActivityHomeBinding;
@@ -49,6 +50,8 @@ public class HomeActivity extends AppCompatActivity {
     AuthClient authClient;
     @Inject
     PurchaseClient purchaseClient;
+    @Inject
+    PurchaseFilterSingleton filter;
     private ActivityHomeBinding binding;
     private int tourStep = 0;
     private NavController navController;
@@ -63,7 +66,6 @@ public class HomeActivity extends AppCompatActivity {
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -75,12 +77,18 @@ public class HomeActivity extends AppCompatActivity {
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
             navController.addOnDestinationChangedListener((controller, currentDest, c) -> invalidateOptionsMenu());
-            NavigationUI.setupWithNavController(binding.navView, navController);
+            NavigationUI.setupWithNavController(binding.navView, navController, false);
             NavigationUI.setupActionBarWithNavController(this, navHostFragment.getNavController(), appBarConfiguration);
         }
         if (AndroidUtils.isFirstTimeOpen(this)) {
             showTourPrompt();
         }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        filter.updateFilter(Constants.getDefaultFilter());
     }
 
     @Override

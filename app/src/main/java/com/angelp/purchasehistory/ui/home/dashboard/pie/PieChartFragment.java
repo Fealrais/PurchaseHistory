@@ -11,17 +11,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.lifecycle.ViewModelProvider;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.AppColorCollection;
 import com.angelp.purchasehistory.data.Constants;
 import com.angelp.purchasehistory.data.filters.PurchaseFilter;
 import com.angelp.purchasehistory.data.interfaces.RefreshablePurchaseFragment;
 import com.angelp.purchasehistory.databinding.FragmentPieChartBinding;
-import com.angelp.purchasehistory.ui.home.dashboard.DashboardViewModel;
 import com.angelp.purchasehistory.ui.home.dashboard.graph.CurrencyValueFormatter;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.util.Utils;
+import com.angelp.purchasehistory.web.clients.PurchaseClient;
 import com.angelp.purchasehistorybackend.models.views.outgoing.CategoryView;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsEntry;
 import com.angelp.purchasehistorybackend.models.views.outgoing.analytics.CategoryAnalyticsReport;
@@ -37,6 +36,7 @@ import com.github.mikephil.charting.utils.MPPointF;
 import dagger.hilt.android.AndroidEntryPoint;
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,15 +47,14 @@ import java.util.stream.Collectors;
 public class PieChartFragment extends RefreshablePurchaseFragment implements OnChartValueSelectedListener {
     private static final String ARG_FILTER = "purchase_filter";
     private final String TAG = this.getClass().getSimpleName();
-    private DashboardViewModel viewModel;
     private FragmentPieChartBinding binding;
     private boolean showFilter;
     private AppColorCollection appColorCollection;
     private Typeface tf;
-    private Typeface tfBold;
-    private PurchaseFilter previousFilter;
     private BigDecimal sum;
     private List<PieEntry> entries = new ArrayList<>();
+    @Inject
+    PurchaseClient purchaseClient;
 
     public PieChartFragment() {
         Bundle args = new Bundle();
@@ -74,11 +73,10 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         binding = FragmentPieChartBinding.inflate(inflater, container, false);
         appColorCollection = new AppColorCollection(inflater.getContext());
         tf = ResourcesCompat.getFont(inflater.getContext(), R.font.inter);
-        tfBold = ResourcesCompat.getFont(inflater.getContext(), R.font.inter_bold);
+        Typeface tfBold = ResourcesCompat.getFont(inflater.getContext(), R.font.inter_bold);
         super.setLoadingScreen(binding.loadingBar);
 
         return binding.getRoot();
@@ -92,7 +90,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         initFilterRow();
         initPieChart(binding.pieChart);
         filterViewModel.getFilter().observe(getViewLifecycleOwner(), this::highlightPieChartOnFilterChange);
-        new Thread(() -> setData(filterViewModel.getFilterValue())).start();
+        new Thread(() -> setData(filterViewModel.getFilterValue(), true)).start();
     }
 
     private void applyFilter(PurchaseFilter newFilter) {
@@ -108,9 +106,8 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         });
     }
 
-    private void setData(PurchaseFilter filter) {
-        CategoryAnalyticsReport report = viewModel.getCategoryAnalyticsReport(filter);
-        previousFilter = filter.copy();
+    private void setData(PurchaseFilter filter, boolean animate) {
+        CategoryAnalyticsReport report = purchaseClient.getCategoryAnalyticsReport(filter);
         if (report == null) {
             binding.pieChart.setCenterText("Failed to load data.\nTry again later.");
             return;
@@ -122,7 +119,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         ).collect(Collectors.toList());
         dataSet.setAutomaticallyDisableSliceSpacing(true);
         sum = report.getTotalSum();
-        setPiechartCenterText(sum);
+        if (filter.getCategoryId() == null) setPiechartCenterText(sum);
 
         dataSet.setDrawIcons(false);
         dataSet.setSliceSpace(3f);
@@ -132,14 +129,14 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
         dataSet.setValueTextColors(categoryColors.stream().map(AndroidUtils::getTextColor).collect(Collectors.toList()));
         dataSet.setValueTextSize(12f);
         dataSet.setValueTypeface(tf);
-        dataSet.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(getContext())));
+        dataSet.setValueFormatter(new CurrencyValueFormatter(AndroidUtils.getCurrencySymbol(requireContext())));
 
         PieData newData = new PieData(dataSet);
 
         new Handler(Looper.getMainLooper()).post(() -> {
             binding.pieChart.setData(newData);
             binding.pieChart.notifyDataSetChanged();
-            binding.pieChart.animateY(1000);
+            if (animate) binding.pieChart.animateY(1000);
             binding.pieChart.invalidate();
         });
     }
@@ -210,7 +207,7 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
-        if (e == null || e.getData() == null)
+        if (e == null || e.getData() == null || ((CategoryView) e.getData()).getId() == null)
             return;
         Log.i(TAG, String.format("Selected value: %s, index: %s, DataSet index: %d", e.getY(), h.getX(), h.getDataSetIndex()));
         CategoryView category = (CategoryView) e.getData();
@@ -233,18 +230,11 @@ public class PieChartFragment extends RefreshablePurchaseFragment implements OnC
 
     public void refresh(PurchaseFilter filter) {
         if (binding == null) return;
-        if (isSameFilter(filter)) return;
         isRefreshing.postValue(true);
         new Thread(() -> {
-            setData(filter);
+            setData(filter, false);
             isRefreshing.postValue(false);
         }).start();
-    }
-
-    private boolean isSameFilter(PurchaseFilter filter) {
-        if (previousFilter == null) return false;
-        previousFilter.setCategoryId(filter.getCategoryId());
-        return filter.equals(previousFilter);
     }
 
     private void highlightPieChartOnFilterChange(PurchaseFilter filter) {

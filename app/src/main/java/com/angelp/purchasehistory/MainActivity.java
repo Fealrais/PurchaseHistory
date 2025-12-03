@@ -40,11 +40,6 @@ public class MainActivity extends AppCompatActivity {
         redirectIfJwtValid();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
     private void redirectIfJwtValid() {
         PurchaseHistoryApplication root = PurchaseHistoryApplication.getInstance();
 

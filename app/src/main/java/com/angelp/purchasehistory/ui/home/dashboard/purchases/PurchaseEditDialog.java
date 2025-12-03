@@ -111,7 +111,7 @@ public class PurchaseEditDialog extends DialogFragment {
             categoryAdapter = new CategorySpinnerAdapter(requireContext(), allCategories);
             requireActivity().runOnUiThread(() -> {
                 binding.purchaseEditCategorySpinner.setAdapter(categoryAdapter);
-                int index = Utils.findIndex(allCategories, (category) -> category.getId().equals(purchase.getCategoryId()));
+                int index = Utils.findIndex(allCategories, (category) -> category.getId() != null && category.getId().equals(purchase.getCategoryId()));
                 if (index >= 0)
                     binding.purchaseEditCategorySpinner.setSelection(index);
             });
@@ -200,8 +200,10 @@ public class PurchaseEditDialog extends DialogFragment {
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             resetForm();
-                            if (onSuccess != null)
+                            if (onSuccess != null) {
                                 onSuccess.accept(purchaseView);
+                                filterViewModel.refresh();
+                            }
                         });
                     }
                     dismiss();

@@ -40,7 +40,7 @@ public class CustomizationAdapter extends RecyclerView.Adapter<CustomizationAdap
         holder.displayCheckbox.setChecked(fragment.isVisible());
         holder.displayCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> fragment.setVisible(isChecked));
         holder.buttonUp.setOnClickListener(v -> {
-            int currentPosition = holder.getAdapterPosition();
+            int currentPosition = holder.getBindingAdapterPosition();
             if (currentPosition > 0) {
                 DashboardComponent component = fragments.remove(currentPosition);
                 fragments.add(currentPosition - 1, component);
@@ -50,7 +50,7 @@ public class CustomizationAdapter extends RecyclerView.Adapter<CustomizationAdap
         });
 
         holder.buttonDown.setOnClickListener(v -> {
-            int currentPosition = holder.getAdapterPosition();
+            int currentPosition = holder.getBindingAdapterPosition();
             if (currentPosition < fragments.size() - 1) {
                 DashboardComponent component = fragments.remove(currentPosition);
                 fragments.add(currentPosition + 1, component);
@@ -66,11 +66,11 @@ public class CustomizationAdapter extends RecyclerView.Adapter<CustomizationAdap
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        AppCompatImageButton buttonDown;
-        AppCompatImageButton buttonUp;
-        TextView fragmentName;
-        CheckBox displayCheckbox;
-        ImageView fragmentIcon;
+        final AppCompatImageButton buttonDown;
+        final AppCompatImageButton buttonUp;
+        final TextView fragmentName;
+        final CheckBox displayCheckbox;
+        final ImageView fragmentIcon;
 
         ViewHolder(View itemView) {
             super(itemView);

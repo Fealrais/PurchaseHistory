@@ -4,6 +4,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="prompt_email">Email</string>
+    <string name="prompt_username_email">Username or Email</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_register">Register</string>
@@ -41,7 +42,7 @@
     <string name="currency_zero">0.00</string>
     <string name="edit_text">Edit</string>
     <string name="add_button_text">Add</string>
-    <string name="create_category">New category</string>
+    <string name="create_category">Category</string>
     <string name="cancel">Cancel</string>
     <string name="name">Name</string>
     <string name="color">Color</string>
@@ -311,4 +312,5 @@ Here you can:\n
     <string name="about_us_desc_email">or write us at <a href="mailto:purchase.history.bg@gmail.com">purchase.history.bg@gmail.com"</a></string>
 
     <string name="about_us_conclusion">\tThank you for using our app! We hope it helps you save money.\n\n\tHappy spending (and saving)! ☻</string>
+    <string name="loading_login">Logging in…</string>
 </resources>

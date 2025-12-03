@@ -35,7 +35,6 @@ public class EditProfileFragment extends Fragment {
     private EditText etUsername;
     private EditText etEmail;
     private EditText etPassword;
-    private Button btnSave;
     private TextView tvFeedback;
 
     @Nullable
@@ -48,7 +47,7 @@ public class EditProfileFragment extends Fragment {
         etUsername = binding.usernameEdit;
         etEmail = binding.emailEdit;
         etPassword = binding.passwordEdit;
-        btnSave = binding.saveButton;
+        Button btnSave = binding.saveButton;
         tvFeedback = binding.tvFeedback;
 
         UserView user = PurchaseHistoryApplication.getInstance().getLoggedUser().getValue(); // Assume this method fetches the user info
@@ -83,22 +82,20 @@ public class EditProfileFragment extends Fragment {
                 NavHostFragment.findNavController(this).popBackStack();
             });
         } catch (WebException e) {
-            new Handler(Looper.getMainLooper()).post(() -> {
-                showError(getString(e.getErrorResource()));
-            });
+            new Handler(Looper.getMainLooper()).post(() -> showError(getString(e.getErrorResource())));
         }
     }
 
     private boolean validateInputs(String username, String email, String password) {
-        if (username.isEmpty() || !AndroidUtils.isUserNameValid(username)) {
+        if (username.isEmpty() || AndroidUtils.isUserNameInvalid(username)) {
             showError(getResources().getString(R.string.invalid_username));
             return false;
         }
-        if (email.isEmpty() || !AndroidUtils.isEmailValid(email)) {
+        if (email.isEmpty() || AndroidUtils.isEmailInvalid(email)) {
             showError(getResources().getString(R.string.invalid_email));
             return false;
         }
-        if (password.isEmpty() || !AndroidUtils.isPasswordValid(password)) {
+        if (password.isEmpty() || AndroidUtils.isPasswordInvalid(password)) {
             showError(getResources().getString(R.string.invalid_password));
             return false;
         }

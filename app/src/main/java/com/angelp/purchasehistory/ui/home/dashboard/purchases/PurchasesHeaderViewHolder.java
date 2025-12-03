@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class PurchasesHeaderViewHolder extends ViewHolder<PurchaseView> {
     private final String TAG = this.getClass().getSimpleName();
 
-    RecyclerViewPurchaseHeaderBinding binding;
+    final RecyclerViewPurchaseHeaderBinding binding;
     private FragmentManager fragmentManager;
 
 

@@ -48,7 +48,6 @@ public class PurchasesPerDayDialog extends DialogFragment {
     PurchaseClient purchaseClient;
     private DialogGraphDetailsBinding binding;
     private PurchasesAdapter purchasesAdapter;
-    private AlertDialog dialog;
     private PurchaseFilter filter;
     private TextView title;
 
@@ -84,7 +83,7 @@ public class PurchasesPerDayDialog extends DialogFragment {
         updateFilterButtons(filter.getFrom());
         binding.nextDayButton.setOnClickListener((v) -> updateFilter(filter.getFrom().plusDays(1)));
         binding.previousDayButton.setOnClickListener((v) -> updateFilter(filter.getFrom().minusDays(1)));
-        dialog = builder.create();
+        AlertDialog dialog = builder.create();
         return dialog;
     }
 
