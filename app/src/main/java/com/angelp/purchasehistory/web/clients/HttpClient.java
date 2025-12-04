@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class HttpClient {
-    public static final String PORT = ":9000"; //8080: PROD, 9000:DEV
+    public static final String PORT = ":8080"; //8080: PROD, 9000:DEV
     public static final String HOST_NAME = "https://angelp-home.zapto.org";
     public static final String BACKEND_URL = HOST_NAME + PORT + "/api";
     protected final OkHttpClient client;
