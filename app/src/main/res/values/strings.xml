@@ -313,4 +313,5 @@ Here you can:\n
 
     <string name="about_us_conclusion">\tThank you for using our app! We hope it helps you save money.\n\n\tHappy spending (and saving)! ☻</string>
     <string name="loading_login">Logging in…</string>
+    <string name="captcha_fail">Failed to pass reCaptcha, try again.</string>
 </resources>

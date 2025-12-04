@@ -49,6 +49,7 @@ public final class Constants {
         errorsMap.put("1010", R.string.err1010);
         errorsMap.put("1011", R.string.err1011);
         errorsMap.put("1012", R.string.err1012);
+        errorsMap.put("1013", R.string.err1013);
     }
 
     public static PurchaseFilter getDefaultFilter() {

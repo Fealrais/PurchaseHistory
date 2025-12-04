@@ -3,20 +3,23 @@ package com.angelp.purchasehistory.web.clients;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
 import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.model.UsernamePassword;
 import com.angelp.purchasehistorybackend.models.views.incoming.ForgottenPasswordDTO;
 import com.angelp.purchasehistorybackend.models.views.incoming.UserDTO;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
-import okhttp3.Response;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Locale;
 import java.util.Optional;
+
+import javax.inject.Inject;
+
+import okhttp3.Response;
 
 public class AuthClient extends HttpClient {
 
@@ -102,8 +105,8 @@ public class AuthClient extends HttpClient {
         }
     }
 
-    public Optional<UserView> register(String username, String password, String email, Locale locale) {
-        try (Response res = post(BACKEND_URL + "/register", new UserDTO(username, password, email, locale.toLanguageTag()))) {
+    public Optional<UserView> register(String username, String password, String email, Locale locale, String capchaToken) {
+        try (Response res = post(BACKEND_URL + "/register", new UserDTO(username, password, email, locale.toLanguageTag(), capchaToken))) {
                 return Optional.of(utils.getBody(res,UserView.class));
         } catch (IOException e) {
             Log.e("registerResult", "failed:" + e.getMessage());

@@ -3,17 +3,20 @@ package com.angelp.purchasehistory.ui.register;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.data.model.LoginResult;
 import com.angelp.purchasehistory.util.AndroidUtils;
 import com.angelp.purchasehistory.web.clients.AuthClient;
 import com.angelp.purchasehistory.web.clients.WebException;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
-import dagger.hilt.android.lifecycle.HiltViewModel;
 
-import javax.inject.Inject;
 import java.util.Locale;
 import java.util.Optional;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class RegisterViewModel extends ViewModel {
@@ -25,6 +28,7 @@ public class RegisterViewModel extends ViewModel {
     @Inject
     public RegisterViewModel(AuthClient authClient) {
         this.authClient = authClient;
+
     }
 
     LiveData<RegisterFormState> getRegisterFormState() {
@@ -35,11 +39,10 @@ public class RegisterViewModel extends ViewModel {
         return registerResult;
     }
 
-    public Runnable register(String username, String password, String email, Locale locale) {
+    public Runnable register(String username, String password, String email, Locale locale, String token) {
         return () -> {
             try {
-                Optional<UserView> loggedUser = authClient.register(username, password, email, locale);
-
+                Optional<UserView> loggedUser = authClient.register(username, password, email, locale, token);
                 if (loggedUser.isPresent()) {
                     UserView userView = loggedUser.get();
                     registerResult.postValue(new LoginResult(userView));
@@ -56,10 +59,7 @@ public class RegisterViewModel extends ViewModel {
         return () -> {
             try {
                 Optional<UserView> loggedUser = authClient.getLoggedUser();
-                if (loggedUser.isPresent()) {
-                    UserView userView = loggedUser.get();
-                    registerResult.postValue(new LoginResult(userView));
-                }
+                loggedUser.ifPresent(userView -> registerResult.postValue(new LoginResult(userView)));
             } catch (WebException ignored) {
             }
         };

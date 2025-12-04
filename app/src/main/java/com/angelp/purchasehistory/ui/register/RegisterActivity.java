@@ -6,29 +6,44 @@ import android.os.Bundle;
 import android.os.LocaleList;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.angelp.purchasehistory.PurchaseHistoryApplication;
 import com.angelp.purchasehistory.R;
 import com.angelp.purchasehistory.databinding.ActivityRegisterBinding;
 import com.angelp.purchasehistory.ui.legal.PrivacyPolicyActivity;
 import com.angelp.purchasehistory.ui.legal.TermsAndConditionsActivity;
 import com.angelp.purchasehistory.util.AfterTextChangedWatcher;
+import com.angelp.purchasehistory.web.clients.WebException;
 import com.angelp.purchasehistorybackend.models.views.outgoing.UserView;
-import dagger.hilt.android.AndroidEntryPoint;
+import com.google.android.recaptcha.Recaptcha;
+import com.google.android.recaptcha.RecaptchaAction;
+import com.google.android.recaptcha.RecaptchaTasksClient;
 
 import java.util.Locale;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class RegisterActivity extends AppCompatActivity {
 
     private RegisterViewModel registerViewModel;
     private ActivityRegisterBinding binding;
+    private RecaptchaTasksClient recaptchaTasksClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
-
+        initializeRecaptchaClient();
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
         final EditText confirmPassword = binding.confirmPassword;
@@ -63,8 +78,7 @@ public class RegisterActivity extends AppCompatActivity {
             if (registerFormState.getPasswordError() != null) {
                 if (registerFormState.getPasswordError().equals(R.string.invalid_password_match))
                     confirmPassword.setError(getString(registerFormState.getPasswordError()));
-                else
-                    passwordEditText.setError(getString(registerFormState.getPasswordError()));
+                else passwordEditText.setError(getString(registerFormState.getPasswordError()));
             }
         });
 
@@ -89,8 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
         TextWatcher afterTextChangedListener = new AfterTextChangedWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                registerViewModel.registerDataChanged(usernameEditText.getText().toString().trim(),
-                        passwordEditText.getText().toString().trim(), confirmPassword.getText().toString().trim(), emailEditText.getText().toString().trim());
+                registerViewModel.registerDataChanged(usernameEditText.getText().toString().trim(), passwordEditText.getText().toString().trim(), confirmPassword.getText().toString().trim(), emailEditText.getText().toString().trim());
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
@@ -126,6 +139,10 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    private void initializeRecaptchaClient() {
+        Recaptcha.fetchTaskClient(PurchaseHistoryApplication.getInstance(), "6Lcg2SAsAAAAAOmgmnY1hVNs6iyZa2uPJLIXibxK").addOnSuccessListener(this, client -> recaptchaTasksClient = client).addOnFailureListener(this, e -> Log.e("RECAPTCHA", "initializeRecaptchaClient: Fail error:" + e.getMessage()));
+    }
+
     private void checkIfLoggedIn() {
         new Thread(registerViewModel.checkIfLoggedIn(), "CheckLogin").start();
     }
@@ -133,9 +150,17 @@ public class RegisterActivity extends AppCompatActivity {
     private void register(EditText usernameEditText, EditText passwordEditText, EditText emailEditText) {
         LocaleList locales = getResources().getConfiguration().getLocales();
         Locale locale = locales.isEmpty() ? Locale.getDefault() : locales.get(0);
-
-        new Thread(registerViewModel.register(usernameEditText.getText().toString().trim(),
-                passwordEditText.getText().toString().trim(), emailEditText.getText().toString().trim(), locale), "Register").start();
+        if (recaptchaTasksClient != null) {
+            recaptchaTasksClient.executeTask(RecaptchaAction.SIGNUP).addOnSuccessListener(this, token -> {
+                try {
+                    new Thread(registerViewModel.register(usernameEditText.getText().toString().trim(), passwordEditText.getText().toString().trim(), emailEditText.getText().toString().trim(), locale, token), "Register").start();
+                } catch (WebException e) {
+                    showRegisterFailed(e.getErrorResource());
+                }
+            }).addOnFailureListener(this, e -> Toast.makeText(getApplicationContext(), R.string.captcha_fail, Toast.LENGTH_LONG).show());
+        } else {
+            showRegisterFailed(R.string.captcha_fail);
+        }
     }
 
     private void updateUiWithUser(UserView ignoredModel) {

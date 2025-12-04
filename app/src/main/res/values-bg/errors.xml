@@ -12,6 +12,7 @@
     <string name="err1010">Неуспешно извличане на потребителски данни.</string>
     <string name="err1011">Паролата не е валидна</string>
     <string name="err1012">Потребителското име или имейл са заети</string>
+    <string name="err1013">Грешка при валидирането на reCaptcha.</string>
 
     <string name="error_web_response">Възникна грешка. Моля, опитайте отново по-късно.</string>
 </resources>
