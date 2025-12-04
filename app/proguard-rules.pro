@@ -1,35 +1,45 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+-dontwarn com.angelp.purchasehistorybackend.models.entities.Category
+-dontwarn com.angelp.purchasehistorybackend.models.entities.MonthlyLimit
+-dontwarn com.angelp.purchasehistorybackend.models.entities.ObservedUser
+-dontwarn com.angelp.purchasehistorybackend.models.entities.Purchase
+-dontwarn com.angelp.purchasehistorybackend.models.entities.ScheduledExpense
+-dontwarn com.angelp.purchasehistorybackend.models.entities.User
+-dontwarn com.google.api.client.auth.oauth2
+-dontwarn org.springframework.data.domain.Page
+-dontwarn org.springframework.data.domain.PageRequest
+-dontwarn org.springframework.data.domain.Sort$Direction
+-dontwarn org.springframework.data.jpa.domain
+-dontwarn org.springframework.http.ProblemDetail
+-dontwarn org.springframework.data.jpa.domain.Specification
+-dontwarn com.google.api.client.auth.oauth2.TokenResponse
+-dontwarn com.google.api.client.util.Key
+-dontwarn jakarta.persistence.criteria.CriteriaBuilder
+-dontwarn jakarta.persistence.criteria.CriteriaQuery
+-dontwarn jakarta.persistence.criteria.Expression
+-dontwarn jakarta.persistence.criteria.Order
+-dontwarn jakarta.persistence.criteria.Path
+-dontwarn jakarta.persistence.criteria.Predicate
+-dontwarn jakarta.persistence.criteria.Root
+-dontwarn org.springframework.data.domain.Sort
+-dontwarn org.springframework.lang.NonNull
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
-# Prevent proguard from stripping interface information from TypeAdapter, TypeAdapterFactory,
-# JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
--keep class * extends com.google.gson.TypeAdapter
--keep class * implements com.google.gson.TypeAdapterFactory
--keep class * implements com.google.gson.JsonSerializer
--keep class * implements com.google.gson.JsonDeserializer
-# Prevent R8 from leaving Data object members always null
--keepclasseswithmembers class * {
+-keep class com.angelp.purchasehistorybackend.models.** { *; }
+-keepclassmembers class com.angelp.purchasehistorybackend.** {
     <init>(...);
+    <fields>;
+}
+-keepattributes Signature,InnerClasses,EnclosingMethod
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep class * extends com.google.gson.reflect.TypeToken
+
+-keepclassmembers class * {
     @com.google.gson.annotations.SerializedName <fields>;
 }
-# Retain generic signatures of TypeToken and its subclasses with R8 version 3.0 and higher.
--keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
--keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+# This line alone fixes 95% of the "Abstract classes can't be instantiated" errors
+-keepclassmembers,allowobfuscation class * {
+    <init>();
+}
